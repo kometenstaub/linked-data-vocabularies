@@ -4,10 +4,15 @@ import {
 	Modal,
 	Plugin,
 	PluginSettingTab,
+	request,
 	Setting,
 } from 'obsidian';
 import { parse } from 'ndjson';
 import { createReadStream, writeFileSync } from 'fs';
+
+const link = 'https://id.loc.gov/authorities/label/';
+
+let headings = new Set();
 
 interface LCSHSettings {
 	mySetting: string;
@@ -22,17 +27,19 @@ export default class LCSHPlugin extends Plugin {
 
 	loadHeadingsData(): void {
 		const path = this.getAbsolutePath('lcsh.skos.ndjson');
-		let headings = new Set();
 		createReadStream(path)
 			.pipe(parse())
 			.on('data', function (obj) {
 				obj['@graph'].map(
 					(element: { [x: string]: { [y: string]: string } }) => {
 						try {
-
-						if (element['skos:prefLabel']['@language'] === 'en') {
-							headings.add(element['skos:prefLabel']['@value']);
-						}
+							if (
+								element['skos:prefLabel']['@language'] === 'en'
+							) {
+								headings.add(
+									element['skos:prefLabel']['@value']
+								);
+							}
 						} catch {
 							//console.log('error')
 						}
@@ -43,6 +50,20 @@ export default class LCSHPlugin extends Plugin {
 		//const writeSetPath = this.getAbsolutePath('set.json');
 		//const json = JSON.stringify(Array.from(headings), null, 2);
 		//writeFileSync(writeSetPath, json);
+	}
+
+	getHeading(input: string): string {
+		const iterator = headings.values();
+		for (let heading in iterator.next()) {
+			if (heading.includes(input)) {
+				return heading;
+			}
+		}
+	}
+
+	async requestJSON(heading: string): Promise<void> {
+		const url = link + encodeURIComponent(heading);
+		const json = await request({ url: url });
 	}
 
 	getAbsolutePath(fileName: string): string {
