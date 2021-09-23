@@ -2,9 +2,8 @@
 	"id": "obsidian-lcsh-headings-plugin",
 	"name": "LCSH Headings Plugin",
 	"version": "0.0.1",
-	"minAppVersion": "0.9.12",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md/about",
+	"minAppVersion": "0.12.15",
+	"description": "Plugin for prepending LCSH Classification to notes.",
+	"author": "kometenstaub and SkepticMystic",
 	"isDesktopOnly": true
 }
