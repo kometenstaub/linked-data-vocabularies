@@ -12,3 +12,8 @@ main.js
 
 # obsidian
 data.json
+
+resources/
+build/
+
+esbuild.js
