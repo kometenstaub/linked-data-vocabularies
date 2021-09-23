@@ -62,7 +62,7 @@ export default class LCSHPlugin extends Plugin {
 	}
 
 	async requestJSON(heading: string): Promise<void> {
-		const url = link + encodeURIComponent(heading);
+		const url = link + encodeURIComponent(heading) + '.json';
 		const json = await request({ url: url });
 	}
 
