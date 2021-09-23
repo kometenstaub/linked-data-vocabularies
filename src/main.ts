@@ -2,13 +2,12 @@ import {
 	App,
 	FileSystemAdapter,
 	Modal,
-	Notice,
 	Plugin,
 	PluginSettingTab,
 	Setting,
 } from 'obsidian';
 import { parse } from 'ndjson';
-import { createReadStream, ReadStream } from 'fs';
+import { createReadStream, writeFileSync } from 'fs';
 
 interface LCSHSettings {
 	mySetting: string;
@@ -27,17 +26,23 @@ export default class LCSHPlugin extends Plugin {
 		createReadStream(path)
 			.pipe(parse())
 			.on('data', function (obj) {
-				obj['@graph'].map((element: { [x: string]: string }) => {
-					if (element['@id'].includes('id.worldcat.org')) {
-						headings.add(
-							element[
-								'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-							]
-						);
+				obj['@graph'].map(
+					(element: { [x: string]: { [y: string]: string } }) => {
+						try {
+
+						if (element['skos:prefLabel']['@language'] === 'en') {
+							headings.add(element['skos:prefLabel']['@value']);
+						}
+						} catch {
+							//console.log('error')
+						}
 					}
-				});
+				);
 			});
 		console.log(headings);
+		//const writeSetPath = this.getAbsolutePath('set.json');
+		//const json = JSON.stringify(Array.from(headings), null, 2);
+		//writeFileSync(writeSetPath, json);
 	}
 
 	getAbsolutePath(fileName: string): string {
