@@ -1,106 +1,211 @@
 import {
 	App,
 	FileSystemAdapter,
-	Modal,
 	Plugin,
-	PluginSettingTab,
 	request,
-	Setting,
-} from 'obsidian';
-import { parse } from 'ndjson';
-import { createReadStream, writeFileSync } from 'fs';
+	Setting} from 'obsidian';
+import  SKOSSettingTab from './settings';
+import { SKOSFuzzyModal, SuggesterItem } from './suggester';
 
-const link = 'https://id.loc.gov/authorities/label/';
+//const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
-let headings = new Set();
 
-interface LCSHSettings {
-	mySetting: string;
+interface SKOSSettings {
+	elementCounter: string;
 }
 
-const DEFAULT_SETTINGS: LCSHSettings = {
-	mySetting: 'default',
+const DEFAULT_SETTINGS: SKOSSettings = {
+	elementCounter: '10',
 };
 
-export default class LCSHPlugin extends Plugin {
-	settings: LCSHSettings;
+// What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
+interface suggest2 {
+	q: string;
+	count: number;
+	pagesize: number;
+	start: number;
+	sortmethod: string;
+	searchtype: string;
+	directory: string;
+	hits: {
+		suggestLabel: string;
+		uri: string;
+		aLabel: string;
+		token: string;
+		vLabel: string;
+		code: string;
+		rank: string;
+	}[];
+}
 
-	loadHeadingsData(): void {
-		const path = this.getAbsolutePath('lcsh.skos.ndjson');
-		createReadStream(path)
-			.pipe(parse())
-			.on('data', function (obj) {
-				obj['@graph'].map(
-					(element: { [x: string]: { [y: string]: string } }) => {
-						try {
-							if (
-								element['skos:prefLabel']['@language'] === 'en'
-							) {
-								headings.add(
-									element['skos:prefLabel']['@value']
-								);
-							}
-						} catch {
-							//console.log('error')
-						}
-					}
-				);
-			});
-		console.log(headings);
-		//const writeSetPath = this.getAbsolutePath('set.json');
-		//const json = JSON.stringify(Array.from(headings), null, 2);
-		//writeFileSync(writeSetPath, json);
+export default class SKOSPlugin extends Plugin {
+    settings: SKOSSettings;
+	plugin: SKOSPlugin;
+
+
+	async requestHeadingURL(url: string): Promise<Object[]> {
+		const response = await request({ url: url });
+		const responseObject: {}[] = JSON.parse(response);
+		return responseObject;
 	}
 
-	getHeading(input: string): string {
-		const iterator = headings.values();
-		for (let heading in iterator.next()) {
-			if (heading.includes(input)) {
-				return heading;
+	// input: heading from FuzzySuggestModal
+	// it needs to be called on every keystroke
+	async findHeading(heading: string): Promise<void> {
+
+        //@ts-ignore
+		let requestObject: RequestParam = {};
+        // reading settings doesn't work, it returns undefined
+		const counter = this.settings.elementCounter;
+		const encodedHeading = encodeURIComponent(heading);
+		let url: string =
+			'https://id.loc.gov/authorities/subjects/suggest2?q=' +
+			encodedHeading;
+		url += '&counter=' + counter;
+		// more parameters could eventually go here; Documentation:
+		//https://id.loc.gov/techcenter/searching.html
+		url += '.json';
+
+		requestObject.url = url;
+
+		let data = await request(requestObject);
+        const newData : suggest2 = JSON.parse(data)
+	//TODO: remove when Modal implemented
+        console.log(newData)
+
+		// calculate heading results from received json
+		let headings: SuggesterItem[] = [];
+
+		newData["hits"].map((suggestion) => {
+			const display = suggestion.suggestLabel;
+			const url = suggestion.uri;
+			headings.push({ display: display, url: url });
+		});
+	//TODO: remove when Modal implemented
+        console.log(headings)
+
+        // set data for modal
+		SKOSFuzzyModal.data = headings;
+
+		// display results
+
+
+		//tests // that URL would need to be supplied by the user over the modal
+		// here it simply takes the first result
+		const testURL = headings[0].url + '.json'
+		const responseObject = await this.requestHeadingURL(testURL)
+	//TODO: remove when Modal implemented
+		console.log(responseObject)
+		await this.parseSKOS(responseObject)
+	}
+
+	async parseSKOS(responseObject : {}[]):Promise<void> {
+		let broaderURLs : string[] = []
+		let narrowerURLs : string[] = []
+		let relatedURLs : string[] = []
+		responseObject.map((element : { [key: string ]: string | {}[] | string[] }) => {
+			if (element['http://www.w3.org/2004/02/skos/core#broader']) {
+				//@ts-expect-error // it also contains strings, but not in what we're looking for
+				element['http://www.w3.org/2004/02/skos/core#broader'].map((id) => {
+					broaderURLs.push(id['@id'])
+				})
 			}
-		}
-	}
+			if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
+				//@ts-expect-error // it also contains strings, but not in what we're looking for
+				element['http://www.w3.org/2004/02/skos/core#narrower'].map((id) => {
+					narrowerURLs.push(id['@id'])
+				})
+			}
+			if (element['http://www.w3.org/2004/02/skos/core#related']) {
+				//@ts-expect-error // it also contains strings, but not in what we're looking for
+				element['http://www.w3.org/2004/02/skos/core#related'].map((id) => {
+					relatedURLs.push(id['@id'])
+				})
+			}
+		})
+		let broaderHeadings : string[] = []
+		let narrowerHeadings : string[] = []
+		let relatedHeadings : string[] = []
 
-	async requestJSON(heading: string): Promise<void> {
-		const url = link + encodeURIComponent(heading) + '.json';
-		const json = await request({ url: url });
-	}
+		broaderURLs.map(async (url) => {
+			const responseObject = await this.requestHeadingURL(url + '.json')
+			responseObject.map((element : { [key: string ]: string | {}[] | string[] }) => {
+				if (element['@id'] === url) {
+					//@ts-expect-error
+					element['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map((nameElement : { [key : string] : string}) => {
+						if (nameElement['@language'] === 'en') {
+							broaderHeadings.push(nameElement['@value'])
+						}
+					})
+					
+				}
+			}
+		)
+	})
+		narrowerURLs.map(async (url) => {
+			const responseObject = await this.requestHeadingURL(url + '.json')
+			responseObject.map((element : { [key: string ]: string | {}[] | string[] }) => {
+				if (element['@id'] === url) {
+					//@ts-expect-error
+					element['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map((nameElement : { [key : string] : string}) => {
+						if (nameElement['@language'] === 'en') {
+							narrowerHeadings.push(nameElement['@value'])
+						}
+					})
+					
+				}
+			}
+		)
+	})
+		relatedURLs.map(async (url) => {
+			const responseObject = await this.requestHeadingURL(url + '.json')
+			responseObject.map((element : { [key: string ]: string | {}[] | string[] }) => {
+				if (element['@id'] === url) {
+					//@ts-expect-error
+					element['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map((nameElement : { [key : string] : string}) => {
+						if (nameElement['@language'] === 'en') {
+							relatedHeadings.push(nameElement['@value'])
+						}
+					})
+					
+				}
+			}
+		)
+	})
+	//TODO: remove when Modal implemented
+	console.log(broaderHeadings)
+	console.log(narrowerHeadings)
+	console.log(relatedHeadings)
+}
 
-	getAbsolutePath(fileName: string): string {
-		let basePath;
-		let relativePath;
-		// base path
-		if (this.app.vault.adapter instanceof FileSystemAdapter) {
-			basePath = (
-				this.app.vault.adapter as FileSystemAdapter
-			).getBasePath();
-		} else {
-			throw new Error('Cannot determine base path.');
-		}
-		// relative path
-		relativePath = `${this.app.vault.configDir}/plugins/obsidian-lcsh/${fileName}`;
-		// absolute path
-		return `${basePath}/${relativePath}`;
-	}
 
 	async onload() {
-		console.log('loading LCSH plugin');
+		console.log('loading SKOS plugin');
 
 		await this.loadSettings();
 
 		this.addCommand({
-			id: 'read-lcsh-data',
-			name: 'Read and log headings data',
+			id: 'query-lcsh-data',
+			name: 'Query LCSH data',
 			callback: () => {
-				this.loadHeadingsData();
+				// doesn't work, returns undefined
+				//const chooser = new SKOSFuzzyModal(this.plugin)
+				//chooser.setPlaceholder('Enter query')
+				//return chooser
+
+				// input name for heading search here, this is just for testing
+				// normally it would be supplied over the modal by the user
+				this.findHeading('policy')
+				
 			},
 		});
 
-		this.addSettingTab(new LCSHSettingTab(this.app, this));
+
+		this.addSettingTab(new SKOSSettingTab(this.app, this));
 	}
 
 	onunload() {
-		console.log('unloading LCSH plugin');
+		console.log('unloading SKOS plugin');
 	}
 
 	async loadSettings() {
@@ -113,52 +218,5 @@ export default class LCSHPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class LCSHModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let { contentEl } = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let { contentEl } = this;
-		contentEl.empty();
-	}
-}
-
-class LCSHSettingTab extends PluginSettingTab {
-	plugin: LCSHPlugin;
-
-	constructor(app: App, plugin: LCSHPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		let { containerEl } = this;
-
-		containerEl.empty();
-
-		containerEl.createEl('h2', { text: 'LCSH Headings plugin settings.' });
-
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc("It's a secret")
-			.addText((text) =>
-				text
-					.setPlaceholder('Enter your secret')
-					.setValue('')
-					.onChange(async (value) => {
-						console.log('Secret: ' + value);
-						this.plugin.settings.mySetting = value;
-						await this.plugin.saveSettings();
-					})
-			);
 	}
 }

@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-lcsh-plugin",
-	"name": "LCSH Plugin",
+	"name": "SKOS Plugin",
 	"version": "0.0.1",
 	"minAppVersion": "0.12.15",
-	"description": "Plugin for prepending LCSH Classification to notes.",
+	"description": "Plugin for prepending SKOS Classification to notes.",
 	"author": "kometenstaub and SkepticMystic",
 	"isDesktopOnly": true
 }
