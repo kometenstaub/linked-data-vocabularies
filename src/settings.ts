@@ -34,5 +34,22 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					})
                 }
 			);
+		// TODO: implement sorting for the API
+
+		new Setting(containerEl)
+			.setName('Test query')
+			.setDesc(
+				'Enter a test query'
+			)
+			.addText((text) => {
+				text
+					.setPlaceholder('philosophy')
+					.setValue(this.plugin.settings.testQuery)
+					.onChange(async (value) => {
+						this.plugin.settings.testQuery = value;
+						this.plugin.saveSettings();
+					})
+                }
+			);
 	}
 }

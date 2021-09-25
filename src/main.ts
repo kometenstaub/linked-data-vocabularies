@@ -11,10 +11,12 @@ import { SKOSFuzzyModal, SuggesterItem } from './suggester';
 
 
 interface SKOSSettings {
+	testQuery: string;
 	elementCounter: string;
 }
 
 const DEFAULT_SETTINGS: SKOSSettings = {
+	testQuery: 'Archeology',
 	elementCounter: '10',
 };
 
@@ -93,6 +95,7 @@ export default class SKOSPlugin extends Plugin {
 		//tests // that URL would need to be supplied by the user over the modal
 		// here it simply takes the first result
 		const testURL = headings[0].url + '.json'
+		const chosenHeading = headings[0].display
 		const responseObject = await this.requestHeadingURL(testURL)
 	//TODO: remove when Modal implemented
 		console.log(responseObject)
@@ -173,8 +176,11 @@ export default class SKOSPlugin extends Plugin {
 		)
 	})
 	//TODO: remove when Modal implemented
+	console.log('broader:')
 	console.log(broaderHeadings)
+	console.log('narrower:')
 	console.log(narrowerHeadings)
+	console.log('related:')
 	console.log(relatedHeadings)
 }
 
@@ -195,7 +201,7 @@ export default class SKOSPlugin extends Plugin {
 
 				// input name for heading search here, this is just for testing
 				// normally it would be supplied over the modal by the user
-				this.findHeading('policy')
+				this.findHeading(this.settings.testQuery)
 				
 			},
 		});
