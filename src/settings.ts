@@ -1,17 +1,13 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import SKOSPlugin from './main';
-
+import type SKOSPlugin from './main';
 
 export default class SKOSSettingTab extends PluginSettingTab {
-	plugin: SKOSPlugin;
-
-	constructor(app: App, plugin: SKOSPlugin) {
+	constructor(app: App, public plugin: SKOSPlugin) {
 		super(app, plugin);
-		this.plugin = plugin;
 	}
 
 	display(): void {
-		let { containerEl } = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
@@ -25,31 +21,25 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				'The limit of elements that wil  be displayed when searching for a heading.'
 			)
 			.addText((text) => {
-				text
-					.setPlaceholder('Enter a number greater than 0.')
+				text.setPlaceholder('Enter a number greater than 0.')
 					.setValue(this.plugin.settings.elementCounter)
 					.onChange(async (value) => {
 						this.plugin.settings.elementCounter = value;
 						this.plugin.saveSettings();
-					})
-                }
-			);
+					});
+			});
 		// TODO: implement sorting for the API
 
 		new Setting(containerEl)
 			.setName('Test query')
-			.setDesc(
-				'Enter a test query'
-			)
+			.setDesc('Enter a test query')
 			.addText((text) => {
-				text
-					.setPlaceholder('philosophy')
+				text.setPlaceholder('philosophy')
 					.setValue(this.plugin.settings.testQuery)
 					.onChange(async (value) => {
 						this.plugin.settings.testQuery = value;
 						this.plugin.saveSettings();
-					})
-                }
-			);
+					});
+			});
 	}
 }

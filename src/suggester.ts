@@ -1,5 +1,5 @@
 import { FuzzySuggestModal, FuzzyMatch} from 'obsidian';
-import SKOSPlugin from './main';
+import type SKOSPlugin from './main';
 
 export interface SuggesterItem {
 	display: string; // the heading that is displayed to the user
@@ -13,10 +13,9 @@ export class SKOSFuzzyModal extends FuzzySuggestModal<SuggesterItem> {
 	// it is the callback
 	//this.requestHeadingURL;
 	static data: SuggesterItem[];
-    plugin: SKOSPlugin;
 	
 
-	constructor(plugin: SKOSPlugin) {
+	constructor(public plugin: SKOSPlugin) {
 		super(plugin.app);
 	}
 
@@ -44,7 +43,7 @@ export class SKOSFuzzyModal extends FuzzySuggestModal<SuggesterItem> {
 
 	async onChooseItem(item: SuggesterItem, evt: MouseEvent | KeyboardEvent): Promise<void> {
         this.close();
-		await this.plugin.findHeading(item.display);
+		await this.plugin.methods.findHeading(item.display);
 	} // required by TS - do we need this or can we use onSuggestion?
 
 	renderSuggestion(item: FuzzyMatch<SuggesterItem>, el: HTMLElement): void {

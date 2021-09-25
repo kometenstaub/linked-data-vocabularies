@@ -16,5 +16,4 @@ data.json
 resources/
 build/
 
-esbuild.js
 *.zip

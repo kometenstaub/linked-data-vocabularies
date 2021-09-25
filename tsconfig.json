@@ -9,6 +9,8 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "importsNotUsedAsValues":"error",
+    "strict": true,
     "lib": [
       "dom",
       "es5",
@@ -17,6 +19,6 @@
     ]
   },
   "include": [
-    "**/*.ts", "node_modules/@types/ndjson/index.d.ts"
+    "src/**.ts"
   ]
 }
