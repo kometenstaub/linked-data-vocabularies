@@ -6,14 +6,12 @@ export interface SuggesterItem {
 	url: string; // the URL for getting the necessary data
 }
 
-//TODO: this needs to be implemented
-
 export class SKOSFuzzyModal extends SuggestModal<SuggesterItem> {
-
 
 	constructor(app: App, public plugin: SKOSPlugin) {
 		super(app);
 	}	
+
 	
 
 	getSuggestions(query: string): SuggesterItem[] {
@@ -22,14 +20,15 @@ export class SKOSFuzzyModal extends SuggestModal<SuggesterItem> {
 		this.plugin.methods.findHeading(input).then( (success) => {
 			output = success
 		})
-
 		return output
 	}
-
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		//@ts-ignore
-		el.createEl('b', value.display)
+		// this doesn't get logged
+		console.log(value.display)
+		el.createEl('div', value.display)
+		
 	}
+	// this can't be called because no suggestions are rendered
 	onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent) {
 		this.plugin.methods.getURL(item).then( (success) => {
 			this.plugin.methods.parseSKOS(success).then((success) => {
