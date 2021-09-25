@@ -1,9 +1,7 @@
-
 export interface SKOSSettings {
 	testQuery: string;
 	elementCounter: string;
 }
-
 
 export interface suggest2 {
 	q: string;

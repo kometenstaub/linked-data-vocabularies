@@ -1,16 +1,9 @@
-import {
-	App,
-	FileSystemAdapter,
-	Plugin,
-	request,
-	Setting} from 'obsidian';
-import  SKOSSettingTab from './settings';
+import { Plugin } from 'obsidian';
+import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
-import { SKOSSettings } from './interfaces';
+import type { SKOSSettings } from './interfaces';
 
 //const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
-
-
 
 const DEFAULT_SETTINGS: SKOSSettings = {
 	testQuery: 'Archeology',
@@ -19,10 +12,9 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 
 // What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
 export default class SKOSPlugin extends Plugin {
-    settings: SKOSSettings;
-	plugin: SKOSPlugin;
-	methods= new LCSHMethods(this);
-
+	methods = new LCSHMethods(this);
+	//@ts-ignore
+	settings: SKOSSettings;
 
 	async onload() {
 		console.log('loading SKOS plugin');
@@ -40,11 +32,9 @@ export default class SKOSPlugin extends Plugin {
 
 				// input name for heading search here, this is just for testing
 				// normally it would be supplied over the modal by the user
-				this.methods.findHeading(this.settings.testQuery)
-				
+				this.methods.findHeading(this.settings.testQuery);
 			},
 		});
-
 
 		this.addSettingTab(new SKOSSettingTab(this.app, this));
 	}
