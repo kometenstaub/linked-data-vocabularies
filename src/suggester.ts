@@ -1,4 +1,4 @@
-import { FuzzySuggestModal, FuzzyMatch} from 'obsidian';
+import { App, SuggestModal } from 'obsidian';
 import type SKOSPlugin from './main';
 
 export interface SuggesterItem {
@@ -8,48 +8,36 @@ export interface SuggesterItem {
 
 //TODO: this needs to be implemented
 
-export class SKOSFuzzyModal extends FuzzySuggestModal<SuggesterItem> {
-	// this only needs to be called when the user has chosen a heading in the modal
-	// it is the callback
-	//this.requestHeadingURL;
-	static data: SuggesterItem[];
+export class SKOSFuzzyModal extends SuggestModal<SuggesterItem> {
+
+
+	constructor(app: App, public plugin: SKOSPlugin) {
+		super(app);
+	}	
 	
 
-	constructor(public plugin: SKOSPlugin) {
-		super(plugin.app);
+	getSuggestions(query: string): SuggesterItem[] {
+		const input = this.inputEl.value
+		let output : SuggesterItem[] = []
+		this.plugin.methods.findHeading(input).then( (success) => {
+			output = success
+		})
+
+		return output
 	}
 
-
-	setSuggesterData(suggesterData: SuggesterItem[]): void {
-		SKOSFuzzyModal.data = suggesterData;
+	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
+		//@ts-ignore
+		el.createEl('b', value.display)
 	}
-
-	//onOpen() {
-	//	super.onOpen();
-	//}
-
-	//onClose() {
-	//	const { contentEl } = this;
-	//	contentEl.empty();
-	//}
-
-	getItems(): SuggesterItem[] {
-		return SKOSFuzzyModal.data;
+	onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent) {
+		this.plugin.methods.getURL(item).then( (success) => {
+			this.plugin.methods.parseSKOS(success).then((success) => {
+				console.log('success')
+			})
+		})
+		
 	}
-
-	getItemText(item: SuggesterItem): string {
-		return item.display;
-	}
-
-	async onChooseItem(item: SuggesterItem, evt: MouseEvent | KeyboardEvent): Promise<void> {
-        this.close();
-		await this.plugin.methods.findHeading(item.display);
-	} // required by TS - do we need this or can we use onSuggestion?
-
-	renderSuggestion(item: FuzzyMatch<SuggesterItem>, el: HTMLElement): void {
-		el.createEl('div', { text: item.item.display });
-	}
-
-
 
 }
+

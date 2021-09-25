@@ -1,7 +1,8 @@
-import { Plugin } from 'obsidian';
+import { Editor, MarkdownView, Plugin } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
+import { SKOSFuzzyModal } from './suggester';
 
 //const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
@@ -25,10 +26,10 @@ export default class SKOSPlugin extends Plugin {
 			id: 'query-lcsh-data',
 			name: 'Query LCSH data',
 			callback: () => {
-				// doesn't work, returns undefined
-				//const chooser = new SKOSFuzzyModal(this.plugin)
+				const chooser = new SKOSFuzzyModal(this.app, this).open()
 				//chooser.setPlaceholder('Enter query')
-				//return chooser
+				return chooser
+				
 
 				// input name for heading search here, this is just for testing
 				// normally it would be supplied over the modal by the user

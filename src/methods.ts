@@ -1,5 +1,5 @@
-import { request, RequestParam, Setting } from 'obsidian';
-import { SKOSFuzzyModal, SuggesterItem } from './suggester';
+import { request, RequestParam } from 'obsidian';
+import type { SuggesterItem } from './suggester';
 import type SKOSPlugin from './main';
 import type { suggest2 } from './interfaces';
 
@@ -14,7 +14,7 @@ export class LCSHMethods {
 
 	// input: heading from FuzzySuggestModal
 	// it needs to be called on every keystroke
-	public async findHeading(heading: string): Promise<void> {
+	public async findHeading(heading: string): Promise<SuggesterItem[]> {
 		//@ts-ignore
 		let requestObject: RequestParam = {};
 		// reading settings doesn't work, it returns undefined
@@ -47,21 +47,27 @@ export class LCSHMethods {
 		console.log(headings);
 
 		// set data for modal
-		SKOSFuzzyModal.data = headings;
+		return headings
 
 		// display results
 
-		//tests // that URL would need to be supplied by the user over the modal
-		// here it simply takes the first result
-		const testURL = headings[0].url + '.json';
-		const chosenHeading = headings[0].display;
-		const responseObject = await this.requestHeadingURL(testURL);
-		//TODO: remove when Modal implemented
-		console.log(responseObject);
-		await this.parseSKOS(responseObject);
+		// //tests // that URL would need to be supplied by the user over the modal
+		// // here it simply takes the first result
+		// const testURL = headings[0].url + '.json';
+		// const chosenHeading = headings[0].display;
+		// const responseObject = await this.requestHeadingURL(testURL);
+		// //TODO: remove when Modal implemented
+		// console.log(responseObject);
+		// await this.parseSKOS(responseObject);
 	}
 
-	private async parseSKOS(responseObject: {}[]): Promise<void> {
+	public async getURL(item: SuggesterItem) : Promise<Object[]> {
+		const url = item.url + '.json'
+		const responseObject = await this.requestHeadingURL(url)
+		return responseObject
+	}
+
+	public async parseSKOS(responseObject: {}[]): Promise<void> {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
