@@ -4,8 +4,8 @@
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "src/main.ts",
   "scripts": {
-    "dev": "rollup --config rollup.config.js -w",
-    "build": "rollup --config rollup.config.js --environment BUILD:production"
+    "dev": "cross-env BUILD=dev node esbuild.js",
+    "build": "cross-env BUILD=production node esbuild.js"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +19,9 @@
     "rollup": "^2.32.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
-  }
+ },
+ "dependencies": {
+  "cross-env": "^7.0.3",
+  "esbuild": "^0.13.2"
+}
 }

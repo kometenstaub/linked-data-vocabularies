@@ -4,9 +4,9 @@ import {
 	Plugin,
 	request,
 	Setting} from 'obsidian';
-import  SKOSSettingTab from 'src/settings';
-import { LCSHMethods } from 'src/methods';
-import { SKOSSettings } from 'src/interfaces';
+import  SKOSSettingTab from './settings';
+import { LCSHMethods } from './methods';
+import { SKOSSettings } from './interfaces';
 
 //const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
@@ -21,7 +21,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 export default class SKOSPlugin extends Plugin {
     settings: SKOSSettings;
 	plugin: SKOSPlugin;
-	methods: LCSHMethods;
+	methods= new LCSHMethods(this);
 
 
 	async onload() {

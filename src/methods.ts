@@ -4,10 +4,7 @@ import { SKOSFuzzyModal, SuggesterItem } from './suggester';
 import { suggest2 } from './interfaces';
 
 export class LCSHMethods {
-    plugin: SKOSPlugin
-    //constructor(plugin: SKOSPlugin){
-    //    this.plugin: this.
-    //}
+    constructor(public plugin: SKOSPlugin){}
 
 	private async requestHeadingURL(url: string): Promise<Object[]> {
 		const response = await request({ url: url });
