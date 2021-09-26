@@ -1,10 +1,10 @@
-import { request, RequestParam } from 'obsidian';
+import { App, Notice, request, RequestParam, TFile } from 'obsidian';
 import type { SuggesterItem } from './suggester';
 import type SKOSPlugin from './main';
-import type { suggest2 } from './interfaces';
+import type { headings, suggest2 } from './interfaces';
 
 export class LCSHMethods {
-	constructor(public plugin: SKOSPlugin) {}
+	constructor(private app: App, private plugin: SKOSPlugin) {}
 
 	private async requestHeadingURL(url: string): Promise<Object[]> {
 		const response = await request({ url: url });
@@ -19,11 +19,13 @@ export class LCSHMethods {
 		let requestObject: RequestParam = {};
 		// reading settings doesn't work, it returns undefined
 		const counter = this.plugin.settings.elementCounter;
+		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
 		let url: string =
 			'https://id.loc.gov/authorities/subjects/suggest2?q=' +
 			encodedHeading;
 		url += '&counter=' + counter;
+		url += '&searchtype=' + searchType;
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
 		url += '.json';
@@ -47,7 +49,7 @@ export class LCSHMethods {
 		console.log(headings);
 
 		// set data for modal
-		return headings
+		return headings;
 
 		// display results
 
@@ -62,13 +64,13 @@ export class LCSHMethods {
 		//await this.parseSKOS(responseObject);
 	}
 
-	public async getURL(item: SuggesterItem) : Promise<Object[]> {
-		const url = item.url + '.json'
-		const responseObject = await this.requestHeadingURL(url)
-		return responseObject
+	public async getURL(item: SuggesterItem): Promise<Object[]> {
+		const url = item.url + '.json';
+		const responseObject = await this.requestHeadingURL(url);
+		return responseObject;
 	}
 
-	public async parseSKOS(responseObject: {}[]): Promise<void> {
+	public async parseSKOS(responseObject: {}[]): Promise<headings> {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
@@ -77,7 +79,7 @@ export class LCSHMethods {
 				if (element['http://www.w3.org/2004/02/skos/core#broader']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
 					element['http://www.w3.org/2004/02/skos/core#broader'].map(
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							broaderURLs.push(id['@id']);
 						}
@@ -86,7 +88,7 @@ export class LCSHMethods {
 				if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
 					element['http://www.w3.org/2004/02/skos/core#narrower'].map(
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							narrowerURLs.push(id['@id']);
 						}
@@ -95,7 +97,7 @@ export class LCSHMethods {
 				if (element['http://www.w3.org/2004/02/skos/core#related']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
 					element['http://www.w3.org/2004/02/skos/core#related'].map(
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							relatedURLs.push(id['@id']);
 						}
@@ -110,12 +112,12 @@ export class LCSHMethods {
 		broaderURLs.map(async (url) => {
 			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.map(
-			//@ts-ignore
+				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-						//@ts-expect-error
+							//@ts-expect-error
 						].map((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
 								broaderHeadings.push(nameElement['@value']);
@@ -128,12 +130,12 @@ export class LCSHMethods {
 		narrowerURLs.map(async (url) => {
 			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.map(
-			//@ts-ignore
+				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-						//@ts-expect-error
+							//@ts-expect-error
 						].map((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
 								narrowerHeadings.push(nameElement['@value']);
@@ -146,12 +148,12 @@ export class LCSHMethods {
 		relatedURLs.map(async (url) => {
 			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.map(
-			//@ts-ignore
+				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-						//@ts-expect-error
+							//@ts-expect-error
 						].map((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
 								relatedHeadings.push(nameElement['@value']);
@@ -168,5 +170,25 @@ export class LCSHMethods {
 		console.log(narrowerHeadings);
 		console.log('related:');
 		console.log(relatedHeadings);
+
+
+		const headingObj: headings = {
+			broader: broaderHeadings,
+			narrower: narrowerHeadings,
+			related: relatedHeadings,
+		};
+
+		return headingObj;
 	}
+
+	//public writeYaml(headingObj: headings, key: string, tfile: TFile): void {
+		////@ts-ignore
+		//const { autoprop } = this.app.plugins.plugins['metaedit'].api;
+
+		//if (!autoprop) {
+			//new Notice("MetaEdit isn't installed.");
+		//} else {
+
+		//}
+	//}
 }

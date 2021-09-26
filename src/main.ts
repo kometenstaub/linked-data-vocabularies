@@ -9,11 +9,15 @@ import { SKOSFuzzyModal } from './suggester';
 const DEFAULT_SETTINGS: SKOSSettings = {
 	testQuery: 'Archeology',
 	elementCounter: '10',
+	broaderKey: 'broader',
+	narrowerKey: 'narrower',
+	relatedKey: 'related',
+	lcshSearchType: 'leftanchored'
 };
 
 // What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
 export default class SKOSPlugin extends Plugin {
-	methods = new LCSHMethods(this);
+	methods = new LCSHMethods(this.app, this);
 	//@ts-ignore
 	settings: SKOSSettings;
 
@@ -37,7 +41,11 @@ export default class SKOSPlugin extends Plugin {
 					// shouldn't happen
 					return;
 				}
-				const chooser = new SKOSFuzzyModal(this.app, this).open();
+				const currentView = view
+				const tfile = currentView.file
+				console.log('tTFile:')
+				console.log(tfile)
+				const chooser = new SKOSFuzzyModal(this.app, this, tfile).open();
 				return chooser;
 
 				// input name for heading search here, this is just for testing

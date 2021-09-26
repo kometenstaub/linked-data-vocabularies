@@ -1,16 +1,18 @@
-import { App, SuggestModal } from 'obsidian';
+import { App, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
-
+import { MetaEditWrapper } from './metaedit';
 export interface SuggesterItem {
 	display: string; // the heading that is displayed to the user
 	url: string; // the URL for getting the necessary data
 }
 
 export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
-	constructor(app: App, public plugin: SKOSPlugin) {
+	constructor(app: App, private plugin: SKOSPlugin, private tfile: TFile) {
 		super(app);
 		this.setPlaceholder('Start typing...');
 	}
+
+	metaedit = new MetaEditWrapper(this.plugin);
 
 	// overwrites the updateSuggestions function (which isn't exposed in the API)
 	// that's what runs the getSuggestions and does something with the results
@@ -45,6 +47,24 @@ export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
 	) {
 		const newItem = item;
 		const url = await this.plugin.methods.getURL(newItem);
-		this.plugin.methods.parseSKOS(url);
+		const headings = await this.plugin.methods.parseSKOS(url);
+		//https://discord.com/channels/686053708261228577/840286264964022302/891754092614017054
+		//metaedit needs some time between edits for adding the YAML keys properly
+		const addKey = (key: string, tfile : TFile) => {
+			//if (headings[key].length > 0) {
+				this.metaedit.updateOrCreateMeta(
+					headings,
+					key,
+					tfile
+				);
+			//}
+		}
+		addKey('broader', this.tfile)
+		//this.app.vault.on('modify', (tfile) => {
+		//	addKey('narrower', this.tfile)
+		//});
+		//this.app.vault.on('modify', (tfile) => {
+		//	addKey('related', this.tfile)
+		//});
 	}
 }
