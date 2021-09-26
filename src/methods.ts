@@ -53,12 +53,13 @@ export class LCSHMethods {
 
 		// //tests // that URL would need to be supplied by the user over the modal
 		// // here it simply takes the first result
-		// const testURL = headings[0].url + '.json';
-		// const chosenHeading = headings[0].display;
-		// const responseObject = await this.requestHeadingURL(testURL);
-		// //TODO: remove when Modal implemented
-		// console.log(responseObject);
-		// await this.parseSKOS(responseObject);
+		//const testURL = headings[0].url + '.json';
+		//const chosenHeading = headings[0].display;
+		//console.log(chosenHeading)
+		//const responseObject = await this.requestHeadingURL(testURL);
+		////TODO: remove when Modal implemented
+		//console.log(responseObject);
+		//await this.parseSKOS(responseObject);
 	}
 
 	public async getURL(item: SuggesterItem) : Promise<Object[]> {
