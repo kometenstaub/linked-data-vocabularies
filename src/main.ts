@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, Plugin } from 'obsidian';
+import { Editor, MarkdownView, Plugin, View } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
@@ -25,15 +25,24 @@ export default class SKOSPlugin extends Plugin {
 		this.addCommand({
 			id: 'query-lcsh-data',
 			name: 'Query LCSH data',
-			callback: () => {
-				const chooser = new SKOSFuzzyModal(this.app, this).open()
-				//chooser.setPlaceholder('Enter query')
-				return chooser
-				
+			editorCheckCallback: (
+				checking: boolean,
+				editor: Editor,
+				view: View
+			) => {
+				if (checking) {
+					return view instanceof MarkdownView;
+				}
+				if (!(view instanceof MarkdownView)) {
+					// shouldn't happen
+					return;
+				}
+				const chooser = new SKOSFuzzyModal(this.app, this).open();
+				return chooser;
 
 				// input name for heading search here, this is just for testing
 				// normally it would be supplied over the modal by the user
-				this.methods.findHeading(this.settings.testQuery);
+				//this.methods.findHeading(this.settings.testQuery);
 			},
 		});
 
