@@ -41,7 +41,8 @@ export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
 		// this doesn't get logged
 		const newValue = value
 		console.log(newValue.display)
-		el.createEl('div', newValue.display)
+		el.createEl('b', newValue.display)
+		el.appendText(newValue.display)
 		
 	}
 	// this can't be called because no suggestions are rendered
