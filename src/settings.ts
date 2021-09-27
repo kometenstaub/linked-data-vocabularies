@@ -2,8 +2,11 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import type SKOSPlugin from './main';
 
 export default class SKOSSettingTab extends PluginSettingTab {
-	constructor(app: App, private plugin: SKOSPlugin) {
+	plugin: SKOSPlugin;
+
+	constructor(app: App, plugin: SKOSPlugin) {
 		super(app, plugin);
+		this.plugin = plugin;
 	}
 
 	display(): void {
@@ -37,8 +40,8 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		Keyword searches are in descending relevance order.'
 			)
 			.addDropdown((dropdown) => {
-				dropdown.addOption('leftanchored', 'Left anchored search');
 				dropdown.addOption('keyword', 'Keyword search');
+				dropdown.addOption('leftanchored', 'Left anchored search');
 
 				// select the currently saved option
 				dropdown.setValue(this.plugin.settings.lcshSearchType);
@@ -51,6 +54,28 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			});
 
 		// keys for YAML
+		new Setting(containerEl)
+			.setName('YAML Key for chosen heading')
+			//.setDesc('')
+			.addText((text) => {
+				text.setPlaceholder('related')
+					.setValue(this.plugin.settings.headingKey)
+					.onChange(async (value) => {
+						this.plugin.settings.headingKey = value;
+						this.plugin.saveSettings();
+					});
+			});
+		new Setting(containerEl)
+			.setName('YAML Key for URL of chosen heading')
+			.setDesc('Leave empty if no URL YAML key should be added.')
+			.addText((text) => {
+				text.setPlaceholder('related')
+					.setValue(this.plugin.settings.urlKey)
+					.onChange(async (value) => {
+						this.plugin.settings.urlKey = value;
+						this.plugin.saveSettings();
+					});
+			});
 		new Setting(containerEl)
 			.setName('YAML Key for \'broader\'')
 			.setDesc('This will be the YAML key for the broader headings.')
@@ -84,5 +109,6 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
+
 	}
 }

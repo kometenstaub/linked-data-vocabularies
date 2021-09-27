@@ -1,10 +1,17 @@
-import { App, Notice, request, RequestParam, TFile } from 'obsidian';
-import type { SuggesterItem } from './suggester';
+import { App, Notice, request, RequestParam, TFile, parseYaml } from 'obsidian';
+import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2 } from './interfaces';
+import { on } from 'events';
 
 export class LCSHMethods {
-	constructor(private app: App, private plugin: SKOSPlugin) {}
+	app: App;
+	plugin: SKOSPlugin;
+
+	constructor(app: App, plugin: SKOSPlugin) {
+		this.app = app;
+		this.plugin = plugin;
+	}
 
 	private async requestHeadingURL(url: string): Promise<Object[]> {
 		const response = await request({ url: url });
@@ -74,11 +81,11 @@ export class LCSHMethods {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
-		responseObject.map(
+		responseObject.forEach(
 			(element: { [key: string]: string | {}[] | string[] }) => {
 				if (element['http://www.w3.org/2004/02/skos/core#broader']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#broader'].map(
+					element['http://www.w3.org/2004/02/skos/core#broader'].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							broaderURLs.push(id['@id']);
@@ -87,7 +94,7 @@ export class LCSHMethods {
 				}
 				if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#narrower'].map(
+					element['http://www.w3.org/2004/02/skos/core#narrower'].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							narrowerURLs.push(id['@id']);
@@ -96,7 +103,7 @@ export class LCSHMethods {
 				}
 				if (element['http://www.w3.org/2004/02/skos/core#related']) {
 					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#related'].map(
+					element['http://www.w3.org/2004/02/skos/core#related'].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							relatedURLs.push(id['@id']);
@@ -105,38 +112,44 @@ export class LCSHMethods {
 				}
 			}
 		);
+		// the URLs get logged fine
+		//console.log(JSON.stringify(broaderURLs, null, 2))
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
 
-		broaderURLs.map(async (url) => {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.map(
+		//something is wrong here
+
+
+		for (let url of broaderURLs) {
+			responseObject.forEach(
 				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
 							//@ts-expect-error
-						].map((nameElement: { [key: string]: string }) => {
+						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
+								console.log('kello again it\'s me')
 								broaderHeadings.push(nameElement['@value']);
 							}
 						});
 					}
 				}
 			);
-		});
-		narrowerURLs.map(async (url) => {
+		}
+		console.log(JSON.stringify(broaderHeadings, null, 2))
+		for (let url of narrowerURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.map(
+			responseObject.forEach(
 				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
 							//@ts-expect-error
-						].map((nameElement: { [key: string]: string }) => {
+						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
 								narrowerHeadings.push(nameElement['@value']);
 							}
@@ -144,17 +157,19 @@ export class LCSHMethods {
 					}
 				}
 			);
-		});
-		relatedURLs.map(async (url) => {
+		}
+		console.log(JSON.stringify(narrowerHeadings, null, 2))
+
+		for (let url of relatedURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.map(
+			responseObject.forEach(
 				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
 							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
 							//@ts-expect-error
-						].map((nameElement: { [key: string]: string }) => {
+						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
 								relatedHeadings.push(nameElement['@value']);
 							}
@@ -162,15 +177,9 @@ export class LCSHMethods {
 					}
 				}
 			);
-		});
-		//TODO: remove when Modal implemented
-		console.log('broader:');
-		console.log(broaderHeadings);
-		console.log('narrower:');
-		console.log(narrowerHeadings);
-		console.log('related:');
-		console.log(relatedHeadings);
-
+		}
+		console.log(JSON.stringify(relatedHeadings, null, 2))
+		
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
@@ -178,17 +187,80 @@ export class LCSHMethods {
 			related: relatedHeadings,
 		};
 
-		return headingObj;
+		console.log('does this work now?????')
+		console.log(JSON.stringify(headingObj, null, 2))
+
+
+		return headingObj
+
 	}
 
-	//public writeYaml(headingObj: headings, key: string, tfile: TFile): void {
-		////@ts-ignore
-		//const { autoprop } = this.app.plugins.plugins['metaedit'].api;
+	// Thank you: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
+	public async writeYaml(
+		headingObj: headings,
+		tfile: TFile,
+		heading: string,
+		url: string
+	) {
+		const fileContent: string = await this.app.vault.read(tfile);
 
-		//if (!autoprop) {
-			//new Notice("MetaEdit isn't installed.");
-		//} else {
+		const frontMatter = this.app.metadataCache.getFileCache(tfile);
+		// the current file has no frontmatter
+		if (!frontMatter?.frontmatter) {
+			let newFrontMatter: string = '---\n';
+			newFrontMatter = this.buildYaml(
+				newFrontMatter,
+				headingObj,
+				heading,
+				url
+			);
+			newFrontMatter += '---\n';
+			const splitFrontMatter = newFrontMatter.split('\n').reverse();
 
-		//}
-	//}
+			let splitContent = fileContent.split('\n');
+			splitFrontMatter.map((property) => {
+				splitContent.unshift(property);
+			});
+
+			const newFileContent = splitContent.join('\n');
+			await this.app.vault.modify(tfile, newFileContent);
+		}
+	}
+
+	buildYaml(
+		newFrontMatter: string,
+		headingObj: headings,
+		heading: string,
+		url: string
+	): string {
+		const obj = headingObj
+		newFrontMatter +=
+			this.plugin.settings.headingKey + ': ' + heading + '\n';
+		if (this.plugin.settings.urlKey !== '') {
+			newFrontMatter += this.plugin.settings.urlKey + ': ' + url + '\n';
+		}
+		if (headingObj.broader.length > 0) {
+			newFrontMatter +=
+				this.plugin.settings.broaderKey +
+				': ' +
+				headingObj.broader.toString() +
+				'\n';
+		}
+		if (headingObj.narrower.length > 0) {
+			newFrontMatter +=
+			this.plugin.settings.narrowerKey +
+				': ' +
+				headingObj.narrower.toString() +
+				'\n';
+		}
+		if (headingObj.related.length > 0) {
+			newFrontMatter +=
+				this.plugin.settings.relatedKey +
+				': ' +
+				headingObj.related.toString() +
+				'\n';
+		}
+		return newFrontMatter;
+	}
+
 }

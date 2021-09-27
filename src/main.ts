@@ -7,12 +7,13 @@ import { SKOSFuzzyModal } from './suggester';
 //const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
 const DEFAULT_SETTINGS: SKOSSettings = {
-	testQuery: 'Archeology',
 	elementCounter: '10',
 	broaderKey: 'broader',
 	narrowerKey: 'narrower',
 	relatedKey: 'related',
-	lcshSearchType: 'leftanchored'
+	lcshSearchType: 'keyword',
+	headingKey: 'heading',
+	urlKey: 'url',
 };
 
 // What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
@@ -41,11 +42,15 @@ export default class SKOSPlugin extends Plugin {
 					// shouldn't happen
 					return;
 				}
-				const currentView = view
-				const tfile = currentView.file
-				console.log('tTFile:')
-				console.log(tfile)
-				const chooser = new SKOSFuzzyModal(this.app, this, tfile).open();
+				const currentView = view;
+				const tfile = currentView.file;
+				console.log('tTFile:');
+				console.log(tfile);
+				const chooser = new SKOSFuzzyModal(
+					this.app,
+					this,
+					tfile
+				).open();
 				return chooser;
 
 				// input name for heading search here, this is just for testing
