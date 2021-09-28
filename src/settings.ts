@@ -11,7 +11,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
-		const { settings, saveSettings } = this.plugin
+		const { settings } = this.plugin
 
 		containerEl.empty();
 
@@ -34,7 +34,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 						if (Number.isInteger(num) && num > 0) {
 							settings.elementCounter = value;
-							await saveSettings();
+							await this.plugin.saveSettings();
 						} else {
 							new Notice('Please enter an integer greater than 0.')
 						}
@@ -58,7 +58,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				dropdown.onChange(async (newValue) => {
 					// update and save the plugin settings
 					settings.lcshSearchType = newValue;
-					await saveSettings();
+					await this.plugin.saveSettings();
 				});
 			});
 
@@ -71,7 +71,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.headingKey)
 					.onChange(async (value) => {
 						settings.headingKey = value;
-						await saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -82,7 +82,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.urlKey)
 					.onChange(async (value) => {
 						settings.urlKey = value;
-						await saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -93,7 +93,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.broaderKey)
 					.onChange(async (value) => {
 						settings.broaderKey = value;
-						await saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -104,7 +104,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.narrowerKey)
 					.onChange(async (value) => {
 						settings.narrowerKey = value;
-						await saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -115,7 +115,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.relatedKey)
 					.onChange(async (value) => {
 						settings.relatedKey = value;
-						await saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 		//whether to display and if so, how many
@@ -129,7 +129,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						const num = Number.parseInt(value);
 						if (Number.isInteger(num) && num >= 0) {
 							settings.broaderMax = value;
-							await saveSettings();
+							await this.plugin.saveSettings();
 						} else {
 							new Notice('Please enter an integer greater than or equal to 0.')
 						}
@@ -145,7 +145,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						const num = Number.parseInt(value);
 						if (Number.isInteger(num) && num >= 0) {
 							settings.narrowerMax = value;
-							await saveSettings();
+							await this.plugin.saveSettings();
 						} else {
 							new Notice('Please enter an integer greater than or equal to 0.')
 						}
@@ -161,7 +161,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						const num = Number.parseInt(value);
 						if (Number.isInteger(num) && num >= 0) {
 							settings.relatedMax = value;
-							await saveSettings();
+							await this.plugin.saveSettings();
 						} else {
 							new Notice('Please enter an integer greater than or equal to 0.')
 						}
