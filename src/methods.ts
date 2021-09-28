@@ -20,8 +20,10 @@ export class LCSHMethods {
 
 	// input: heading from SuggestModal
 	public async findHeading(heading: string): Promise<SuggesterItem[]> {
-		//@ts-ignore
-		let requestObject: RequestParam = {};
+		let requestObject: RequestParam = {
+			url: ''
+		};
+
 		// reading settings doesn't work, it returns undefined
 		const counter = this.plugin.settings.elementCounter;
 		const searchType = this.plugin.settings.lcshSearchType;
@@ -40,13 +42,11 @@ export class LCSHMethods {
 		const newData: suggest2 = JSON.parse(data);
 
 		// calculate heading results from received json
-		let headings: SuggesterItem[] = [];
-
-		newData['hits'].map((suggestion) => {
+		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
 			const url = suggestion.uri;
-			headings.push({ display: display, url: url });
-		});
+			return { display, url }
+		})
 
 		// set data for modal
 		return headings;
@@ -62,38 +62,23 @@ export class LCSHMethods {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
+
+		function fillURLs(type: string, element: { [key: string]: string | {}[] | string[] }, urlArr: string[]) {
+			const item = element[type]
+			if (item) {
+				item.forEach(
+					(id: { [x: string]: string; }) => {
+						urlArr.push(id['@id']);
+					}
+				);
+			}
+		}
+
 		responseObject.forEach(
 			(element: { [key: string]: string | {}[] | string[] }) => {
-				if (element[BROADER_URL]) {
-					element[
-						BROADER_URL
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						(id: { [x: string]: string; }) => {
-							broaderURLs.push(id['@id']);
-						}
-					);
-				}
-				if (element[NARROWER_URL]) {
-					element[
-						NARROWER_URL
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						(id: { [x: string]: string; }) => {
-							narrowerURLs.push(id['@id']);
-						}
-					);
-				}
-				if (element[RELATED_URL]) {
-					element[
-						RELATED_URL
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						(id: { [x: string]: string; }) => {
-							relatedURLs.push(id['@id']);
-						}
-					);
-				}
+				fillURLs(BROADER_URL, element, broaderURLs)
+				fillURLs(NARROWER_URL, element, narrowerURLs)
+				fillURLs(RELATED_URL, element, relatedURLs)
 			}
 		);
 
@@ -101,61 +86,30 @@ export class LCSHMethods {
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
 
-		for (let url of broaderURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							AUTHORITATIVE_LABEL
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								broaderHeadings.push(nameElement['@value']);
-							}
-						});
+		const fillValues = async (urls: string[], headingsArr: string[]) => {
+			for (let url of urls) {
+				const responseObject = await this.requestHeadingURL(url + '.json');
+				responseObject.forEach(
+					//@ts-ignore
+					(element: { [key: string]: string | {}[] | string[] }) => {
+						if (element['@id'] === url) {
+							element[
+								AUTHORITATIVE_LABEL
+								//@ts-expect-error
+							].forEach((nameElement: { [key: string]: string }) => {
+								if (nameElement['@language'] === 'en') {
+									headingsArr.push(nameElement['@value']);
+								}
+							});
+						}
 					}
-				}
-			);
-		}
-		for (let url of narrowerURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							AUTHORITATIVE_LABEL
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								narrowerHeadings.push(nameElement['@value']);
-							}
-						});
-					}
-				}
-			);
+				);
+			}
 		}
 
-		for (let url of relatedURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							AUTHORITATIVE_LABEL
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								relatedHeadings.push(nameElement['@value']);
-							}
-						});
-					}
-				}
-			);
-		}
+		fillValues(broaderURLs, broaderHeadings)
+		fillValues(narrowerURLs, narrowerHeadings)
+		fillValues(relatedURLs, relatedHeadings)
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
