@@ -199,11 +199,12 @@ export class LCSHMethods {
 						parseInt(settings.broaderMax)
 					);
 				}
+				broaderHeadings = this.surroundWithQuotes(broaderHeadings)
 				newFrontMatter.push(
-					settings.broaderKey +
-					': [' +
-					broaderHeadings +
-					']'
+					this.plugin.settings.broaderKey +
+						': [' +
+						broaderHeadings.toString() +
+						']'
 				);
 			}
 		}
@@ -216,11 +217,12 @@ export class LCSHMethods {
 						parseInt(settings.narrowerMax)
 					);
 				}
+				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings)
 				newFrontMatter.push(
-					settings.narrowerKey +
-					': [' +
-					narrowerHeadings +
-					']'
+					this.plugin.settings.narrowerKey +
+						': [' +
+						narrowerHeadings.toString() +
+						']'
 				);
 			}
 		}
@@ -233,14 +235,23 @@ export class LCSHMethods {
 						parseInt(settings.relatedMax)
 					);
 				}
+				relatedHeadings = this.surroundWithQuotes(relatedHeadings)
 				newFrontMatter.push(
-					settings.relatedKey +
-					': [' +
-					relatedHeadings +
-					']'
+					this.plugin.settings.relatedKey +
+						': [' +
+						relatedHeadings.toString() +
+						']'
 				);
 			}
 		}
 		return newFrontMatter;
+	}
+
+	surroundWithQuotes(headingsArray : string[]) : string[]{
+		let newHeadingsArray : string[]= []
+		for (let heading of headingsArray) {
+			newHeadingsArray.push('"' + heading + '"')
+		}
+		return newHeadingsArray
 	}
 }
