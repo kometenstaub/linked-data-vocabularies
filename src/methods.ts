@@ -64,41 +64,39 @@ export class LCSHMethods {
 		let relatedURLs: string[] = [];
 		responseObject.forEach(
 			(element: { [key: string]: string | {}[] | string[] }) => {
-				if (element['http://www.w3.org/2004/02/skos/core#broader']) {
+				if (element[BROADER_URL]) {
 					element[
-						'http://www.w3.org/2004/02/skos/core#broader'
+						BROADER_URL
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
+						(id: { [x: string]: string; }) => {
 							broaderURLs.push(id['@id']);
 						}
 					);
 				}
-				if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
+				if (element[NARROWER_URL]) {
 					element[
-						'http://www.w3.org/2004/02/skos/core#narrower'
+						NARROWER_URL
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
+						(id: { [x: string]: string; }) => {
 							narrowerURLs.push(id['@id']);
 						}
 					);
 				}
-				if (element['http://www.w3.org/2004/02/skos/core#related']) {
+				if (element[RELATED_URL]) {
 					element[
-						'http://www.w3.org/2004/02/skos/core#related'
+						RELATED_URL
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
+						(id: { [x: string]: string; }) => {
 							relatedURLs.push(id['@id']);
 						}
 					);
 				}
 			}
 		);
+
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
@@ -110,7 +108,7 @@ export class LCSHMethods {
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
+							AUTHORITATIVE_LABEL
 							//@ts-expect-error
 						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
@@ -128,7 +126,7 @@ export class LCSHMethods {
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
+							AUTHORITATIVE_LABEL
 							//@ts-expect-error
 						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
@@ -147,7 +145,7 @@ export class LCSHMethods {
 				(element: { [key: string]: string | {}[] | string[] }) => {
 					if (element['@id'] === url) {
 						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
+							AUTHORITATIVE_LABEL
 							//@ts-expect-error
 						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
@@ -192,7 +190,7 @@ export class LCSHMethods {
 				splitContent.unshift(property);
 			}
 			await this.writeYamlToFile(splitContent, tfile);
-		} //the current file has frontmatter
+		} // the current file has frontmatter
 		else {
 			// destructures the file cache frontmatter position
 			// start is the beggining and should return 0, the end returns 
@@ -232,58 +230,60 @@ export class LCSHMethods {
 		heading: string,
 		url: string
 	): string[] {
-		newFrontMatter.push(this.plugin.settings.headingKey + ': ' + heading);
-		if (this.plugin.settings.urlKey !== '') {
-			newFrontMatter.push(this.plugin.settings.urlKey + ': ' + url);
+		const { settings } = this.plugin
+
+		newFrontMatter.push(settings.headingKey + ': ' + heading);
+		if (settings.urlKey !== '') {
+			newFrontMatter.push(settings.urlKey + ': ' + url);
 		}
-		if (this.plugin.settings.broaderMax !== '0') {
+		if (settings.broaderMax !== '0') {
 			let broaderHeadings: string[] = headingObj.broader;
 			if (headingObj.broader.length > 0) {
-				if (this.plugin.settings.broaderMax !== '') {
+				if (settings.broaderMax !== '') {
 					broaderHeadings = broaderHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.broaderMax)
+						parseInt(settings.broaderMax)
 					);
 				}
 				newFrontMatter.push(
-					this.plugin.settings.broaderKey +
-						': [' +
-						broaderHeadings +
-						']'
+					settings.broaderKey +
+					': [' +
+					broaderHeadings +
+					']'
 				);
 			}
 		}
-		if (this.plugin.settings.narrowerMax !== '0') {
+		if (settings.narrowerMax !== '0') {
 			let narrowerHeadings: string[] = headingObj.narrower;
 			if (headingObj.narrower.length > 0) {
-				if (this.plugin.settings.narrowerMax !== '') {
+				if (settings.narrowerMax !== '') {
 					narrowerHeadings = narrowerHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.narrowerMax)
+						parseInt(settings.narrowerMax)
 					);
 				}
 				newFrontMatter.push(
-					this.plugin.settings.narrowerKey +
-						': [' +
-						narrowerHeadings +
-						']'
+					settings.narrowerKey +
+					': [' +
+					narrowerHeadings +
+					']'
 				);
 			}
 		}
-		if (this.plugin.settings.relatedMax !== '0') {
+		if (settings.relatedMax !== '0') {
 			let relatedHeadings: string[] = headingObj.related;
 			if (headingObj.related.length > 0) {
-				if (this.plugin.settings.relatedMax !== '') {
+				if (settings.relatedMax !== '') {
 					relatedHeadings = relatedHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.relatedMax)
+						parseInt(settings.relatedMax)
 					);
 				}
 				newFrontMatter.push(
-					this.plugin.settings.relatedKey +
-						': [' +
-						relatedHeadings +
-						']'
+					settings.relatedKey +
+					': [' +
+					relatedHeadings +
+					']'
 				);
 			}
 		}
