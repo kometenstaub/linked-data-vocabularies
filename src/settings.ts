@@ -77,7 +77,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 		new Setting(containerEl)
-			.setName('YAML Key for \'broader\'')
+			.setName("YAML Key for 'broader'")
 			.setDesc('This will be the YAML key for the broader headings.')
 			.addText((text) => {
 				text.setPlaceholder('broader')
@@ -88,7 +88,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 		new Setting(containerEl)
-			.setName('YAML Key for \'narrower\'')
+			.setName("YAML Key for 'narrower'")
 			.setDesc('This will be the YAML key for the narrower headings.')
 			.addText((text) => {
 				text.setPlaceholder('narrower')
@@ -99,7 +99,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 		new Setting(containerEl)
-			.setName('YAML Key for \'related\'')
+			.setName("YAML Key for 'related'")
 			.setDesc('This will be the YAML key for the related headings.')
 			.addText((text) => {
 				text.setPlaceholder('related')
@@ -109,6 +109,5 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
-
 	}
 }

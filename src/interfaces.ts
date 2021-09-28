@@ -33,7 +33,6 @@ export interface headings {
 	related: string[];
 }
 
-
 export interface SuggesterItem {
 	display: string; // the heading that is displayed to the user
 	url: string; // the URL for getting the necessary data

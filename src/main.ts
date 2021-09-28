@@ -2,7 +2,7 @@ import { Editor, MarkdownView, Plugin, View } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
-import { SKOSFuzzyModal } from './suggester';
+import { SKOSModal } from './suggester';
 
 
 const DEFAULT_SETTINGS: SKOSSettings = {
@@ -43,7 +43,7 @@ export default class SKOSPlugin extends Plugin {
 				}
 				const currentView = view;
 				const tfile = currentView.file;
-				const chooser = new SKOSFuzzyModal(
+				const chooser = new SKOSModal(
 					this.app,
 					this,
 					tfile

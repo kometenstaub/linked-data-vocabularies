@@ -18,8 +18,7 @@ export class LCSHMethods {
 		return responseObject;
 	}
 
-	// input: heading from FuzzySuggestModal
-	// it needs to be called on every keystroke
+	// input: heading from SuggestModal
 	public async findHeading(heading: string): Promise<SuggesterItem[]> {
 		//@ts-ignore
 		let requestObject: RequestParam = {};
@@ -40,7 +39,6 @@ export class LCSHMethods {
 
 		let data = await request(requestObject);
 		const newData: suggest2 = JSON.parse(data);
-		//TODO: remove when Modal implemented
 
 		// calculate heading results from received json
 		let headings: SuggesterItem[] = [];
@@ -53,7 +51,6 @@ export class LCSHMethods {
 
 		// set data for modal
 		return headings;
-
 	}
 
 	public async getURL(item: SuggesterItem): Promise<Object[]> {
@@ -106,8 +103,6 @@ export class LCSHMethods {
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
-
-		//something is wrong here
 
 		for (let url of broaderURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
@@ -184,8 +179,8 @@ export class LCSHMethods {
 		const fileContent: string = await this.app.vault.read(tfile);
 
 		const fileCache = this.app.metadataCache.getFileCache(tfile);
-		// the current file has no frontmatter
 		let splitContent = fileContent.split('\n');
+		// if the current file has no frontmatter
 		if (!fileCache?.frontmatter) {
 			let newFrontMatter: string[] = ['---'];
 			newFrontMatter.concat(
@@ -198,7 +193,8 @@ export class LCSHMethods {
 				splitContent.unshift(property);
 			}
 			await this.writeYamlToFile(splitContent, tfile);
-		} else {
+		} //the current file has frontmatter
+		else {
 			const {
 				//@ts-ignore
 				position: { start, end },
@@ -228,7 +224,9 @@ export class LCSHMethods {
 		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
 		} else {
-			new Notice('You switched to another file before the content could be written.')
+			new Notice(
+				'You switched to another file before the content could be written.'
+			);
 		}
 	}
 

@@ -1,7 +1,7 @@
 import { App, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
 import type { SuggesterItem } from './interfaces';
-export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
+export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
 
@@ -39,8 +39,7 @@ export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
 		el.appendText(newValue.display);
 	}
 
-
-//@ts-ignore
+	//@ts-ignore
 	async onChooseSuggestion(
 		item: SuggesterItem,
 		evt: MouseEvent | KeyboardEvent
@@ -49,6 +48,11 @@ export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
 		const headingUrl = item.url;
 		const url = await this.plugin.methods.getURL(item);
 		const headings = await this.plugin.methods.parseSKOS(url);
-		await this.plugin.methods.writeYaml(headings, this.tfile, heading, headingUrl);
+		await this.plugin.methods.writeYaml(
+			headings,
+			this.tfile,
+			heading,
+			headingUrl
+		);
 	}
 }
