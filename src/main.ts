@@ -22,7 +22,7 @@ export default class SKOSPlugin extends Plugin {
 	settings: SKOSSettings;
 
 	async onload() {
-		console.log('loading SKOS plugin');
+		console.log('loading Linked Data Vocabularies (SKOS) plugin');
 
 		await this.loadSettings();
 
@@ -56,7 +56,7 @@ export default class SKOSPlugin extends Plugin {
 	}
 
 	onunload() {
-		console.log('unloading SKOS plugin');
+		console.log('unloading Linked Data Vocabularies (SKOS) plugin');
 	}
 
 	async loadSettings() {
