@@ -1,4 +1,4 @@
-// Thank you: https://discord.com/channels/686053708261228577/840286264964022302/877506735856836661
+// Thank you: https://github.com/aidenlx/media-extended/blob/main/esbuild.js
 const { build } = require('esbuild');
 
 const banner = `/*

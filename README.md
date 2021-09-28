@@ -14,7 +14,7 @@ If there is no YAML block present, a new one will be created. If there is alread
 
 You can set the limit of queries to be display. 10 is the default setting.
 
-You can set the key names for `heading`, `broder`, `narrower` and `related` in the settings.
+You can set the key names for `heading`, `broader`, `narrower` and `related` in the settings.
 
 Furthermore, you can set the search type. 
 
@@ -24,7 +24,7 @@ Furthermore, you can set the search type.
 > 
 ><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
-The default search is `keyword`.
+The default search type is `keyword`, although both `keyword` and `leftanchored` seem to return the same results.
 
 ### Recommendation
 

@@ -169,13 +169,13 @@ export class LCSHMethods {
 		return headingObj;
 	}
 
-	// Thank you: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
+	// Thank you for the inspiration: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
 	public async writeYaml(
 		headingObj: headings,
 		tfile: TFile,
 		heading: string,
 		url: string
-	) {
+	): Promise<void> {
 		const fileContent: string = await this.app.vault.read(tfile);
 
 		const fileCache = this.app.metadataCache.getFileCache(tfile);
@@ -196,9 +196,8 @@ export class LCSHMethods {
 		} //the current file has frontmatter
 		else {
 			const {
-				//@ts-ignore
-				position: { start, end },
-			} = this.app.metadataCache.getFileCache(tfile)?.frontmatter;
+				linePosition: { start, end },
+			} = fileCache.frontmatter
 
 			let addedFrontmatter: string[] = [];
 			addedFrontmatter.concat(
@@ -212,14 +211,9 @@ export class LCSHMethods {
 			}
 
 			await this.writeYamlToFile(splitContent, tfile);
-			//const yamlContent = fileContent
-			//	.split('\n')
-			//	.slice(start.line, end.line)
-			//	.join('\n');
-			//const parsedYamlContent = parseYaml(yamlContent);
 		}
 	}
-	async writeYamlToFile(splitContent: string[], tfile: TFile) {
+	async writeYamlToFile(splitContent: string[], tfile: TFile):Promise<void> {
 		const newFileContent = splitContent.join('\n');
 		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
