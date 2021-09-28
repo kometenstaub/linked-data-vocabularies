@@ -1,6 +1,11 @@
 export interface SKOSSettings {
-	testQuery: string;
 	elementCounter: string;
+	broaderKey: string;
+	narrowerKey: string;
+	relatedKey: string;
+	lcshSearchType: string;
+	headingKey: string;
+	urlKey: string;
 }
 
 export interface suggest2 {
@@ -20,4 +25,15 @@ export interface suggest2 {
 		code: string;
 		rank: string;
 	}[];
+}
+
+export interface headings {
+	broader: string[];
+	narrower: string[];
+	related: string[];
+}
+
+export interface SuggesterItem {
+	display: string; // the heading that is displayed to the user
+	url: string; // the URL for getting the necessary data
 }

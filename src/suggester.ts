@@ -1,55 +1,58 @@
-import { FuzzySuggestModal, FuzzyMatch} from 'obsidian';
+import { App, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
+import type { SuggesterItem } from './interfaces';
+export class SKOSModal extends SuggestModal<Promise<any[]>> {
+	plugin: SKOSPlugin;
+	tfile: TFile;
 
-export interface SuggesterItem {
-	display: string; // the heading that is displayed to the user
-	url: string; // the URL for getting the necessary data
-}
-
-//TODO: this needs to be implemented
-
-export class SKOSFuzzyModal extends FuzzySuggestModal<SuggesterItem> {
-	// this only needs to be called when the user has chosen a heading in the modal
-	// it is the callback
-	//this.requestHeadingURL;
-	static data: SuggesterItem[];
-	
-
-	constructor(public plugin: SKOSPlugin) {
-		super(plugin.app);
+	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
+		super(app);
+		this.plugin = plugin;
+		this.tfile = tfile;
+		this.setPlaceholder('Start typing...');
 	}
 
-
-	setSuggesterData(suggesterData: SuggesterItem[]): void {
-		SKOSFuzzyModal.data = suggesterData;
+	// overwrites the updateSuggestions function (which isn't exposed in the API)
+	// that's what runs the getSuggestions and does something with the results
+	// Thank you Licat!
+	suggestions: any;
+	async updateSuggestions() {
+		this.suggestions = await this.asyncGetSuggestions();
+		//@ts-expect-error
+		await super.updateSuggestions();
+		//dereference suggestions for memory efficiency
+		this.suggestions = null;
 	}
 
-	//onOpen() {
-	//	super.onOpen();
-	//}
-
-	//onClose() {
-	//	const { contentEl } = this;
-	//	contentEl.empty();
-	//}
-
-	getItems(): SuggesterItem[] {
-		return SKOSFuzzyModal.data;
+	getSuggestions() {
+		return this.suggestions;
 	}
 
-	getItemText(item: SuggesterItem): string {
-		return item.display;
+	async asyncGetSuggestions() {
+		const input = this.inputEl.value;
+		return this.plugin.methods.findHeading(input);
 	}
 
-	async onChooseItem(item: SuggesterItem, evt: MouseEvent | KeyboardEvent): Promise<void> {
-        this.close();
-		await this.plugin.methods.findHeading(item.display);
-	} // required by TS - do we need this or can we use onSuggestion?
-
-	renderSuggestion(item: FuzzyMatch<SuggesterItem>, el: HTMLElement): void {
-		el.createEl('div', { text: item.item.display });
+	renderSuggestion(value: any, el: HTMLElement) {
+		const newValue = value;
+		el.createEl('b', newValue.display);
+		el.appendText(newValue.display);
 	}
 
-
-
+	//@ts-ignore
+	async onChooseSuggestion(
+		item: SuggesterItem,
+		evt: MouseEvent | KeyboardEvent
+	) {
+		const heading = item.display;
+		const headingUrl = item.url;
+		const url = await this.plugin.methods.getURL(item);
+		const headings = await this.plugin.methods.parseSKOS(url);
+		await this.plugin.methods.writeYaml(
+			headings,
+			this.tfile,
+			heading,
+			headingUrl
+		);
+	}
 }

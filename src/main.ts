@@ -1,18 +1,23 @@
-import { Plugin } from 'obsidian';
+import { Editor, MarkdownView, Plugin, View } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
+import { SKOSModal } from './suggester';
 
-//const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
 const DEFAULT_SETTINGS: SKOSSettings = {
-	testQuery: 'Archeology',
 	elementCounter: '10',
+	broaderKey: 'broader',
+	narrowerKey: 'narrower',
+	relatedKey: 'related',
+	lcshSearchType: 'keyword',
+	headingKey: 'heading',
+	urlKey: 'url',
 };
 
 // What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
 export default class SKOSPlugin extends Plugin {
-	methods = new LCSHMethods(this);
+	methods = new LCSHMethods(this.app, this);
 	//@ts-ignore
 	settings: SKOSSettings;
 
@@ -24,15 +29,26 @@ export default class SKOSPlugin extends Plugin {
 		this.addCommand({
 			id: 'query-lcsh-data',
 			name: 'Query LCSH data',
-			callback: () => {
-				// doesn't work, returns undefined
-				//const chooser = new SKOSFuzzyModal(this.plugin)
-				//chooser.setPlaceholder('Enter query')
-				//return chooser
-
-				// input name for heading search here, this is just for testing
-				// normally it would be supplied over the modal by the user
-				this.methods.findHeading(this.settings.testQuery);
+			editorCheckCallback: (
+				checking: boolean,
+				editor: Editor,
+				view: View
+			) => {
+				if (checking) {
+					return view instanceof MarkdownView;
+				}
+				if (!(view instanceof MarkdownView)) {
+					// shouldn't happen
+					return;
+				}
+				const currentView = view;
+				const tfile = currentView.file;
+				const chooser = new SKOSModal(
+					this.app,
+					this,
+					tfile
+				).open();
+				return chooser;
 			},
 		});
 
