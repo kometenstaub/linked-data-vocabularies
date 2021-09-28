@@ -4,7 +4,6 @@ import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
 import { SKOSFuzzyModal } from './suggester';
 
-//const link = 'https://id.loc.gov/authorities/subjects/suggest2?q='
 
 const DEFAULT_SETTINGS: SKOSSettings = {
 	elementCounter: '10',
@@ -52,10 +51,6 @@ export default class SKOSPlugin extends Plugin {
 					tfile
 				).open();
 				return chooser;
-
-				// input name for heading search here, this is just for testing
-				// normally it would be supplied over the modal by the user
-				//this.methods.findHeading(this.settings.testQuery);
 			},
 		});
 

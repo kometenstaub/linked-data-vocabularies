@@ -49,8 +49,6 @@ export class SKOSFuzzyModal extends SuggestModal<Promise<any[]>> {
 		const headingUrl = item.url;
 		const url = await this.plugin.methods.getURL(item);
 		const headings = await this.plugin.methods.parseSKOS(url);
-		console.log('onChooseSuggestion Headings')
-		console.log(JSON.stringify(headings, null, 2))
 		await this.plugin.methods.writeYaml(headings, this.tfile, heading, headingUrl);
 	}
 }

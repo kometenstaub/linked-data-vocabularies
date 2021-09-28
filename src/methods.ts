@@ -1,8 +1,7 @@
-import { App, Notice, request, RequestParam, TFile, parseYaml } from 'obsidian';
+import { App, request, RequestParam, TFile} from 'obsidian';
 import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2 } from './interfaces';
-import { on } from 'events';
 
 export class LCSHMethods {
 	app: App;
@@ -84,8 +83,10 @@ export class LCSHMethods {
 		responseObject.forEach(
 			(element: { [key: string]: string | {}[] | string[] }) => {
 				if (element['http://www.w3.org/2004/02/skos/core#broader']) {
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#broader'].forEach(
+					element[
+						'http://www.w3.org/2004/02/skos/core#broader'
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
+					].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							broaderURLs.push(id['@id']);
@@ -93,8 +94,10 @@ export class LCSHMethods {
 					);
 				}
 				if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#narrower'].forEach(
+					element[
+						'http://www.w3.org/2004/02/skos/core#narrower'
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
+					].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							narrowerURLs.push(id['@id']);
@@ -102,8 +105,10 @@ export class LCSHMethods {
 					);
 				}
 				if (element['http://www.w3.org/2004/02/skos/core#related']) {
-					//@ts-expect-error // it also contains strings, but not in what we're looking for
-					element['http://www.w3.org/2004/02/skos/core#related'].forEach(
+					element[
+						'http://www.w3.org/2004/02/skos/core#related'
+						//@ts-expect-error // it also contains strings, but not in what we're looking for
+					].forEach(
 						//@ts-expect-error // it also contains strings, but not in what we're looking for
 						(id) => {
 							relatedURLs.push(id['@id']);
@@ -120,8 +125,8 @@ export class LCSHMethods {
 
 		//something is wrong here
 
-
 		for (let url of broaderURLs) {
+			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.forEach(
 				//@ts-ignore
 				(element: { [key: string]: string | {}[] | string[] }) => {
@@ -131,7 +136,7 @@ export class LCSHMethods {
 							//@ts-expect-error
 						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
-								console.log('kello again it\'s me')
+								console.log("kello again it's me");
 								broaderHeadings.push(nameElement['@value']);
 							}
 						});
@@ -139,7 +144,7 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(broaderHeadings, null, 2))
+		console.log(JSON.stringify(broaderHeadings, null, 2));
 		for (let url of narrowerURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.forEach(
@@ -158,7 +163,7 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(narrowerHeadings, null, 2))
+		console.log(JSON.stringify(narrowerHeadings, null, 2));
 
 		for (let url of relatedURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
@@ -178,8 +183,7 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(relatedHeadings, null, 2))
-		
+		console.log(JSON.stringify(relatedHeadings, null, 2));
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
@@ -187,12 +191,10 @@ export class LCSHMethods {
 			related: relatedHeadings,
 		};
 
-		console.log('does this work now?????')
-		console.log(JSON.stringify(headingObj, null, 2))
+		console.log('does this work now?????');
+		console.log(JSON.stringify(headingObj, null, 2));
 
-
-		return headingObj
-
+		return headingObj;
 	}
 
 	// Thank you: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
@@ -204,63 +206,88 @@ export class LCSHMethods {
 	) {
 		const fileContent: string = await this.app.vault.read(tfile);
 
-		const frontMatter = this.app.metadataCache.getFileCache(tfile);
+		const fileCache = this.app.metadataCache.getFileCache(tfile);
 		// the current file has no frontmatter
-		if (!frontMatter?.frontmatter) {
-			let newFrontMatter: string = '---\n';
-			newFrontMatter = this.buildYaml(
-				newFrontMatter,
-				headingObj,
-				heading,
-				url
+		let splitContent = fileContent.split('\n');
+		if (!fileCache?.frontmatter) {
+			let newFrontMatter: string[] = ['---'];
+			newFrontMatter.concat(
+				this.buildYaml(newFrontMatter, headingObj, heading, url)
 			);
-			newFrontMatter += '---\n';
-			const splitFrontMatter = newFrontMatter.split('\n').reverse();
+			newFrontMatter.push('---');
+			const reversedFrontMatter = newFrontMatter.reverse();
 
-			let splitContent = fileContent.split('\n');
-			splitFrontMatter.map((property) => {
+			for (let property of reversedFrontMatter) {
 				splitContent.unshift(property);
-			});
+			}
+			await this.writeYamlToFile(splitContent, tfile)
+		} else {
+			const {
+				//@ts-ignore
+				position: { start, end },
+			} = this.app.metadataCache.getFileCache(tfile)?.frontmatter;
+			console.log(this.app.metadataCache.getFileCache(tfile)?.frontmatter)
+			console.log(start.line)
+			console.log(end.line)
 
+			let addedFrontmatter : string[] = []
+			addedFrontmatter.concat(this.buildYaml(addedFrontmatter, headingObj, heading, url))
+			console.log(addedFrontmatter)
+
+			let lineCount : number = 0
+			for (let line of addedFrontmatter) {
+				splitContent.splice(end.line + lineCount, 0, line)
+				lineCount++
+			}
+
+			await this.writeYamlToFile(splitContent, tfile)
+			//const yamlContent = fileContent
+			//	.split('\n')
+			//	.slice(start.line, end.line)
+			//	.join('\n');
+			//const parsedYamlContent = parseYaml(yamlContent);
+			//console.log(parsedYamlContent);
+		}
+	}
+	async writeYamlToFile(splitContent : string[], tfile: TFile) {
 			const newFileContent = splitContent.join('\n');
 			await this.app.vault.modify(tfile, newFileContent);
-		}
 	}
 
 	buildYaml(
-		newFrontMatter: string,
+		newFrontMatter: string[],
 		headingObj: headings,
 		heading: string,
 		url: string
-	): string {
-		const obj = headingObj
-		newFrontMatter +=
-			this.plugin.settings.headingKey + ': ' + heading + '\n';
+	): string[] {
+		newFrontMatter.push(this.plugin.settings.headingKey + ': ' + heading);
 		if (this.plugin.settings.urlKey !== '') {
-			newFrontMatter += this.plugin.settings.urlKey + ': ' + url + '\n';
+			newFrontMatter.push(this.plugin.settings.urlKey + ': ' + url);
 		}
 		if (headingObj.broader.length > 0) {
-			newFrontMatter +=
+			newFrontMatter.push(
 				this.plugin.settings.broaderKey +
-				': ' +
-				headingObj.broader.toString() +
-				'\n';
+					': [' +
+					headingObj.broader.toString() +
+					']'
+			);
 		}
 		if (headingObj.narrower.length > 0) {
-			newFrontMatter +=
-			this.plugin.settings.narrowerKey +
-				': ' +
-				headingObj.narrower.toString() +
-				'\n';
+			newFrontMatter.push(
+				this.plugin.settings.narrowerKey +
+					': [' +
+					headingObj.narrower.toString() +
+					']'
+			);
 		}
 		if (headingObj.related.length > 0) {
-			newFrontMatter +=
+			newFrontMatter.push(
 				this.plugin.settings.relatedKey +
-				': ' +
-				headingObj.related.toString() +
-				'\n';
+					': [' +
+					headingObj.related.toString() +
+					']'
+			);
 		}
 		return newFrontMatter;
 	}
-
 }
