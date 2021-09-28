@@ -194,6 +194,9 @@ export class LCSHMethods {
 			await this.writeYamlToFile(splitContent, tfile);
 		} //the current file has frontmatter
 		else {
+			// destructures the file cache frontmatter position
+			// start is the beggining and should return 0, the end returns 
+			// the line number of the last ---
 			const {
 				position: { start, end },
 			} = fileCache.frontmatter;
