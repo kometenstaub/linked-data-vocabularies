@@ -14,7 +14,9 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Linked Data Vocabularies (SKOS) settings.' });
+		containerEl.createEl('h2', {
+			text: 'Linked Data Vocabularies (SKOS) settings',
+		});
 
 		containerEl.createEl('h3', { text: 'Settings for LCSH' });
 
@@ -106,6 +108,40 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.relatedKey)
 					.onChange(async (value) => {
 						this.plugin.settings.relatedKey = value;
+						this.plugin.saveSettings();
+					});
+			});
+		//whether to display and if, how many
+		new Setting(containerEl)
+			.setName(`Maximum number of entries for '${this.plugin.settings.broaderKey}'`)
+			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
+			.addText((text) => {
+				text.setPlaceholder('')
+					.setValue(this.plugin.settings.broaderMax)
+					.onChange(async (value) => {
+						this.plugin.settings.broaderMax = value;
+						this.plugin.saveSettings();
+					});
+			});
+		new Setting(containerEl)
+			.setName(`Maximum number of entries for '${this.plugin.settings.narrowerKey}'`)
+			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
+			.addText((text) => {
+				text.setPlaceholder('')
+					.setValue(this.plugin.settings.narrowerMax)
+					.onChange(async (value) => {
+						this.plugin.settings.narrowerMax = value;
+						this.plugin.saveSettings();
+					});
+			});
+		new Setting(containerEl)
+			.setName(`Maximum number of entries for '${this.plugin.settings.relatedKey}'`)
+			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
+			.addText((text) => {
+				text.setPlaceholder('')
+					.setValue(this.plugin.settings.relatedMax)
+					.onChange(async (value) => {
+						this.plugin.settings.relatedMax = value;
 						this.plugin.saveSettings();
 					});
 			});

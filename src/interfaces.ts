@@ -6,6 +6,9 @@ export interface SKOSSettings {
 	lcshSearchType: string;
 	headingKey: string;
 	urlKey: string;
+	broaderMax: string;
+	narrowerMax: string;
+	relatedMax: string;
 }
 
 export interface suggest2 {

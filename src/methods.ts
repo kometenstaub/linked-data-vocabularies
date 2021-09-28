@@ -197,7 +197,7 @@ export class LCSHMethods {
 		else {
 			const {
 				linePosition: { start, end },
-			} = fileCache.frontmatter
+			} = fileCache.frontmatter;
 
 			let addedFrontmatter: string[] = [];
 			addedFrontmatter.concat(
@@ -213,7 +213,7 @@ export class LCSHMethods {
 			await this.writeYamlToFile(splitContent, tfile);
 		}
 	}
-	async writeYamlToFile(splitContent: string[], tfile: TFile):Promise<void> {
+	async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
 		const newFileContent = splitContent.join('\n');
 		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
@@ -234,29 +234,56 @@ export class LCSHMethods {
 		if (this.plugin.settings.urlKey !== '') {
 			newFrontMatter.push(this.plugin.settings.urlKey + ': ' + url);
 		}
-		if (headingObj.broader.length > 0) {
-			newFrontMatter.push(
-				this.plugin.settings.broaderKey +
-					': [' +
-					headingObj.broader.toString() +
-					']'
-			);
+		if (this.plugin.settings.broaderMax !== '0') {
+			let broaderHeadings: string[] = headingObj.broader;
+			if (this.plugin.settings.broaderMax !== '') {
+				broaderHeadings = broaderHeadings.slice(
+					0,
+					parseInt(this.plugin.settings.broaderMax)
+				);
+			}
+			if (headingObj.broader.length > 0) {
+				newFrontMatter.push(
+					this.plugin.settings.broaderKey +
+						': [' +
+						broaderHeadings +
+						']'
+				);
+			}
 		}
-		if (headingObj.narrower.length > 0) {
-			newFrontMatter.push(
-				this.plugin.settings.narrowerKey +
-					': [' +
-					headingObj.narrower.toString() +
-					']'
-			);
+		if (this.plugin.settings.narrowerMax !== '0') {
+			let narrowerHeadings: string[] = headingObj.narrower;
+			if (this.plugin.settings.narrowerMax !== '') {
+				narrowerHeadings = narrowerHeadings.slice(
+					0,
+					parseInt(this.plugin.settings.narrowerMax)
+				);
+			}
+			if (headingObj.narrower.length > 0) {
+				newFrontMatter.push(
+					this.plugin.settings.narrowerKey +
+						': [' +
+						narrowerHeadings +
+						']'
+				);
+			}
 		}
-		if (headingObj.related.length > 0) {
-			newFrontMatter.push(
-				this.plugin.settings.relatedKey +
-					': [' +
-					headingObj.related.toString() +
-					']'
-			);
+		if (this.plugin.settings.relatedMax !== '0') {
+			let relatedHeadings: string[] = headingObj.related;
+			if (this.plugin.settings.relatedMax !== '') {
+				relatedHeadings = relatedHeadings.slice(
+					0,
+					parseInt(this.plugin.settings.relatedMax)
+				);
+			}
+			if (headingObj.related.length > 0) {
+				newFrontMatter.push(
+					this.plugin.settings.relatedKey +
+						': [' +
+						relatedHeadings +
+						']'
+				);
+			}
 		}
 		return newFrontMatter;
 	}

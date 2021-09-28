@@ -13,6 +13,9 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	lcshSearchType: 'keyword',
 	headingKey: 'heading',
 	urlKey: 'url',
+	broaderMax: '',
+	narrowerMax: '',
+	relatedMax: '',
 };
 
 // What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
