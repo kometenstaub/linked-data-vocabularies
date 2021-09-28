@@ -195,7 +195,7 @@ export class LCSHMethods {
 		} //the current file has frontmatter
 		else {
 			const {
-				linePosition: { start, end },
+				position: { start, end },
 			} = fileCache.frontmatter;
 
 			let addedFrontmatter: string[] = [];
