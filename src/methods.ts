@@ -46,7 +46,9 @@ export class LCSHMethods {
 		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
 			const url = suggestion.uri;
-			return { display, url }
+			const aLabel = suggestion.aLabel;
+			const vLabel = suggestion.vLabel;
+			return { display, url , aLabel, vLabel}
 		})
 
 		// set data for modal

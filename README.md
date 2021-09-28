@@ -28,6 +28,17 @@ The default search type is `keyword`.
 
 From my experience, keywords gives better results, but only gives good results when you type out the word fully. So `archeolo` wouldn't show `Archeology`, for that you need to type the full word.
 
+### Modal
+
+The Modal shows the heading in bold, under it, it shows the aLabel and if existing, the vLabel.
+
+> aLabel will only return a resource whose authoritative label exactly matches the searched term. For example, aLabel:"International librarianship".
+>
+> vLabel will only return a resource which has a variant label exactly matching the searched term. For example, vLabel:"Librarianship, International".
+> 
+><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
+
+
 ### Recommendation
 
 Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs). You can set the hierachies in its settings and will have a breadcrumbs view for navigating the heading hierarchy you create in your notes.

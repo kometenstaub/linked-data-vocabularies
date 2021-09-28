@@ -33,10 +33,17 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		return this.plugin.methods.findHeading(input);
 	}
 
-	renderSuggestion(value: any, el: HTMLElement) {
-		const newValue = value;
-		el.createEl('b', newValue.display);
-		el.appendText(newValue.display);
+	//@ts-ignore
+	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
+		const el1 = el.createEl('b');
+		el1.appendText(value.display);
+		//el.createEl('br')
+		const el2 = el.createEl('div');
+		if (value.vLabel) {
+			el2.appendText(value.aLabel + ' — ' + value.vLabel);
+		} else {
+			el2.appendText(value.aLabel);
+		}
 	}
 
 	//@ts-ignore

@@ -39,4 +39,6 @@ export interface headings {
 export interface SuggesterItem {
 	display: string; // the heading that is displayed to the user
 	url: string; // the URL for getting the necessary data
+	aLabel: string;
+	vLabel: string;
 }
