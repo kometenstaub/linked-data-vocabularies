@@ -2,6 +2,7 @@ import { App, Notice, request, RequestParam, TFile } from 'obsidian';
 import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2 } from './interfaces';
+import { BROADER_URL, NARROWER_URL, RELATED_URL, AUTHORITATIVE_LABEL}from './constants'
 
 export class LCSHMethods {
 	app: App;
@@ -66,6 +67,7 @@ export class LCSHMethods {
 		function fillURLs(type: string, element: { [key: string]: string | {}[] | string[] }, urlArr: string[]) {
 			const item = element[type]
 			if (item) {
+				//@ts-ignore
 				item.forEach(
 					(id: { [x: string]: string; }) => {
 						urlArr.push(id['@id']);
@@ -107,9 +109,9 @@ export class LCSHMethods {
 			}
 		}
 
-		fillValues(broaderURLs, broaderHeadings)
-		fillValues(narrowerURLs, narrowerHeadings)
-		fillValues(relatedURLs, relatedHeadings)
+		await fillValues(broaderURLs, broaderHeadings)
+		await fillValues(narrowerURLs, narrowerHeadings)
+		await fillValues(relatedURLs, relatedHeadings)
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
