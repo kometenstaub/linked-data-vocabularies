@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import type SKOSPlugin from './main';
 
 export default class SKOSSettingTab extends PluginSettingTab {
@@ -11,6 +11,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
+		const { settings, saveSettings } = this.plugin
 
 		containerEl.empty();
 
@@ -27,10 +28,16 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			)
 			.addText((text) => {
 				text.setPlaceholder('Enter a number greater than 0.')
-					.setValue(this.plugin.settings.elementCounter)
+					.setValue(settings.elementCounter)
 					.onChange(async (value) => {
-						this.plugin.settings.elementCounter = value;
-						this.plugin.saveSettings();
+						const num = Number.parseInt(value)
+
+						if (Number.isInteger(num) && num > 0) {
+							settings.elementCounter = value;
+							await saveSettings();
+						} else {
+							new Notice('Please enter an integer greater than 0.')
+						}
 					});
 			});
 
@@ -46,12 +53,12 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				dropdown.addOption('leftanchored', 'Left anchored search');
 
 				// select the currently saved option
-				dropdown.setValue(this.plugin.settings.lcshSearchType);
+				dropdown.setValue(settings.lcshSearchType);
 
-				dropdown.onChange((newValue) => {
+				dropdown.onChange(async (newValue) => {
 					// update and save the plugin settings
-					this.plugin.settings.lcshSearchType = newValue;
-					this.plugin.saveSettings();
+					settings.lcshSearchType = newValue;
+					await saveSettings();
 				});
 			});
 
@@ -61,10 +68,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			//.setDesc('')
 			.addText((text) => {
 				text.setPlaceholder('related')
-					.setValue(this.plugin.settings.headingKey)
+					.setValue(settings.headingKey)
 					.onChange(async (value) => {
-						this.plugin.settings.headingKey = value;
-						this.plugin.saveSettings();
+						settings.headingKey = value;
+						await saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -72,10 +79,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.setDesc('Leave empty if no URL YAML key should be added.')
 			.addText((text) => {
 				text.setPlaceholder('related')
-					.setValue(this.plugin.settings.urlKey)
+					.setValue(settings.urlKey)
 					.onChange(async (value) => {
-						this.plugin.settings.urlKey = value;
-						this.plugin.saveSettings();
+						settings.urlKey = value;
+						await saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -83,10 +90,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.setDesc('This will be the YAML key for the broader headings.')
 			.addText((text) => {
 				text.setPlaceholder('broader')
-					.setValue(this.plugin.settings.broaderKey)
+					.setValue(settings.broaderKey)
 					.onChange(async (value) => {
-						this.plugin.settings.broaderKey = value;
-						this.plugin.saveSettings();
+						settings.broaderKey = value;
+						await saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -94,10 +101,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.setDesc('This will be the YAML key for the narrower headings.')
 			.addText((text) => {
 				text.setPlaceholder('narrower')
-					.setValue(this.plugin.settings.narrowerKey)
+					.setValue(settings.narrowerKey)
 					.onChange(async (value) => {
-						this.plugin.settings.narrowerKey = value;
-						this.plugin.saveSettings();
+						settings.narrowerKey = value;
+						await saveSettings();
 					});
 			});
 		new Setting(containerEl)
@@ -105,44 +112,59 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.setDesc('This will be the YAML key for the related headings.')
 			.addText((text) => {
 				text.setPlaceholder('related')
-					.setValue(this.plugin.settings.relatedKey)
+					.setValue(settings.relatedKey)
 					.onChange(async (value) => {
-						this.plugin.settings.relatedKey = value;
-						this.plugin.saveSettings();
+						settings.relatedKey = value;
+						await saveSettings();
 					});
 			});
-		//whether to display and if, how many
+		//whether to display and if so, how many
 		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${this.plugin.settings.broaderKey}'`)
+			.setName(`Maximum number of entries for '${settings.broaderKey}'`)
 			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
 			.addText((text) => {
 				text.setPlaceholder('')
-					.setValue(this.plugin.settings.broaderMax)
+					.setValue(settings.broaderMax)
 					.onChange(async (value) => {
-						this.plugin.settings.broaderMax = value;
-						this.plugin.saveSettings();
+						const num = Number.parseInt(value);
+						if (Number.isInteger(num) && num >= 0) {
+							settings.broaderMax = value;
+							await saveSettings();
+						} else {
+							new Notice('Please enter an integer greater than or equal to 0.')
+						}
 					});
 			});
 		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${this.plugin.settings.narrowerKey}'`)
+			.setName(`Maximum number of entries for '${settings.narrowerKey}'`)
 			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
 			.addText((text) => {
 				text.setPlaceholder('')
-					.setValue(this.plugin.settings.narrowerMax)
+					.setValue(settings.narrowerMax)
 					.onChange(async (value) => {
-						this.plugin.settings.narrowerMax = value;
-						this.plugin.saveSettings();
+						const num = Number.parseInt(value);
+						if (Number.isInteger(num) && num >= 0) {
+							settings.narrowerMax = value;
+							await saveSettings();
+						} else {
+							new Notice('Please enter an integer greater than or equal to 0.')
+						}
 					});
 			});
 		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${this.plugin.settings.relatedKey}'`)
+			.setName(`Maximum number of entries for '${settings.relatedKey}'`)
 			.setDesc('If set to 0, it will not be added. Leave empty to add all entries.')
 			.addText((text) => {
 				text.setPlaceholder('')
-					.setValue(this.plugin.settings.relatedMax)
+					.setValue(settings.relatedMax)
 					.onChange(async (value) => {
-						this.plugin.settings.relatedMax = value;
-						this.plugin.saveSettings();
+						const num = Number.parseInt(value);
+						if (Number.isInteger(num) && num >= 0) {
+							settings.relatedMax = value;
+							await saveSettings();
+						} else {
+							new Notice('Please enter an integer greater than or equal to 0.')
+						}
 					});
 			});
 	}
