@@ -236,13 +236,13 @@ export class LCSHMethods {
 		}
 		if (this.plugin.settings.broaderMax !== '0') {
 			let broaderHeadings: string[] = headingObj.broader;
-			if (this.plugin.settings.broaderMax !== '') {
-				broaderHeadings = broaderHeadings.slice(
-					0,
-					parseInt(this.plugin.settings.broaderMax)
-				);
-			}
 			if (headingObj.broader.length > 0) {
+				if (this.plugin.settings.broaderMax !== '') {
+					broaderHeadings = broaderHeadings.slice(
+						0,
+						parseInt(this.plugin.settings.broaderMax)
+					);
+				}
 				newFrontMatter.push(
 					this.plugin.settings.broaderKey +
 						': [' +
@@ -253,13 +253,13 @@ export class LCSHMethods {
 		}
 		if (this.plugin.settings.narrowerMax !== '0') {
 			let narrowerHeadings: string[] = headingObj.narrower;
-			if (this.plugin.settings.narrowerMax !== '') {
-				narrowerHeadings = narrowerHeadings.slice(
-					0,
-					parseInt(this.plugin.settings.narrowerMax)
-				);
-			}
 			if (headingObj.narrower.length > 0) {
+				if (this.plugin.settings.narrowerMax !== '') {
+					narrowerHeadings = narrowerHeadings.slice(
+						0,
+						parseInt(this.plugin.settings.narrowerMax)
+					);
+				}
 				newFrontMatter.push(
 					this.plugin.settings.narrowerKey +
 						': [' +
@@ -270,13 +270,13 @@ export class LCSHMethods {
 		}
 		if (this.plugin.settings.relatedMax !== '0') {
 			let relatedHeadings: string[] = headingObj.related;
-			if (this.plugin.settings.relatedMax !== '') {
-				relatedHeadings = relatedHeadings.slice(
-					0,
-					parseInt(this.plugin.settings.relatedMax)
-				);
-			}
 			if (headingObj.related.length > 0) {
+				if (this.plugin.settings.relatedMax !== '') {
+					relatedHeadings = relatedHeadings.slice(
+						0,
+						parseInt(this.plugin.settings.relatedMax)
+					);
+				}
 				newFrontMatter.push(
 					this.plugin.settings.relatedKey +
 						': [' +
