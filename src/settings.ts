@@ -14,7 +14,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'SKOS plugin settings.' });
+		containerEl.createEl('h2', { text: 'Linked Data Vocabularies (SKOS) settings.' });
 
 		containerEl.createEl('h3', { text: 'Settings for LCSH' });
 

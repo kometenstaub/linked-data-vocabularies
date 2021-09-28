@@ -1,57 +1,31 @@
-## Obsidian Sample Plugin
+## Obsidian Linked Data Vocabularies Plugin
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API is implemented.
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+### Usage
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+In the editor, open the command palette and execute the `LCSH` command. Alternatively, you can set a hotkey for it.
 
-### First time developing plugins?
+If there is no YAML block present, a new one will be created. If there is already YAML present, the new YAML will be appended to the current YAML.
 
-Quick starting guide for new plugin devs:
+### Configuration
 
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+You can set the limit of queries to be display. 10 is the default setting.
 
-### Releasing new releases
+You can set the key names for `heading`, `broder`, `narrower` and `related` in the settings.
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments.
-- Publish the release.
+Furthermore, you can set the search type. 
 
-### Adding your plugin to the community plugin list
+> Left anchored searches are ordered alphabetically, case and diacritic insensitive.
+>
+>Keyword searches are in descending relevance order, using the same search ranking as the main search page.
+> 
+><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+The default search is `keyword`.
 
-### How to use
+### Recommendation
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
-
-### Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-### API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs). You can set the hierachies in its settings and will have a breadcrumbs view for navigating the heading hierarchy you create in your notes.
