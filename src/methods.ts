@@ -33,7 +33,6 @@ export class LCSHMethods {
 		url += '&searchtype=' + searchType;
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
-		url += '.json';
 
 		requestObject.url = url;
 

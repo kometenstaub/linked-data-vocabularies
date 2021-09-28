@@ -24,7 +24,7 @@ Furthermore, you can set the search type.
 > 
 ><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
-The default search type is `keyword`, although both `keyword` and `leftanchored` seem to return the same results.
+The default search type is `keyword`.
 
 ### Recommendation
 
