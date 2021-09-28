@@ -21,7 +21,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('Element limit')
 			.setDesc(
-				'The limit of elements that wil  be displayed when searching for a heading.'
+				'The limit of elements that wil be displayed when searching for a heading.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('Enter a number greater than 0.')
