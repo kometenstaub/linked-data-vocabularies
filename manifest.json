@@ -1,9 +1,9 @@
 {
-	"id": "skos-plugin",
-	"name": "SKOS Plugin",
+	"id": "linked-data-vocabularies",
+	"name": "Linked Data Vocabularies (SKOS)",
 	"version": "0.0.1",
 	"minAppVersion": "0.12.15",
-	"description": "Plugin for prepending SKOS Classification to notes.",
+	"description": "Add SKOS heading classification to YAML.",
 	"author": "kometenstaub",
 	"authorUrl": "https://github.com/kometenstaub",
 	"isDesktopOnly": false
