@@ -20,8 +20,10 @@ export class LCSHMethods {
 
 	// input: heading from SuggestModal
 	public async findHeading(heading: string): Promise<SuggesterItem[]> {
-		//@ts-ignore
-		let requestObject: RequestParam = {};
+		let requestObject: RequestParam = {
+			url: ''
+		};
+
 		// reading settings doesn't work, it returns undefined
 		const counter = this.plugin.settings.elementCounter;
 		const searchType = this.plugin.settings.lcshSearchType;
@@ -40,13 +42,11 @@ export class LCSHMethods {
 		const newData: suggest2 = JSON.parse(data);
 
 		// calculate heading results from received json
-		let headings: SuggesterItem[] = [];
-
-		newData['hits'].map((suggestion) => {
+		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
 			const url = suggestion.uri;
-			headings.push({ display: display, url: url });
-		});
+			return { display, url }
+		})
 
 		// set data for modal
 		return headings;
@@ -62,102 +62,54 @@ export class LCSHMethods {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
+
+		function fillURLs(type: string, element: { [key: string]: string | {}[] | string[] }, urlArr: string[]) {
+			const item = element[type]
+			if (item) {
+				item.forEach(
+					(id: { [x: string]: string; }) => {
+						urlArr.push(id['@id']);
+					}
+				);
+			}
+		}
+
 		responseObject.forEach(
 			(element: { [key: string]: string | {}[] | string[] }) => {
-				if (element['http://www.w3.org/2004/02/skos/core#broader']) {
-					element[
-						'http://www.w3.org/2004/02/skos/core#broader'
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
-							broaderURLs.push(id['@id']);
-						}
-					);
-				}
-				if (element['http://www.w3.org/2004/02/skos/core#narrower']) {
-					element[
-						'http://www.w3.org/2004/02/skos/core#narrower'
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
-							narrowerURLs.push(id['@id']);
-						}
-					);
-				}
-				if (element['http://www.w3.org/2004/02/skos/core#related']) {
-					element[
-						'http://www.w3.org/2004/02/skos/core#related'
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-					].forEach(
-						//@ts-expect-error // it also contains strings, but not in what we're looking for
-						(id) => {
-							relatedURLs.push(id['@id']);
-						}
-					);
-				}
+				fillURLs(BROADER_URL, element, broaderURLs)
+				fillURLs(NARROWER_URL, element, narrowerURLs)
+				fillURLs(RELATED_URL, element, relatedURLs)
 			}
 		);
+
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
 
-		for (let url of broaderURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								broaderHeadings.push(nameElement['@value']);
-							}
-						});
+		const fillValues = async (urls: string[], headingsArr: string[]) => {
+			for (let url of urls) {
+				const responseObject = await this.requestHeadingURL(url + '.json');
+				responseObject.forEach(
+					//@ts-ignore
+					(element: { [key: string]: string | {}[] | string[] }) => {
+						if (element['@id'] === url) {
+							element[
+								AUTHORITATIVE_LABEL
+								//@ts-expect-error
+							].forEach((nameElement: { [key: string]: string }) => {
+								if (nameElement['@language'] === 'en') {
+									headingsArr.push(nameElement['@value']);
+								}
+							});
+						}
 					}
-				}
-			);
-		}
-		for (let url of narrowerURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								narrowerHeadings.push(nameElement['@value']);
-							}
-						});
-					}
-				}
-			);
+				);
+			}
 		}
 
-		for (let url of relatedURLs) {
-			const responseObject = await this.requestHeadingURL(url + '.json');
-			responseObject.forEach(
-				//@ts-ignore
-				(element: { [key: string]: string | {}[] | string[] }) => {
-					if (element['@id'] === url) {
-						element[
-							'http://www.loc.gov/mads/rdf/v1#authoritativeLabel'
-							//@ts-expect-error
-						].forEach((nameElement: { [key: string]: string }) => {
-							if (nameElement['@language'] === 'en') {
-								relatedHeadings.push(nameElement['@value']);
-							}
-						});
-					}
-				}
-			);
-		}
+		fillValues(broaderURLs, broaderHeadings)
+		fillValues(narrowerURLs, narrowerHeadings)
+		fillValues(relatedURLs, relatedHeadings)
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
@@ -192,7 +144,7 @@ export class LCSHMethods {
 				splitContent.unshift(property);
 			}
 			await this.writeYamlToFile(splitContent, tfile);
-		} //the current file has frontmatter
+		} // the current file has frontmatter
 		else {
 			// destructures the file cache frontmatter position
 			// start is the beggining and should return 0, the end returns 
@@ -232,17 +184,19 @@ export class LCSHMethods {
 		heading: string,
 		url: string
 	): string[] {
-		newFrontMatter.push(this.plugin.settings.headingKey + ': ' + heading);
-		if (this.plugin.settings.urlKey !== '') {
-			newFrontMatter.push(this.plugin.settings.urlKey + ': ' + url);
+		const { settings } = this.plugin
+
+		newFrontMatter.push(settings.headingKey + ': ' + heading);
+		if (settings.urlKey !== '') {
+			newFrontMatter.push(settings.urlKey + ': ' + url);
 		}
-		if (this.plugin.settings.broaderMax !== '0') {
+		if (settings.broaderMax !== '0') {
 			let broaderHeadings: string[] = headingObj.broader;
 			if (headingObj.broader.length > 0) {
-				if (this.plugin.settings.broaderMax !== '') {
+				if (settings.broaderMax !== '') {
 					broaderHeadings = broaderHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.broaderMax)
+						parseInt(settings.broaderMax)
 					);
 				}
 				broaderHeadings = this.surroundWithQuotes(broaderHeadings)
@@ -254,13 +208,13 @@ export class LCSHMethods {
 				);
 			}
 		}
-		if (this.plugin.settings.narrowerMax !== '0') {
+		if (settings.narrowerMax !== '0') {
 			let narrowerHeadings: string[] = headingObj.narrower;
 			if (headingObj.narrower.length > 0) {
-				if (this.plugin.settings.narrowerMax !== '') {
+				if (settings.narrowerMax !== '') {
 					narrowerHeadings = narrowerHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.narrowerMax)
+						parseInt(settings.narrowerMax)
 					);
 				}
 				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings)
@@ -272,13 +226,13 @@ export class LCSHMethods {
 				);
 			}
 		}
-		if (this.plugin.settings.relatedMax !== '0') {
+		if (settings.relatedMax !== '0') {
 			let relatedHeadings: string[] = headingObj.related;
 			if (headingObj.related.length > 0) {
-				if (this.plugin.settings.relatedMax !== '') {
+				if (settings.relatedMax !== '') {
 					relatedHeadings = relatedHeadings.slice(
 						0,
-						parseInt(this.plugin.settings.relatedMax)
+						parseInt(settings.relatedMax)
 					);
 				}
 				relatedHeadings = this.surroundWithQuotes(relatedHeadings)
