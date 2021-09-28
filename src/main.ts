@@ -43,8 +43,6 @@ export default class SKOSPlugin extends Plugin {
 				}
 				const currentView = view;
 				const tfile = currentView.file;
-				console.log('tTFile:');
-				console.log(tfile);
 				const chooser = new SKOSFuzzyModal(
 					this.app,
 					this,

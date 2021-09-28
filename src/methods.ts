@@ -1,4 +1,4 @@
-import { App, request, RequestParam, TFile} from 'obsidian';
+import { App, Notice, request, RequestParam, TFile } from 'obsidian';
 import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2 } from './interfaces';
@@ -41,7 +41,6 @@ export class LCSHMethods {
 		let data = await request(requestObject);
 		const newData: suggest2 = JSON.parse(data);
 		//TODO: remove when Modal implemented
-		console.log(newData);
 
 		// calculate heading results from received json
 		let headings: SuggesterItem[] = [];
@@ -51,23 +50,10 @@ export class LCSHMethods {
 			const url = suggestion.uri;
 			headings.push({ display: display, url: url });
 		});
-		//TODO: remove when Modal implemented
-		console.log(headings);
 
 		// set data for modal
 		return headings;
 
-		// display results
-
-		// //tests // that URL would need to be supplied by the user over the modal
-		// // here it simply takes the first result
-		//const testURL = headings[0].url + '.json';
-		//const chosenHeading = headings[0].display;
-		//console.log(chosenHeading)
-		//const responseObject = await this.requestHeadingURL(testURL);
-		////TODO: remove when Modal implemented
-		//console.log(responseObject);
-		//await this.parseSKOS(responseObject);
 	}
 
 	public async getURL(item: SuggesterItem): Promise<Object[]> {
@@ -117,8 +103,6 @@ export class LCSHMethods {
 				}
 			}
 		);
-		// the URLs get logged fine
-		//console.log(JSON.stringify(broaderURLs, null, 2))
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
@@ -136,7 +120,6 @@ export class LCSHMethods {
 							//@ts-expect-error
 						].forEach((nameElement: { [key: string]: string }) => {
 							if (nameElement['@language'] === 'en') {
-								console.log("kello again it's me");
 								broaderHeadings.push(nameElement['@value']);
 							}
 						});
@@ -144,7 +127,6 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(broaderHeadings, null, 2));
 		for (let url of narrowerURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
 			responseObject.forEach(
@@ -163,7 +145,6 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(narrowerHeadings, null, 2));
 
 		for (let url of relatedURLs) {
 			const responseObject = await this.requestHeadingURL(url + '.json');
@@ -183,16 +164,12 @@ export class LCSHMethods {
 				}
 			);
 		}
-		console.log(JSON.stringify(relatedHeadings, null, 2));
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
 			narrower: narrowerHeadings,
 			related: relatedHeadings,
 		};
-
-		console.log('does this work now?????');
-		console.log(JSON.stringify(headingObj, null, 2));
 
 		return headingObj;
 	}
@@ -220,38 +197,39 @@ export class LCSHMethods {
 			for (let property of reversedFrontMatter) {
 				splitContent.unshift(property);
 			}
-			await this.writeYamlToFile(splitContent, tfile)
+			await this.writeYamlToFile(splitContent, tfile);
 		} else {
 			const {
 				//@ts-ignore
 				position: { start, end },
 			} = this.app.metadataCache.getFileCache(tfile)?.frontmatter;
-			console.log(this.app.metadataCache.getFileCache(tfile)?.frontmatter)
-			console.log(start.line)
-			console.log(end.line)
 
-			let addedFrontmatter : string[] = []
-			addedFrontmatter.concat(this.buildYaml(addedFrontmatter, headingObj, heading, url))
-			console.log(addedFrontmatter)
+			let addedFrontmatter: string[] = [];
+			addedFrontmatter.concat(
+				this.buildYaml(addedFrontmatter, headingObj, heading, url)
+			);
 
-			let lineCount : number = 0
+			let lineCount: number = 0;
 			for (let line of addedFrontmatter) {
-				splitContent.splice(end.line + lineCount, 0, line)
-				lineCount++
+				splitContent.splice(end.line + lineCount, 0, line);
+				lineCount++;
 			}
 
-			await this.writeYamlToFile(splitContent, tfile)
+			await this.writeYamlToFile(splitContent, tfile);
 			//const yamlContent = fileContent
 			//	.split('\n')
 			//	.slice(start.line, end.line)
 			//	.join('\n');
 			//const parsedYamlContent = parseYaml(yamlContent);
-			//console.log(parsedYamlContent);
 		}
 	}
-	async writeYamlToFile(splitContent : string[], tfile: TFile) {
-			const newFileContent = splitContent.join('\n');
+	async writeYamlToFile(splitContent: string[], tfile: TFile) {
+		const newFileContent = splitContent.join('\n');
+		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
+		} else {
+			new Notice('You switched to another file before the content could be written.')
+		}
 	}
 
 	buildYaml(
