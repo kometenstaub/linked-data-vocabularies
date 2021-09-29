@@ -4,6 +4,7 @@ import type { SuggesterItem } from './interfaces';
 export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
+	suggestions: any;
 
 	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
 		super(app);
@@ -15,9 +16,10 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	// overwrites the updateSuggestions function (which isn't exposed in the API)
 	// that's what runs the getSuggestions and does something with the results
 	// Thank you Licat!
-	suggestions: any;
 	async updateSuggestions() {
-		this.suggestions = await this.asyncGetSuggestions();
+		const { value } = this.inputEl;
+		this.suggestions = await this.plugin.methods.findHeading(value);
+
 		//@ts-expect-error
 		await super.updateSuggestions();
 		//dereference suggestions for memory efficiency
@@ -28,10 +30,10 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		return this.suggestions;
 	}
 
-	async asyncGetSuggestions() {
-		const input = this.inputEl.value;
-		return this.plugin.methods.findHeading(input);
-	}
+	// async asyncGetSuggestions() {
+	// 	const input = this.inputEl.value;
+	// 	return this.plugin.methods.findHeading(input);
+	// }
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
