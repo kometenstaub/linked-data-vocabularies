@@ -35,14 +35,16 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
+		const { display, vLabel, aLabel } = value
+
 		const el1 = el.createEl('b');
-		el1.appendText(value.display);
+		el1.appendText(display);
 		//el.createEl('br')
 		const el2 = el.createEl('div');
-		if (value.vLabel) {
-			el2.appendText(value.aLabel + ' — ' + value.vLabel);
-		} else {
-			el2.appendText(value.aLabel);
+		if (vLabel && vLabel !== display) {
+			el2.appendText(aLabel + ' — ' + vLabel);
+		} else if (aLabel !== display) {
+			el2.appendText(aLabel);
 		}
 	}
 
