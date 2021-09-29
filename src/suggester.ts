@@ -13,16 +13,31 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		this.setPlaceholder('Start typing...');
 	}
 
-	// overwrites the updateSuggestions function (which isn't exposed in the API)
-	// that's what runs the getSuggestions and does something with the results
-	// Thank you Licat!
+	/** 
+	 * overwrites the updateSuggestions method (which isn't exposed in the API)
+	 * to make it asynchronous 
+	 * 
+	 * @remarks
+	 * 
+	 * (because of the data that is requested in {@link LCSHMethods.findHeading}
+	 * it needs to be async)
+	 * 
+	 * {@link SKOSModal.updateSuggestion | super.updateSuggestions} calls 
+	 * {@link SKOSModal.getSuggestions | getSuggestions } that returns the suggestions, 
+	 * a property which was set by {@link SKOSModal.asyncGetSuggestions | asyncGetSuggestions } before
+	 * 
+	 * Thank you Licat!
+	 * 
+	 * 
+	 * */ 
 	async updateSuggestions() {
 		const { value } = this.inputEl;
 		this.suggestions = await this.plugin.methods.findHeading(value);
-
 		//@ts-expect-error
 		await super.updateSuggestions();
-		//dereference suggestions for memory efficiency
+		/**
+		 * dereference suggestions for memory efficiency
+		 */
 		this.suggestions = null;
 	}
 
@@ -30,10 +45,13 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		return this.suggestions;
 	}
 
-	// async asyncGetSuggestions() {
-	// 	const input = this.inputEl.value;
-	// 	return this.plugin.methods.findHeading(input);
-	// }
+
+/**
+ * 
+ * @param value - takes the {@link SuggesterItem} 
+ * @param el - append HTML to be displayed to it
+ */
+
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
@@ -49,6 +67,15 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			el2.appendText(aLabel);
 		}
 	}
+
+	/**
+	 * Gets the JSON content for each URL
+	 * returns all the headings and parse them
+	 * then writes them to the current file's YAML
+	 * 
+	 * @param item - @see the type definition
+	 * @param evt - @see the type definition
+	 */
 
 	//@ts-ignore
 	async onChooseSuggestion(

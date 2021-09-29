@@ -18,7 +18,6 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	relatedMax: '',
 };
 
-// What suggest2 API method (https://id.loc.gov/techcenter/searching.html) returns as JSON
 export default class SKOSPlugin extends Plugin {
 	methods = new LCSHMethods(this.app, this);
 	//@ts-ignore
