@@ -2,7 +2,7 @@ import { App, Notice, request, RequestParam, TFile } from 'obsidian';
 import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2 } from './interfaces';
-import { BROADER_URL, NARROWER_URL, RELATED_URL, AUTHORITATIVE_LABEL}from './constants'
+import { BROADER_URL, NARROWER_URL, RELATED_URL, AUTHORITATIVE_LABEL } from './constants'
 
 export class LCSHMethods {
 	app: App;
@@ -14,7 +14,7 @@ export class LCSHMethods {
 	}
 
 	private async requestHeadingURL(url: string): Promise<Object[]> {
-		const response = await request({ url: url });
+		const response = await request({ url });
 		const responseObject: {}[] = JSON.parse(response);
 		return responseObject;
 	}
@@ -48,7 +48,7 @@ export class LCSHMethods {
 			const url = suggestion.uri;
 			const aLabel = suggestion.aLabel;
 			const vLabel = suggestion.vLabel;
-			return { display, url , aLabel, vLabel}
+			return { display, url, aLabel, vLabel }
 		})
 
 		// set data for modal
@@ -206,9 +206,9 @@ export class LCSHMethods {
 				broaderHeadings = this.surroundWithQuotes(broaderHeadings)
 				newFrontMatter.push(
 					this.plugin.settings.broaderKey +
-						': [' +
-						broaderHeadings.toString() +
-						']'
+					': [' +
+					broaderHeadings.toString() +
+					']'
 				);
 			}
 		}
@@ -224,9 +224,9 @@ export class LCSHMethods {
 				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings)
 				newFrontMatter.push(
 					this.plugin.settings.narrowerKey +
-						': [' +
-						narrowerHeadings.toString() +
-						']'
+					': [' +
+					narrowerHeadings.toString() +
+					']'
 				);
 			}
 		}
@@ -242,17 +242,17 @@ export class LCSHMethods {
 				relatedHeadings = this.surroundWithQuotes(relatedHeadings)
 				newFrontMatter.push(
 					this.plugin.settings.relatedKey +
-						': [' +
-						relatedHeadings.toString() +
-						']'
+					': [' +
+					relatedHeadings.toString() +
+					']'
 				);
 			}
 		}
 		return newFrontMatter;
 	}
 
-	surroundWithQuotes(headingsArray : string[]) : string[]{
-		let newHeadingsArray : string[]= []
+	surroundWithQuotes(headingsArray: string[]): string[] {
+		let newHeadingsArray: string[] = []
 		for (let heading of headingsArray) {
 			newHeadingsArray.push('"' + heading + '"')
 		}
