@@ -51,7 +51,7 @@ Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs)
 
 ## Explanation of linked data
 
-Thank you @brimwats for this explanation on Linked Data!
+Thank you [@brimwats](https://github.com/brimwats) for this explanation on Linked Data!
 
 ### Introduction
 This plugin allows the use of structured linked data vocabularies as metadata in Obsidian notes. There are some concepts that should be understood when using this plugin. There are two sections below, one for non-technical users and ones for technical users (those familiar with linked data).
