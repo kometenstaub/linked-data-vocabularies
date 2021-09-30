@@ -1,5 +1,5 @@
 import { App, Notice, request, RequestParam, TFile } from 'obsidian';
-import type { suggest2Return, SuggesterItem } from './interfaces';
+import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2, returnObjectLcsh } from './interfaces';
 import {
@@ -113,7 +113,6 @@ export class LCSHMethods {
 			}
 			for (let url of urls) {
 				if (limit && count === 0) {
-					console.log('broke out')
 					break;
 				}
 				responseObject = await this.requestHeadingURL(url + '.json');
