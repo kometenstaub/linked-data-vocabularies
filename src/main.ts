@@ -29,8 +29,8 @@ export default class SKOSPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.addCommand({
-			id: 'query-lcsh-data',
-			name: 'Query LCSH data',
+			id: 'query-lcsh-headings',
+			name: 'Query LCSH headings',
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
