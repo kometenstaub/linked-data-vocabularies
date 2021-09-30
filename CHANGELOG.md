@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.0.10...0.0.11) (2021-09-30)
+
 ### [0.0.10](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.0.9...0.0.10) (2021-09-30)
 
 
