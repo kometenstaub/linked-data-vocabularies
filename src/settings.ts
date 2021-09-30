@@ -127,7 +127,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.broaderMax)
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
-						if (Number.isInteger(num) && num >= 0) {
+						if ((Number.isInteger(num) && num >= 0) || value === '') {
 							settings.broaderMax = value;
 							await this.plugin.saveSettings();
 						} else {
@@ -143,7 +143,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.narrowerMax)
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
-						if (Number.isInteger(num) && num >= 0) {
+						if ((Number.isInteger(num) && num >= 0) || value === '') {
 							settings.narrowerMax = value;
 							await this.plugin.saveSettings();
 						} else {
@@ -159,7 +159,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.setValue(settings.relatedMax)
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
-						if (Number.isInteger(num) && num >= 0) {
+						if ((Number.isInteger(num) && num >= 0) || value === '') {
 							settings.relatedMax = value;
 							await this.plugin.saveSettings();
 						} else {
