@@ -8,4 +8,4 @@ export const [BROADER_URL, NARROWER_URL, RELATED_URL] = [
     'http://www.w3.org/2004/02/skos/core#related'
 ]
 
-export const AUTHORITATIVE_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel'
+export const PREF_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel'

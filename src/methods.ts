@@ -1,8 +1,13 @@
 import { App, Notice, request, RequestParam, TFile } from 'obsidian';
-import type { SuggesterItem } from './interfaces';
+import type { suggest2Return, SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
-import type { headings, suggest2 } from './interfaces';
-import { BROADER_URL, NARROWER_URL, RELATED_URL, AUTHORITATIVE_LABEL } from './constants'
+import type { headings, suggest2, returnObjectLcsh } from './interfaces';
+import {
+	BROADER_URL,
+	NARROWER_URL,
+	RELATED_URL,
+	PREF_LABEL,
+} from './constants';
 
 export class LCSHMethods {
 	app: App;
@@ -13,16 +18,16 @@ export class LCSHMethods {
 		this.plugin = plugin;
 	}
 
-	private async requestHeadingURL(url: string): Promise<Object[]> {
+	private async requestHeadingURL(url: string): Promise<returnObjectLcsh[]> {
 		const response = await request({ url });
-		const responseObject: {}[] = JSON.parse(response);
+		const responseObject: returnObjectLcsh[] = JSON.parse(response);
 		return responseObject;
 	}
 
 	// input: heading from SuggestModal
 	public async findHeading(heading: string): Promise<SuggesterItem[]> {
 		let requestObject: RequestParam = {
-			url: ''
+			url: '',
 		};
 
 		// reading settings doesn't work, it returns undefined
@@ -48,72 +53,104 @@ export class LCSHMethods {
 			const url = suggestion.uri;
 			const aLabel = suggestion.aLabel;
 			const vLabel = suggestion.vLabel;
-			return { display, url, aLabel, vLabel }
-		})
+			return { display, url, aLabel, vLabel };
+		});
 
 		// set data for modal
 		return headings;
 	}
 
-	public async getURL(item: SuggesterItem): Promise<Object[]> {
+	public async getURL(item: SuggesterItem): Promise<returnObjectLcsh[]> {
 		const url = item.url + '.json';
-		const responseObject = await this.requestHeadingURL(url);
+		const responseObject: returnObjectLcsh[] = await this.requestHeadingURL(
+			url
+		);
 		return responseObject;
 	}
 
-	public async parseSKOS(responseObject: {}[]): Promise<headings> {
+	public async parseSKOS(
+		responseObject: returnObjectLcsh[]
+	): Promise<headings> {
 		let broaderURLs: string[] = [];
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
 
-		function fillURLs(type: string, element: { [key: string]: string | {}[] | string[] }, urlArr: string[]) {
-			const item = element[type]
+		function fillURLs(
+			type: string,
+			element: returnObjectLcsh,
+			urlArr: string[]
+		) {
+			//@ts-ignore
+			const item = element[type];
 			if (item) {
 				//@ts-ignore
-				item.forEach(
-					(id: { [x: string]: string; }) => {
-						urlArr.push(id['@id']);
-					}
-				);
+				item.forEach((id: { [x: string]: string }) => {
+					urlArr.push(id['@id']);
+				});
 			}
 		}
 
-		responseObject.forEach(
-			(element: { [key: string]: string | {}[] | string[] }) => {
-				fillURLs(BROADER_URL, element, broaderURLs)
-				fillURLs(NARROWER_URL, element, narrowerURLs)
-				fillURLs(RELATED_URL, element, relatedURLs)
-			}
-		);
+		for (let element of responseObject) {
+			fillURLs(BROADER_URL, element, broaderURLs);
+			fillURLs(NARROWER_URL, element, narrowerURLs);
+			fillURLs(RELATED_URL, element, relatedURLs);
+		}
 
 		let broaderHeadings: string[] = [];
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
 
-		const fillValues = async (urls: string[], headingsArr: string[]) => {
+		const fillValues = async (
+			urls: string[],
+			headingsArr: string[],
+			numberOfHeadings: string
+		) => {
+			let count: number = 0;
+			let limit: boolean = false;
+			if (numberOfHeadings !== '') {
+				limit = true;
+				count = parseInt(numberOfHeadings);
+			}
 			for (let url of urls) {
-				const responseObject = await this.requestHeadingURL(url + '.json');
-				responseObject.forEach(
-					//@ts-ignore
-					(element: { [key: string]: string | {}[] | string[] }) => {
-						if (element['@id'] === url) {
-							element[
-								AUTHORITATIVE_LABEL
-								//@ts-expect-error
-							].forEach((nameElement: { [key: string]: string }) => {
-								if (nameElement['@language'] === 'en') {
-									headingsArr.push(nameElement['@value']);
+				if (limit && count === 0) {
+					console.log('broke out')
+					break;
+				}
+				responseObject = await this.requestHeadingURL(url + '.json');
+
+				for (let element of responseObject) {
+					if (element['@id'] === url) {
+						let subelement = element[PREF_LABEL];
+						if (subelement !== undefined) {
+							for (let subsubelement of subelement) {
+								if (subsubelement['@language'] === 'en') {
+									headingsArr.push(subsubelement['@value']);
 								}
-							});
+								if (limit) {
+									count--;
+								}
+							}
 						}
 					}
-				);
+				}
 			}
-		}
+		};
 
-		await fillValues(broaderURLs, broaderHeadings)
-		await fillValues(narrowerURLs, narrowerHeadings)
-		await fillValues(relatedURLs, relatedHeadings)
+		await fillValues(
+			broaderURLs,
+			broaderHeadings,
+			this.plugin.settings.broaderMax
+		);
+		await fillValues(
+			narrowerURLs,
+			narrowerHeadings,
+			this.plugin.settings.narrowerMax
+		);
+		await fillValues(
+			relatedURLs,
+			relatedHeadings,
+			this.plugin.settings.relatedMax
+		);
 
 		const headingObj: headings = {
 			broader: broaderHeadings,
@@ -151,7 +188,7 @@ export class LCSHMethods {
 		} // the current file has frontmatter
 		else {
 			// destructures the file cache frontmatter position
-			// start is the beggining and should return 0, the end returns 
+			// start is the beggining and should return 0, the end returns
 			// the line number of the last ---
 			const {
 				position: { start, end },
@@ -188,7 +225,7 @@ export class LCSHMethods {
 		heading: string,
 		url: string
 	): string[] {
-		const { settings } = this.plugin
+		const { settings } = this.plugin;
 
 		newFrontMatter.push(settings.headingKey + ': ' + heading);
 		if (settings.urlKey !== '') {
@@ -203,12 +240,12 @@ export class LCSHMethods {
 						parseInt(settings.broaderMax)
 					);
 				}
-				broaderHeadings = this.surroundWithQuotes(broaderHeadings)
+				broaderHeadings = this.surroundWithQuotes(broaderHeadings);
 				newFrontMatter.push(
 					this.plugin.settings.broaderKey +
-					': [' +
-					broaderHeadings.toString() +
-					']'
+						': [' +
+						broaderHeadings.toString() +
+						']'
 				);
 			}
 		}
@@ -221,12 +258,12 @@ export class LCSHMethods {
 						parseInt(settings.narrowerMax)
 					);
 				}
-				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings)
+				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
 				newFrontMatter.push(
 					this.plugin.settings.narrowerKey +
-					': [' +
-					narrowerHeadings.toString() +
-					']'
+						': [' +
+						narrowerHeadings.toString() +
+						']'
 				);
 			}
 		}
@@ -239,12 +276,12 @@ export class LCSHMethods {
 						parseInt(settings.relatedMax)
 					);
 				}
-				relatedHeadings = this.surroundWithQuotes(relatedHeadings)
+				relatedHeadings = this.surroundWithQuotes(relatedHeadings);
 				newFrontMatter.push(
 					this.plugin.settings.relatedKey +
-					': [' +
-					relatedHeadings.toString() +
-					']'
+						': [' +
+						relatedHeadings.toString() +
+						']'
 				);
 			}
 		}
@@ -252,10 +289,10 @@ export class LCSHMethods {
 	}
 
 	surroundWithQuotes(headingsArray: string[]): string[] {
-		let newHeadingsArray: string[] = []
+		let newHeadingsArray: string[] = [];
 		for (let heading of headingsArray) {
-			newHeadingsArray.push('"' + heading + '"')
+			newHeadingsArray.push('"' + heading + '"');
 		}
-		return newHeadingsArray
+		return newHeadingsArray;
 	}
 }
