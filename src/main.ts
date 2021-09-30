@@ -13,9 +13,9 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	lcshSearchType: 'keyword',
 	headingKey: 'heading',
 	urlKey: 'url',
-	broaderMax: '',
-	narrowerMax: '',
-	relatedMax: '',
+	broaderMax: '3',
+	narrowerMax: '3',
+	relatedMax: '3',
 };
 
 export default class SKOSPlugin extends Plugin {
