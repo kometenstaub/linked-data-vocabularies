@@ -4,7 +4,7 @@ This plugin adds YAML keys for the selected heading, url (optional), and broader
 
 Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API is implemented.
 
-See @brimwats’ [explanation](#explanation-of-linked-data) to understand linked data better.
+See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
 
 ### Usage
 
