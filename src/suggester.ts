@@ -10,13 +10,43 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
-		this.setPlaceholder('Start typing...');
 		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
 		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
 			// @ts-ignore
 			this.chooser.useSelectedItem(evt);
 			return false;
 		});
+	}
+
+	onOpen() {
+		const el3 = createEl('div', 'prompt-instructions');
+		const el4 = createEl('div', 'prompt-instruction');
+		const modal = document.getElementsByClassName('prompt')[0];
+		modal.appendChild(el3);
+		el3.appendChild(el4);
+		const el4_1 = createEl('span', 'prompt-instruction-command');
+		el4.appendChild(el4_1);
+		const el4_1_1 = createEl('kbd');
+		el4_1.appendChild(el4_1_1);
+		el4_1_1.appendText('Shift + Enter');
+		const el4_2 = createEl('span');
+		el4.appendChild(el4_2);
+		el4_2.appendText('to insert as inline YAML at selection');
+
+		const el5 = createEl('div', 'prompt-instruction');
+		el3.appendChild(el5);
+		const el5_1 = createEl('span', 'prompt-instruction-command');
+		el5.appendChild(el5_1);
+		const el5_1_1 = createEl('kbd');
+		el5_1.appendChild(el5_1_1);
+		el5_1_1.appendText('Enter');
+		const el5_2 = createEl('span');
+		el5.appendChild(el5_2);
+		el5_2.appendText('to insert as YAML');
+
+		this.setPlaceholder('Start typing...');
+		//@ts-ignore
+		document.getElementsByClassName('prompt-input')[0].focus();
 	}
 
 	/**
