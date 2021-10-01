@@ -7,7 +7,10 @@ import {
 	TFile,
 	MarkdownView,
 } from 'obsidian';
-import type { SuggesterItem } from './interfaces';
+import type {
+	HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging,
+	SuggesterItem,
+} from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2, returnObjectLcsh } from './interfaces';
 import {
@@ -26,21 +29,30 @@ export class LCSHMethods {
 		this.plugin = plugin;
 	}
 
+	/**
+	 * Gets the object which is needed to iterate over the headings
+	 * @param url - the URL that is requested
+	 * @returns - a responseObject in form of {@link returnObjectLcsh[]}
+	 */
 	private async requestHeadingURL(url: string): Promise<returnObjectLcsh[]> {
-		const httpsUrl = url.replace('http', 'https')
-		const requestObj : RequestParam = {url: httpsUrl}
+		const httpsUrl = url.replace('http', 'https');
+		const requestObj: RequestParam = { url: httpsUrl };
 		const response = await request(requestObj);
 		const responseObject: returnObjectLcsh[] = JSON.parse(response);
 		return responseObject;
 	}
 
-	// input: heading from SuggestModal
+	/**
+	 *
+	 * @param heading | the input from the {@link SKOSModal.updateSuggestions | SuggesterModal }
+	 * @returns - {@link SuggesterItem[] }, the array with information that populates
+	 * 				SuggestModal in {@link SKOSModal.renderSuggestion }
+	 */
 	public async findHeading(heading: string): Promise<SuggesterItem[]> {
 		let requestObject: RequestParam = {
 			url: '',
 		};
 
-		// reading settings doesn't work, it returns undefined
 		const counter = this.plugin.settings.elementCounter;
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
@@ -61,15 +73,21 @@ export class LCSHMethods {
 		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
 			const url = suggestion.uri;
-			const aLabel = suggestion.aLabel;
-			const vLabel = suggestion.vLabel;
+			const aLabel = suggestion.aLabel; // authoritative label
+			const vLabel = suggestion.vLabel; // variant label
 			return { display, url, aLabel, vLabel };
 		});
 
-		// set data for modal
+		// return data for modal
 		return headings;
 	}
 
+	/**
+	 *
+	 * @param item - the {@link SuggesterItem} which {@link SKOSModal.onChooseSuggestion} passes to this function
+	 * @returns - a response object, which is the content that is needed to parse the broader, narrower and
+	 * related headings in {@link LCSHMethods.async parseSKOS}
+	 */
 	public async getURL(item: SuggesterItem): Promise<returnObjectLcsh[]> {
 		const url = item.url + '.json';
 		const responseObject: returnObjectLcsh[] = await this.requestHeadingURL(
@@ -78,6 +96,13 @@ export class LCSHMethods {
 		return responseObject;
 	}
 
+	/**
+	 *
+	 * @param responseObject - passed from {@link SKOSModal.async onChooseSuggestion}, is
+	 * what {@link LCSHMethods.async getURL} returns
+	 * @returns - the headingObj of type {@link headings} which contains the broader, narrower and related headings
+	 * which can then be written to the file with {@link LCSHMethods.writeYaml}
+	 */
 	public async parseSKOS(
 		responseObject: returnObjectLcsh[]
 	): Promise<headings> {
@@ -85,21 +110,30 @@ export class LCSHMethods {
 		let narrowerURLs: string[] = [];
 		let relatedURLs: string[] = [];
 
+		/**
+		 *
+		 * @param type - broader, narrower or related constant @see BROADER_URL, @see NARROWER_URL, @see RELATED_URL
+		 * @param element - the response Object for the chosen heading, @see returnObjectLcsh
+		 * @param urlArr - takes one of the three arrays above and fills them with the URls which are contained under
+		 * broder, narrower or related in {@link returnObjectLcsh}
+		 */
 		function fillURLs(
 			type: string,
 			element: returnObjectLcsh,
 			urlArr: string[]
 		) {
-			//@ts-ignore
-			const item = element[type];
+			const item: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] =
+				//@ts-expect-error
+				element[type];
 			if (item) {
-				//@ts-ignore
-				item.forEach((id: { [x: string]: string }) => {
-					urlArr.push(id['@id']);
-				});
+				for (let element of item) {
+					urlArr.push(element['@id']);
+				}
 			}
 		}
-
+		/**
+		 * get all the URLs for all the broader, narrower and related headings
+		 */
 		for (let element of responseObject) {
 			fillURLs(BROADER_URL, element, broaderURLs);
 			fillURLs(NARROWER_URL, element, narrowerURLs);
@@ -110,6 +144,12 @@ export class LCSHMethods {
 		let narrowerHeadings: string[] = [];
 		let relatedHeadings: string[] = [];
 
+		/**
+		 * Each JSON for each heading URL is requested and its name is resolved and added to the headingsArr
+		 * @param urls - the URL arrays from above, @see broaderURLs, @see narrowerURLs, @see relatedURLs
+		 * @param headingsArr - the array to be filled with values, @see broaderHeadings, @see narrowerHeadings, @see relatedHeadings
+		 * @param numberOfHeadings - the number of maximum headings to be included, they are taken from the settings
+		 */
 		const fillValues = async (
 			urls: string[],
 			headingsArr: string[],
@@ -171,6 +211,14 @@ export class LCSHMethods {
 	}
 
 	// Thank you for the inspiration: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
+	/**
+	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
+	 * YAML or inline YAML or use with {@link https://github.com/blacksmithgu/obsidian-dataview | Dataview}
+	 * @param headingObj - The object containing all the broader, narrower and related headings from {@link parseSKOS}
+	 * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
+	 * @param heading - The selected heading from th heading from the SuggesterModal
+	 * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
+	 */
 	public async writeYaml(
 		headingObj: headings,
 		tfile: TFile,
@@ -178,6 +226,7 @@ export class LCSHMethods {
 		url: string,
 		evt: KeyboardEvent | MouseEvent
 	): Promise<void> {
+		// the shift key is not activated
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);
 			const fileCache = this.app.metadataCache.getFileCache(tfile);
@@ -217,7 +266,8 @@ export class LCSHMethods {
 
 				await this.writeYamlToFile(splitContent, tfile);
 			}
-		} else if (evt.shiftKey) {
+		} // the shift key is activated
+		else if (evt.shiftKey) {
 			let newFrontMatter: string[] = [];
 			const yaml = this.buildYaml(
 				newFrontMatter,
@@ -232,6 +282,12 @@ export class LCSHMethods {
 			this.writeInlineYamlToSel(inlineYaml, tfile);
 		}
 	}
+
+	/**
+	 * Writes the YAML to the currently active file, if it is active.
+	 * @param splitContent - the curerntly active file, each line being one array element
+	 * @param tfile - the currently active file, @see TFile
+	 */
 	async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
 		const newFileContent = splitContent.join('\n');
 		if (this.app.workspace.getActiveFile() === tfile) {
@@ -243,6 +299,11 @@ export class LCSHMethods {
 		}
 	}
 
+	/**
+	 * Insert the inline YAML at the current cursor position, if the file from the beginning is still active.
+	 * @param inlineYaml - the inline YAML as string
+	 * @param tfile - the currently active file, @see TFile
+	 */
 	writeInlineYamlToSel(inlineYaml: string, tfile: TFile) {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (this.app.workspace.getActiveFile() === tfile) {
@@ -251,11 +312,19 @@ export class LCSHMethods {
 			if (typeof editorRange !== 'undefined') {
 				activeEditor?.replaceRange(inlineYaml, editorRange);
 			} else {
-				new Notice('Your cursor is not anymore in the same file.')
+				new Notice('Your cursor is not anymore in the same file.');
 			}
 		}
 	}
 
+	/**
+	 *
+	 * @param newFrontMatter - the array to which the YAML lines will be pushed
+	 * @param headingObj - the object containing broader, narrower and related headings
+	 * @param heading - the heading that was selected in the SuggestModal
+	 * @param url - the URL of the heading that was selected in the SuggestModal
+	 * @returns - the YAML lines as an array which can then be written to the file
+	 */
 	buildYaml(
 		newFrontMatter: string[],
 		headingObj: headings,
@@ -305,7 +374,11 @@ export class LCSHMethods {
 		}
 		return newFrontMatter;
 	}
-
+	/**
+	 *
+	 * @param headingsArray | the array of headings returned from {@link buildYaml}
+	 * @returns - an array where each element is surrounded with double quotes
+	 */
 	surroundWithQuotes(headingsArray: string[]): string[] {
 		let newHeadingsArray: string[] = [];
 		for (let heading of headingsArray) {

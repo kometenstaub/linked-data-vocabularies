@@ -128,8 +128,8 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	) {
 		const heading = item.display;
 		const headingUrl = item.url;
-		const url = await this.plugin.methods.getURL(item);
-		const headings = await this.plugin.methods.parseSKOS(url);
+		const headingObj = await this.plugin.methods.getURL(item);
+		const headings = await this.plugin.methods.parseSKOS(headingObj);
 
 		await this.plugin.methods.writeYaml(
 			headings,
