@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.3...0.2.4) (2021-10-01)
+
+
+### Bug Fixes
+
+* needed to use setTimeout for this because the modal got opened, but not fast enough ([cf469fb](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/cf469fbb803c8996f9e0368bc025c0084f365f5e))
+
 ### [0.2.3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.2...0.2.3) (2021-10-01)
 
 
