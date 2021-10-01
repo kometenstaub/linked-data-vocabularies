@@ -1,6 +1,6 @@
 ## Obsidian Linked Data Vocabularies Plugin
 
-This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings.
+This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings. It also supports inserting it as inline YAML at the current selection for use with [Dataview](https://github.com/blacksmithgu/obsidian-dataview).
 
 Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API is implemented.
 
@@ -10,7 +10,13 @@ See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-li
 
 In the editor, open the command palette and execute the `LCSH` command. Alternatively, you can set a hotkey for it.
 
+There are two options: You can either use <kbd>Enter</kbd> to insert the data as YAML.
+
 If there is no YAML block present, a new one will be created. If there is already YAML present, the new YAML will be appended to the current YAML.
+
+Or you use <kbd>Shift</kbd> + <kbd>Enter</kbd> to insert it as inline YAML at the current selection.
+
+You can of course also use the mouse instead.
 
 ### Configuration
 
