@@ -147,3 +147,13 @@ export interface Hit {
     code:         string;
     rank:         string;
 }
+
+
+declare module "obsidian" {
+    interface App {
+        commands: {
+                addCommand: any;
+                removeCommand: any;
+        }
+    }
+}

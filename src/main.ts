@@ -1,9 +1,8 @@
-import { Editor, MarkdownView, Plugin, View } from 'obsidian';
+import { Command, Editor, MarkdownView, Plugin, View } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
 import { SKOSModal } from './suggester';
-
 
 const DEFAULT_SETTINGS: SKOSSettings = {
 	elementCounter: '10',
@@ -22,6 +21,25 @@ export default class SKOSPlugin extends Plugin {
 	methods = new LCSHMethods(this.app, this);
 	//@ts-ignore
 	settings: SKOSSettings;
+
+	/**
+	 * override internal Obsidian function to get shorter name in command palette
+	 * @param command - type Command
+	 * @returns - 
+	 */
+	addCommand = (command: Command) => {
+		var t = this;
+		return (
+			(command.id = this.manifest.id + ':' + command.id),
+			//command.name = this.manifest.name + ": " + command.name,
+			(command.name = 'Linked Vocab' + ': ' + command.name),
+			this.app.commands.addCommand(command),
+			this.register(function () {
+				return t.app.commands.removeCommand(command.id);
+			}),
+			command
+		);
+	};
 
 	async onload() {
 		console.log('loading Linked Data Vocabularies plugin');
@@ -45,11 +63,7 @@ export default class SKOSPlugin extends Plugin {
 				}
 				const currentView = view;
 				const tfile = currentView.file;
-				const chooser = new SKOSModal(
-					this.app,
-					this,
-					tfile
-				).open();
+				const chooser = new SKOSModal(this.app, this, tfile).open();
 				return chooser;
 			},
 		});
