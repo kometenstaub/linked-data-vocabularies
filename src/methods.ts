@@ -1,4 +1,12 @@
-import { App, Notice, request, RequestParam, TFile } from 'obsidian';
+import {
+	App,
+	MarkdownEditView,
+	Notice,
+	request,
+	RequestParam,
+	TFile,
+	MarkdownView,
+} from 'obsidian';
 import type { SuggesterItem } from './interfaces';
 import type SKOSPlugin from './main';
 import type { headings, suggest2, returnObjectLcsh } from './interfaces';
@@ -165,46 +173,63 @@ export class LCSHMethods {
 		headingObj: headings,
 		tfile: TFile,
 		heading: string,
-		url: string
+		url: string,
+		evt: KeyboardEvent | MouseEvent
 	): Promise<void> {
-		const fileContent: string = await this.app.vault.read(tfile);
+		//doesn't even get here with shift + enter
+		if (!evt.shiftKey) {
+			const fileContent: string = await this.app.vault.read(tfile);
+			const fileCache = this.app.metadataCache.getFileCache(tfile);
+			let splitContent = fileContent.split('\n');
+			// if the current file has no frontmatter
+			if (!fileCache?.frontmatter) {
+				let newFrontMatter: string[] = ['---'];
+				newFrontMatter.concat(
+					this.buildYaml(newFrontMatter, headingObj, heading, url)
+				);
+				newFrontMatter.push('---');
+				const reversedFrontMatter = newFrontMatter.reverse();
 
-		const fileCache = this.app.metadataCache.getFileCache(tfile);
-		let splitContent = fileContent.split('\n');
-		// if the current file has no frontmatter
-		if (!fileCache?.frontmatter) {
-			let newFrontMatter: string[] = ['---'];
-			newFrontMatter.concat(
-				this.buildYaml(newFrontMatter, headingObj, heading, url)
-			);
-			newFrontMatter.push('---');
-			const reversedFrontMatter = newFrontMatter.reverse();
+				for (let property of reversedFrontMatter) {
+					splitContent.unshift(property);
+				}
+				await this.writeYamlToFile(splitContent, tfile);
+			} // the current file has frontmatter
+			else {
+				// destructures the file cache frontmatter position
+				// start is the beggining and should return 0, the end returns
+				// the line number of the last ---
+				const {
+					position: { start, end },
+				} = fileCache.frontmatter;
 
-			for (let property of reversedFrontMatter) {
-				splitContent.unshift(property);
+				let addedFrontmatter: string[] = [];
+				addedFrontmatter.concat(
+					this.buildYaml(addedFrontmatter, headingObj, heading, url)
+				);
+
+				let lineCount: number = 0;
+				for (let line of addedFrontmatter) {
+					splitContent.splice(end.line + lineCount, 0, line);
+					lineCount++;
+				}
+
+				await this.writeYamlToFile(splitContent, tfile);
 			}
-			await this.writeYamlToFile(splitContent, tfile);
-		} // the current file has frontmatter
-		else {
-			// destructures the file cache frontmatter position
-			// start is the beggining and should return 0, the end returns
-			// the line number of the last ---
-			const {
-				position: { start, end },
-			} = fileCache.frontmatter;
-
-			let addedFrontmatter: string[] = [];
-			addedFrontmatter.concat(
-				this.buildYaml(addedFrontmatter, headingObj, heading, url)
+		} else if (evt.shiftKey) {
+			console.log('hello')
+			let newFrontMatter: string[] = [];
+			const yaml = this.buildYaml(
+				newFrontMatter,
+				headingObj,
+				heading,
+				url
 			);
-
-			let lineCount: number = 0;
-			for (let line of addedFrontmatter) {
-				splitContent.splice(end.line + lineCount, 0, line);
-				lineCount++;
+			let inlineYaml: string = '';
+			for (let line of yaml) {
+				inlineYaml += line.replace(':', '::') + '\n';
 			}
-
-			await this.writeYamlToFile(splitContent, tfile);
+			this.writeInlineYamlToSel(inlineYaml, tfile);
 		}
 	}
 	async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
@@ -215,6 +240,19 @@ export class LCSHMethods {
 			new Notice(
 				'You switched to another file before the content could be written.'
 			);
+		}
+	}
+
+	writeInlineYamlToSel(inlineYaml: string, tfile: TFile) {
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (this.app.workspace.getActiveFile() === tfile) {
+			const activeEditor = activeView?.editor;
+			const editorRange = activeEditor?.getCursor('from');
+			if (typeof editorRange !== 'undefined') {
+				activeEditor?.replaceRange(inlineYaml, editorRange);
+			} else {
+				new Notice('Your cursor is not anymore in the same file.')
+			}
 		}
 	}
 
@@ -245,26 +283,26 @@ export class LCSHMethods {
 					']'
 			);
 		}
-			if (headingObj.narrower.length > 0) {
+		if (headingObj.narrower.length > 0) {
 			let narrowerHeadings: string[] = headingObj.narrower;
-				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
-				newFrontMatter.push(
-					this.plugin.settings.narrowerKey +
-						': [' +
-						narrowerHeadings.toString() +
-						']'
-				);
+			narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
+			newFrontMatter.push(
+				this.plugin.settings.narrowerKey +
+					': [' +
+					narrowerHeadings.toString() +
+					']'
+			);
 		}
-			if (headingObj.related.length > 0) {
+		if (headingObj.related.length > 0) {
 			let relatedHeadings: string[] = headingObj.related;
-				relatedHeadings = this.surroundWithQuotes(relatedHeadings);
-				newFrontMatter.push(
-					this.plugin.settings.relatedKey +
-						': [' +
-						relatedHeadings.toString() +
-						']'
-				);
-			}
+			relatedHeadings = this.surroundWithQuotes(relatedHeadings);
+			newFrontMatter.push(
+				this.plugin.settings.relatedKey +
+					': [' +
+					relatedHeadings.toString() +
+					']'
+			);
+		}
 		return newFrontMatter;
 	}
 
