@@ -86,13 +86,11 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		item: SuggesterItem,
 		evt: MouseEvent | KeyboardEvent
 	) {
-		//console.log(evt);
 		const heading = item.display;
 		const headingUrl = item.url;
 		const url = await this.plugin.methods.getURL(item);
 		const headings = await this.plugin.methods.parseSKOS(url);
 
-		//const { altKey, ctrlKey, metaKey, shiftKey } = evt;
 		await this.plugin.methods.writeYaml(
 			headings,
 			this.tfile,

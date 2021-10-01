@@ -176,7 +176,6 @@ export class LCSHMethods {
 		url: string,
 		evt: KeyboardEvent | MouseEvent
 	): Promise<void> {
-		//doesn't even get here with shift + enter
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);
 			const fileCache = this.app.metadataCache.getFileCache(tfile);
@@ -217,7 +216,6 @@ export class LCSHMethods {
 				await this.writeYamlToFile(splitContent, tfile);
 			}
 		} else if (evt.shiftKey) {
-			console.log('hello')
 			let newFrontMatter: string[] = [];
 			const yaml = this.buildYaml(
 				newFrontMatter,
