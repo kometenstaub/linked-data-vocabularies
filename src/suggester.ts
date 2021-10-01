@@ -19,6 +19,10 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		});
 	}
 
+	/**
+	 * Add what function the Shift key has and refocus the cursor in it.
+	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
+	 */
 	onOpen() {
 		if (Platform.isDesktopApp) {
 			const el3 = createEl('div', 'prompt-instructions');
