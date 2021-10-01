@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.1.4...0.2.0) (2021-10-01)
+
+
+### Features
+
+* :sparkles: shift + enter inserts inline YAML at cursor position ([b52be02](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/b52be021f032a21b4ea130a5549808d6647c9c32))
+* inline yaml when shift + click ([b539aed](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/b539aed14476430f35dfa249d3da31a789e5873d))
+
 ### [0.1.4](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.1.3...0.1.4) (2021-10-01)
 
 ### [0.1.3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.1.2...0.1.3) (2021-10-01)
