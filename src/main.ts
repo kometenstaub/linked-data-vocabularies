@@ -32,7 +32,7 @@ export default class SKOSPlugin extends Plugin {
 		return (
 			(command.id = this.manifest.id + ':' + command.id),
 			//command.name = this.manifest.name + ": " + command.name,
-			(command.name = 'Linked Vocab' + ': ' + command.name),
+			(command.name = 'Linked Vocabs: ' + command.name),
 			this.app.commands.addCommand(command),
 			this.register(function () {
 				return t.app.commands.removeCommand(command.id);
