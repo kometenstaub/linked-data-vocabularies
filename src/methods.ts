@@ -113,7 +113,6 @@ export class LCSHMethods {
 			}
 			for (let url of urls) {
 				if (limit && count === 0) {
-					console.log('broke out')
 					break;
 				}
 				responseObject = await this.requestHeadingURL(url + '.json');
@@ -231,33 +230,23 @@ export class LCSHMethods {
 		if (settings.urlKey !== '') {
 			newFrontMatter.push(settings.urlKey + ': ' + url);
 		}
-		if (settings.broaderMax !== '0') {
+		/**
+		 * It will be zero if there are no headings or when the user chose 0 in the settings,
+		 * because {@link LCSHMethods.fillValues} breaks if the number is 0 or at the user defined limit,
+		 * so the array with headings will only contain as many heaindgs as the user chose
+		 */
+		if (headingObj.broader.length > 0) {
 			let broaderHeadings: string[] = headingObj.broader;
-			if (headingObj.broader.length > 0) {
-				if (settings.broaderMax !== '') {
-					broaderHeadings = broaderHeadings.slice(
-						0,
-						parseInt(settings.broaderMax)
-					);
-				}
-				broaderHeadings = this.surroundWithQuotes(broaderHeadings);
-				newFrontMatter.push(
-					this.plugin.settings.broaderKey +
-						': [' +
-						broaderHeadings.toString() +
-						']'
-				);
-			}
+			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
+			newFrontMatter.push(
+				this.plugin.settings.broaderKey +
+					': [' +
+					broaderHeadings.toString() +
+					']'
+			);
 		}
-		if (settings.narrowerMax !== '0') {
-			let narrowerHeadings: string[] = headingObj.narrower;
 			if (headingObj.narrower.length > 0) {
-				if (settings.narrowerMax !== '') {
-					narrowerHeadings = narrowerHeadings.slice(
-						0,
-						parseInt(settings.narrowerMax)
-					);
-				}
+			let narrowerHeadings: string[] = headingObj.narrower;
 				narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
 				newFrontMatter.push(
 					this.plugin.settings.narrowerKey +
@@ -265,17 +254,9 @@ export class LCSHMethods {
 						narrowerHeadings.toString() +
 						']'
 				);
-			}
 		}
-		if (settings.relatedMax !== '0') {
-			let relatedHeadings: string[] = headingObj.related;
 			if (headingObj.related.length > 0) {
-				if (settings.relatedMax !== '') {
-					relatedHeadings = relatedHeadings.slice(
-						0,
-						parseInt(settings.relatedMax)
-					);
-				}
+			let relatedHeadings: string[] = headingObj.related;
 				relatedHeadings = this.surroundWithQuotes(relatedHeadings);
 				newFrontMatter.push(
 					this.plugin.settings.relatedKey +
@@ -284,7 +265,6 @@ export class LCSHMethods {
 						']'
 				);
 			}
-		}
 		return newFrontMatter;
 	}
 
