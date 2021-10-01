@@ -11,7 +11,12 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		this.plugin = plugin;
 		this.tfile = tfile;
 		this.setPlaceholder('Start typing...');
-
+		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
+		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
+			// @ts-ignore
+			this.chooser.useSelectedItem(evt);
+			return false;
+		});
 	}
 
 	/**
