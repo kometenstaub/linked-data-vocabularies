@@ -115,6 +115,7 @@ export class LCSHMethods {
 		 * I can break after the last one and don't check the objects after it because no BT/NT/RT links
 		 * would be in there; hence also three `if` and not else if (they're all in the same object)
 		 */
+		// prettier-ignore
 		for (let element of responseObject) {
 			//@ts-ignore
 			let broaderItem: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] = element[BROADER_URL];
