@@ -25,8 +25,8 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	 */
 	onOpen() {
 		if (Platform.isDesktopApp) {
-			const el3 = createEl('div', 'prompt-instructions');
-			const el4 = createEl('div', 'prompt-instruction');
+			const el3 = createDiv({cls: 'prompt-instructions'});
+			const el4 = createDiv({cls: 'prompt-instruction'});
 			const modal = document.getElementsByClassName('prompt')[0];
 			modal.appendChild(el3);
 			el3.appendChild(el4);
@@ -39,7 +39,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			el4.appendChild(el4_2);
 			el4_2.appendText('to insert as inline YAML at selection');
 
-			const el5 = createEl('div', 'prompt-instruction');
+			const el5 = createDiv({cls:'prompt-instruction'});
 			el3.appendChild(el5);
 			const el5_1 = createEl('span', 'prompt-instruction-command');
 			el5.appendChild(el5_1);
