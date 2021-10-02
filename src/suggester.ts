@@ -130,7 +130,8 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		item: SuggesterItem,
 		evt: MouseEvent | KeyboardEvent
 	) {
-		const heading = item.display;
+		let heading = item.display;
+		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1')
 		const headingUrl = item.url;
 		const headingObj = await this.plugin.methods.getURL(item);
 		const headings = await this.plugin.methods.parseSKOS(headingObj);
