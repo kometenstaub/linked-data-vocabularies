@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.9...0.3.0) (2021-10-02)
+
+
+### Features
+
+* :sparkles: infer subdivisions, only write heading and show heading in suggester ([fd75161](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/fd75161d9a9e3934343e709d617a6b90df0cd960))
+
 ### [0.2.9](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.8...0.2.9) (2021-10-02)
 
 
