@@ -49,6 +49,8 @@ The Modal shows the heading in bold, under it, it shows the aLabel and if existi
 ><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
 
+Subdivisions are inferred, usually you wouldn't want to choose them.
+
 ### Recommendation
 
 Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs). You can set the hierachies in its settings and will have a breadcrumbs view for navigating the heading hierarchy you create in your notes.
