@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.3.1...0.3.2) (2021-10-02)
+
+
+### Bug Fixes
+
+* use setInstructions instead of creating the HTML myself in onOpen ([7f26c91](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/7f26c91731d0a4ba99735ea152c36e9a5aa60d92))
+
 ### [0.3.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.3.0...0.3.1) (2021-10-02)
 
 ## [0.3.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.9...0.3.0) (2021-10-02)
