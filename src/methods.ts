@@ -111,33 +111,31 @@ export class LCSHMethods {
 		let relatedURLs: string[] = [];
 
 		/**
-		 *
-		 * @param type - broader, narrower or related constant @see BROADER_URL, @see NARROWER_URL, @see RELATED_URL
-		 * @param element - the response Object for the chosen heading, @see returnObjectLcsh
-		 * @param urlArr - takes one of the three arrays above and fills them with the URls which are contained under
-		 * broder, narrower or related in {@link returnObjectLcsh}
-		 */
-		function fillURLs(
-			type: string,
-			element: returnObjectLcsh,
-			urlArr: string[]
-		) {
-			const item: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] =
-				//@ts-expect-error
-				element[type];
-			if (item) {
-				for (let element of item) {
-					urlArr.push(element['@id']);
-				}
-			}
-		}
-		/**
-		 * get all the URLs for all the broader, narrower and related headings
+		 * The broader, narrower and related URLs are all in one object in the array, therefore
+		 * I can break after the last one and don't check the objects after it because no BT/NT/RT links
+		 * would be in there; hence also three `if` and not else if (they're all in the same object)
 		 */
 		for (let element of responseObject) {
-			fillURLs(BROADER_URL, element, broaderURLs);
-			fillURLs(NARROWER_URL, element, narrowerURLs);
-			fillURLs(RELATED_URL, element, relatedURLs);
+			//@ts-ignore
+			let broaderItem: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] = element[BROADER_URL];
+			//@ts-ignore
+			let narrowerItem: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] = element[NARROWER_URL];
+			//@ts-ignore
+			let relatedItem: HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging[] = element[RELATED_URL];
+			if (broaderItem) {
+				for (let element of broaderItem) {
+					broaderURLs.push(element['@id']);
+				}
+			} if (narrowerItem) {
+				for (let element of narrowerItem) {
+					narrowerURLs.push(element['@id']);
+				}
+			} if (relatedItem) {
+				for (let element of relatedItem) {
+					relatedURLs.push(element['@id']);
+				}
+				break;
+			}
 		}
 
 		let broaderHeadings: string[] = [];
