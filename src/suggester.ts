@@ -103,16 +103,25 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		const { display, vLabel, aLabel } = value;
+		const { display, vLabel, aLabel, subdivision } = value;
 
 		const el1 = el.createEl('b');
-		el1.appendText(display);
+		const heading = display.replace(/.+?\(USE (.+?)\)/, '$1');
+		el1.appendText(heading);
 		//el.createEl('br')
 		const el2 = el.createEl('div');
-		if (vLabel && vLabel !== display) {
+		if (vLabel && vLabel !== display && subdivision) {
+			el2.appendText(
+				aLabel + ' — ' + vLabel + ' — Subdivision (inferred)'
+			);
+		} else if (vLabel && vLabel !== display && !subdivision) {
 			el2.appendText(aLabel + ' — ' + vLabel);
-		} else if (aLabel !== display) {
+		} else if (aLabel !== display && subdivision) {
+			el2.appendText(aLabel + ' — Subdivision (inferred)');
+		} else if (aLabel !== display && !subdivision) {
 			el2.appendText(aLabel);
+		} else if (subdivision) {
+			el2.appendText('Subdivision (inferred)');
 		}
 	}
 
@@ -131,7 +140,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		evt: MouseEvent | KeyboardEvent
 	) {
 		let heading = item.display;
-		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1')
+		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
 		const headingUrl = item.url;
 		const headingObj = await this.plugin.methods.getURL(item);
 		const headings = await this.plugin.methods.parseSKOS(headingObj);

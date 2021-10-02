@@ -69,13 +69,19 @@ export class LCSHMethods {
 		let data = await request(requestObject);
 		const newData: suggest2 = JSON.parse(data);
 
+		let formerHeading = '';
 		// calculate heading results from received json
 		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
-			const url = suggestion.uri;
+			let subdivision = false;
 			const aLabel = suggestion.aLabel; // authoritative label
+			if (formerHeading === display) {
+				subdivision = true;
+			}
+			formerHeading = display;
+			const url = suggestion.uri;
 			const vLabel = suggestion.vLabel; // variant label
-			return { display, url, aLabel, vLabel };
+			return { display, url, aLabel, vLabel, subdivision };
 		});
 
 		// return data for modal
