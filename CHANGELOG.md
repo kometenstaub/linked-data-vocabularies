@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.7...0.2.8) (2021-10-02)
+
+
+### Bug Fixes
+
+* :bug: trim whitespace from YAML keys in settings ([6fa98e3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/6fa98e30f80ad5e52883c28082399bf0cee9ea5e))
+
 ### [0.2.7](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.6...0.2.7) (2021-10-02)
 
 ### [0.2.6](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.2.5...0.2.6) (2021-10-02)
