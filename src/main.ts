@@ -49,20 +49,11 @@ export default class SKOSPlugin extends Plugin {
 		this.addCommand({
 			id: 'query-lcsh-headings',
 			name: 'Query LCSH headings',
-			editorCheckCallback: (
-				checking: boolean,
+			editorCallback: (
 				editor: Editor,
-				view: View
+				view: MarkdownView
 			) => {
-				if (checking) {
-					return view instanceof MarkdownView;
-				}
-				if (!(view instanceof MarkdownView)) {
-					// shouldn't happen
-					return;
-				}
-				const currentView = view;
-				const tfile = currentView.file;
+				const tfile = view.file;
 				const chooser = new SKOSModal(this.app, this, tfile).open();
 				return chooser;
 			},
