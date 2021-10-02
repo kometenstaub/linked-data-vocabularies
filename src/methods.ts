@@ -31,11 +31,14 @@ export class LCSHMethods {
 
 	/**
 	 * Gets the object which is needed to iterate over the headings
-	 * @param url - the URL that is requested
+	 * @param url - the URL that is requested -> are all of this format: http://id.loc.gov/authorities/subjects/sh85055634
 	 * @returns - a responseObject in form of {@link returnObjectLcsh[]}
 	 */
 	private async requestHeadingURL(url: string): Promise<returnObjectLcsh[]> {
-		const httpsUrl = url.replace('http', 'https');
+		let httpsUrl = ''
+		if (url.slice(0, 7) === 'http://') {
+			httpsUrl = url.replace('http://', 'https://')
+		}
 		const requestObj: RequestParam = { url: httpsUrl };
 		const response = await request(requestObj);
 		const responseObject: returnObjectLcsh[] = JSON.parse(response);
