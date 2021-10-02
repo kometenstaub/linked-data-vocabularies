@@ -178,6 +178,8 @@ export class LCSHMethods {
 								}
 							}
 						}
+						// we already have the heading name, no need to check the other objects
+						break;
 					}
 				}
 			}
