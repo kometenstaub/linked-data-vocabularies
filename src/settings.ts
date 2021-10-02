@@ -70,7 +70,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				text.setPlaceholder('related')
 					.setValue(settings.headingKey)
 					.onChange(async (value) => {
-						settings.headingKey = value;
+						settings.headingKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -81,7 +81,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				text.setPlaceholder('related')
 					.setValue(settings.urlKey)
 					.onChange(async (value) => {
-						settings.urlKey = value;
+						settings.urlKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -92,7 +92,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				text.setPlaceholder('broader')
 					.setValue(settings.broaderKey)
 					.onChange(async (value) => {
-						settings.broaderKey = value;
+						settings.broaderKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -103,7 +103,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				text.setPlaceholder('narrower')
 					.setValue(settings.narrowerKey)
 					.onChange(async (value) => {
-						settings.narrowerKey = value;
+						settings.narrowerKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -114,7 +114,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				text.setPlaceholder('related')
 					.setValue(settings.relatedKey)
 					.onChange(async (value) => {
-						settings.relatedKey = value;
+						settings.relatedKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
