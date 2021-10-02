@@ -10,7 +10,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
-		this.setPlaceholder('Start typing...');
+		this.setPlaceholder('Please start typing...');
 		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
 		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
 			// @ts-ignore
