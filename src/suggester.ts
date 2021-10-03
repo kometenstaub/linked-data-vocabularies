@@ -102,25 +102,17 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		const { display, vLabel, aLabel, subdivision } = value;
+		const { display, vLabel, aLabel } = value;
 
 		const el1 = el.createEl('b');
 		const heading = display.replace(/.+?\(USE (.+?)\)/, '$1');
 		el1.appendText(heading);
 		//el.createEl('br')
 		const el2 = el.createEl('div');
-		if (vLabel && vLabel !== display && subdivision) {
-			el2.appendText(
-				aLabel + ' — ' + vLabel + ' — Subdivision (inferred)'
-			);
-		} else if (vLabel && vLabel !== display && !subdivision) {
+		if (vLabel && vLabel !== display) {
 			el2.appendText(aLabel + ' — ' + vLabel);
-		} else if (aLabel !== display && subdivision) {
-			el2.appendText(aLabel + ' — Subdivision (inferred)');
-		} else if (aLabel !== display && !subdivision) {
+		} else if (aLabel !== display) {
 			el2.appendText(aLabel);
-		} else if (subdivision) {
-			el2.appendText('Subdivision (inferred)');
 		}
 	}
 
@@ -151,7 +143,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open();
 		} else {
 			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
-		const headingObj = await this.plugin.methods.getURL(item);
+			const headingObj = await this.plugin.methods.getURL(item);
 			const headings = await this.plugin.methods.parseSKOS(headingObj);
 			await this.plugin.methods.writeYaml(
 				headings,

@@ -35,9 +35,9 @@ export class LCSHMethods {
 	 * @returns - a responseObject in form of {@link returnObjectLcsh[]}
 	 */
 	private async requestHeadingURL(url: string): Promise<returnObjectLcsh[]> {
-		let httpsUrl = ''
+		let httpsUrl = '';
 		if (url.slice(0, 7) === 'http://') {
-			httpsUrl = url.replace('http://', 'https://')
+			httpsUrl = url.replace('http://', 'https://');
 		}
 		const requestObj: RequestParam = { url: httpsUrl };
 		const response = await request(requestObj);
@@ -51,7 +51,10 @@ export class LCSHMethods {
 	 * @returns - {@link SuggesterItem[] }, the array with information that populates
 	 * 				SuggestModal in {@link SKOSModal.renderSuggestion }
 	 */
-	public async findHeading(heading: string, methodOf: string): Promise<SuggesterItem[]> {
+	public async findHeading(
+		heading: string,
+		methodOf: string
+	): Promise<SuggesterItem[]> {
 		let requestObject: RequestParam = {
 			url: '',
 		};
@@ -59,12 +62,10 @@ export class LCSHMethods {
 		const counter = this.plugin.settings.elementCounter;
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
-		let url: string =
-			'https://id.loc.gov/suggest2?q=' +
-			encodedHeading;
+		let url: string = 'https://id.loc.gov/suggest2?q=' + encodedHeading;
 		url += '&counter=' + counter;
 		url += '&searchtype=' + searchType;
-		url += '&memberOf=' + methodOf
+		url += '&memberOf=' + methodOf;
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
 
@@ -73,19 +74,13 @@ export class LCSHMethods {
 		let data = await request(requestObject);
 		const newData: suggest2 = JSON.parse(data);
 
-		let formerHeading = '';
 		// calculate heading results from received json
 		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
-			let subdivision = false;
 			const aLabel = suggestion.aLabel; // authoritative label
-			if (formerHeading === display) {
-				subdivision = true;
-			}
-			formerHeading = display;
 			const url = suggestion.uri;
 			const vLabel = suggestion.vLabel; // variant label
-			return { display, url, aLabel, vLabel, subdivision };
+			return { display, url, aLabel, vLabel };
 		});
 
 		// return data for modal

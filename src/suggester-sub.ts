@@ -2,17 +2,22 @@ import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
 import type { passInformation, SuggesterItem } from './interfaces';
 import { SUBDIVISIONS } from './constants';
-export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
+export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
 	suggestions: any;
-	data: passInformation
+	data: passInformation;
 
-	constructor(app: App, plugin: SKOSPlugin, tfile: TFile, data: passInformation) {
+	constructor(
+		app: App,
+		plugin: SKOSPlugin,
+		tfile: TFile,
+		data: passInformation
+	) {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
-		this.data = data
+		this.data = data;
 		this.setPlaceholder('Please start typing...');
 		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
 			// @ts-ignore
@@ -27,7 +32,7 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 			{
 				command: '↵',
 				purpose: 'to insert as YAML',
-			}
+			},
 		]);
 	}
 
@@ -69,7 +74,10 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 	 * */
 	async updateSuggestions() {
 		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods.findHeading(value, SUBDIVISIONS);
+		this.suggestions = await this.plugin.methods.findHeading(
+			value,
+			SUBDIVISIONS
+		);
 		//@ts-expect-error
 		await super.updateSuggestions();
 		/**
@@ -90,25 +98,17 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 
 	//@ts-ignore
 	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		const { display, vLabel, aLabel, subdivision } = value;
+		const { display, vLabel, aLabel } = value;
 
 		const el1 = el.createEl('b');
 		const heading = display.replace(/.+?\(USE (.+?)\)/, '$1');
 		el1.appendText(heading);
 		//el.createEl('br')
 		const el2 = el.createEl('div');
-		if (vLabel && vLabel !== display && subdivision) {
-			el2.appendText(
-				aLabel + ' — ' + vLabel + ' — Subdivision (inferred)'
-			);
-		} else if (vLabel && vLabel !== display && !subdivision) {
+		if (vLabel && vLabel !== display) {
 			el2.appendText(aLabel + ' — ' + vLabel);
-		} else if (aLabel !== display && subdivision) {
-			el2.appendText(aLabel + ' — Subdivision (inferred)');
-		} else if (aLabel !== display && !subdivision) {
+		} else if (aLabel !== display) {
 			el2.appendText(aLabel);
-		} else if (subdivision) {
-			el2.appendText('Subdivision (inferred)');
 		}
 	}
 
@@ -132,7 +132,7 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 		//const headingObj = await this.plugin.methods.getURL(item);
 		//const headings = await this.plugin.methods.parseSKOS(headingObj);
 
-		const data = this.data
+		const data = this.data;
 		// parse the data of the authorized heading from the first modal
 		const headingObj = await this.plugin.methods.getURL(data.suggestItem);
 		const headings = await this.plugin.methods.parseSKOS(headingObj);
