@@ -1,25 +1,20 @@
-import { App, Platform, SuggestModal, TFile } from 'obsidian';
+import { App, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
 import type { passInformation, SuggesterItem } from './interfaces';
-import { SubSKOSModal } from './suggester-sub';
-import { SUBJECTS } from './constants';
-export class SKOSModal extends SuggestModal<Promise<any[]>> {
+import { SUBDIVISIONS } from './constants';
+export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 	plugin: SKOSPlugin;
 	tfile: TFile;
 	suggestions: any;
+	data: passInformation
 
-	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
+	constructor(app: App, plugin: SKOSPlugin, tfile: TFile, data: passInformation) {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
+		this.data = data
 		this.setPlaceholder('Please start typing...');
-		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
 		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
-			// @ts-ignore
-			this.chooser.useSelectedItem(evt);
-			return false;
-		});
-		this.scope.register(['Alt'], 'Enter', (evt: KeyboardEvent) => {
 			// @ts-ignore
 			this.chooser.useSelectedItem(evt);
 			return false;
@@ -32,11 +27,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			{
 				command: '↵',
 				purpose: 'to insert as YAML',
-			},
-			{
-				command: 'alt ↵',
-				purpose: 'to add a subdivision',
-			},
+			}
 		]);
 	}
 
@@ -44,13 +35,6 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	 * Add what function the Shift key has and refocus the cursor in it.
 	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
-	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
 
 	focusInput() {
 		//@ts-ignore
@@ -78,7 +62,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	 * */
 	async updateSuggestions() {
 		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods.findHeading(value, SUBJECTS);
+		this.suggestions = await this.plugin.methods.findHeading(value, SUBDIVISIONS);
 		//@ts-expect-error
 		await super.updateSuggestions();
 		/**
@@ -137,22 +121,17 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	) {
 		let heading = item.display;
 		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
-		const headingUrl = item.url;
-		const headingObj = await this.plugin.methods.getURL(item);
-		const headings = await this.plugin.methods.parseSKOS(headingObj);
+		//const headingUrl = item.url;
+		//const headingObj = await this.plugin.methods.getURL(item);
+		//const headings = await this.plugin.methods.parseSKOS(headingObj);
+		const data = this.data
 
-		if (evt.altKey) {
-			const data :passInformation = {headingObject: headings, heading: heading, url: headingUrl}
-			console.log('new modal')
-			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open()
-		} else {
-			await this.plugin.methods.writeYaml(
-				headings,
-				this.tfile,
-				heading,
-				headingUrl,
-				evt
-			);
-		}
+		await this.plugin.methods.writeYaml(
+			data.headingObject,
+			this.tfile,
+			data.heading + '--' + heading,
+			data.url,
+			evt
+		);
 	}
 }

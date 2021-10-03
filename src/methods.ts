@@ -51,7 +51,7 @@ export class LCSHMethods {
 	 * @returns - {@link SuggesterItem[] }, the array with information that populates
 	 * 				SuggestModal in {@link SKOSModal.renderSuggestion }
 	 */
-	public async findHeading(heading: string): Promise<SuggesterItem[]> {
+	public async findHeading(heading: string, methodOf: string): Promise<SuggesterItem[]> {
 		let requestObject: RequestParam = {
 			url: '',
 		};
@@ -60,10 +60,11 @@ export class LCSHMethods {
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
 		let url: string =
-			'https://id.loc.gov/authorities/subjects/suggest2?q=' +
+			'https://id.loc.gov/suggest2?q=' +
 			encodedHeading;
 		url += '&counter=' + counter;
 		url += '&searchtype=' + searchType;
+		url += '&memberOf=' + methodOf
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
 
