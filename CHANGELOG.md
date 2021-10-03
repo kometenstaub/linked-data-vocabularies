@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.4.0...0.4.1) (2021-10-03)
+
+
+### Bug Fixes
+
+* :bug: add missing onOpen() to suggester-sub.ts ([25b2ee4](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/25b2ee48e0796466ce91de9115fc46b91a2c0e23))
+
 ## [0.4.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.3.2...0.4.0) (2021-10-03)
 
 
