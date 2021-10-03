@@ -143,7 +143,6 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 
 		if (evt.altKey) {
 			const data :passInformation = {headingObject: headings, heading: heading, url: headingUrl}
-			console.log('new modal')
 			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open()
 		} else {
 			await this.plugin.methods.writeYaml(
