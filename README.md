@@ -1,4 +1,4 @@
-## Obsidian Linked Data Vocabularies Plugin
+# Obsidian Linked Data Vocabularies Plugin
 
 This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings. It also supports inserting it as inline YAML at the current selection for use with [Dataview](https://github.com/blacksmithgu/obsidian-dataview).
 
@@ -6,7 +6,7 @@ Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API
 
 See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
 
-### Usage
+## Usage
 
 In the editor, open the command palette and execute the `LCSH` command. Alternatively, you can set a hotkey for it.
 
@@ -16,9 +16,12 @@ If there is no YAML block present, a new one will be created. If there is alread
 
 Or you use <kbd>Shift</kbd> + <kbd>Enter</kbd> to insert it as inline YAML at the current selection.
 
+As of 0.4.2 you can also add a subdivision after an authorized heading if you press <kbd>Alt</kbd> + <kbd>Enter</kbd>.
+[Here](#subdivisions--complex-subjects) is an explanation of Subdivisions from [@brimwats](https://github.com/brimwats).
+
 You can of course also use the mouse instead.
 
-### Configuration
+## Configuration
 
 You can set the limit of queries to be display. 10 is the default setting.
 
@@ -38,7 +41,7 @@ From my experience, keywords gives better results, but only gives good results w
 
 You can also set a maximum number of headings to be added per type. The default value is 3. The larger you set it, the longer it will need to process.
 
-### Modal
+## Modal
 
 The Modal shows the heading in bold, under it, it shows the aLabel and if existing, the vLabel.
 
@@ -49,26 +52,27 @@ The Modal shows the heading in bold, under it, it shows the aLabel and if existi
 ><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
 
-Subdivisions are inferred, usually you wouldn't want to choose them.
+Subdivisions are inferred, usually you wouldn't want to choose them as authorized heading but only to spefify one.
 
-### Recommendation
+
+## Recommendation
 
 Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs). You can set the hierachies in its settings and will have a breadcrumbs view for navigating the heading hierarchy you create in your notes.
 
 </br>
 
-## Explanation of linked data
+# Explanation of linked data
 
 Thank you [@brimwats](https://github.com/brimwats) for this explanation of Linked Data!
 
-### Introduction
+## Introduction
 This plugin allows the use of structured linked data vocabularies as metadata in Obsidian notes. There are some concepts that should be understood when using this plugin. There are two sections below, one for non-technical users and ones for technical users (those familiar with linked data).
 
-### Technical Information
+## Technical Information
 
 This plugin uses a JSON-based API to allow the browsing of linked data vocabularies constructed in SKOS. An endpoint must be provided. Local vocabularies are not supported, as an index would have to be built to implement fast parsing/a lookup table of some sort, and parsing the file would not work on mobile.
 
-### Non-Technical Information
+## Non-Technical Information
 
 See another explanation [here](https://www.librarianshipstudies.com/2017/03/vocabulary-control.html?m=1) and [here](https://www.ala.org/alcts/resources/z687/skos).
 
@@ -87,7 +91,7 @@ There are three basic rules that occur in thesauri are UF, BT/NT and RT.
 3.  Related Terms (RT).
 
 
-#### USE/UF
+### USE/UF
 
 According to the Library of Congress:
 > USE references are made from an unauthorized or non-preferred term to an authorized or preferred heading. Under the heading referred to, the code UF (Used For) precedes the term not used… USE references are made from an unauthorized or non-preferred term to an authorized or preferred heading. Under the heading referred to, the code UF (Used For) precedes the term not used. The codes USE and UF function as reciprocals
@@ -104,7 +108,7 @@ For example:
 
 USE references are made from synonyms, variant spellings, variant forms of expression, alternate constructions of headings, and earlier forms of headings. USE references are also made when it has been decided that words should not be used as a heading even if the heading and the unused words are not truly synonymous.
 
-#### Broader Term and Narrower Term
+### Broader Term and Narrower Term
 
 The abbreviations **BT** (broader term) and **NT** (narrower term) indicate hiararchy.
 
@@ -127,7 +131,7 @@ Art
         - **NT** Modern Sculpture 
             - **NT** [etc.]
 
-#### Related Terms
+### Related Terms
 The abbreviation **RT** (Related Term), links two headings that are associated in some manner other than by hierarchy (**BT**s/**NT**s). For example,
 
 Birds
@@ -141,8 +145,40 @@ In the most basic sense, **RT**s just assert that there are connections between 
 **RT**s allow broader information institutions to control terminology.
 
 
-### Searching for vocabularies:
+## Searching for vocabularies:
 
 - You may search the Library of Congress Subject Headings (LCSH) here: [https://id.loc.gov/authorities/subjects.html](https://id.loc.gov/authorities/subjects.html)
 
 - A repository of vocabularies exists here: https://lov.linkeddata.es/dataset/lov/ 
+
+
+# Subdivisions / Complex Subjects
+
+For LCSH, this plugin also supports what are called "**[Subdivisions](https://www.loc.gov/aba/publications/FreeSHM/H0180.pdf)**" or **complex subjects**. A subdivision is a way for the cataloger (aka the plugin user, aka you) to be more specific with a generic subject heading. 
+
+For example, if I wanted to catalog my note as dicsussing the Ancient Phonecians and their religion I would use this plugin to add `Phonecians` to my note. This would meet many people's needs. But what if I had a lot of notes about `Phonecians`, if I wanted to distuingish between my notes on "Ancient" and "Regular" `Phonecians`, or if I wanted to distinguish between notes about `Phonecian` *religion* and notes about their *gods*? 
+
+LCSH does not have `Ancient Phonecian Gods` so—enter subdivisions! Subdivisions are 'addon' terms that follow the first. Use this secondary term following the first when a more specific heading does not exist.
+
+First find `Phonecians` and then  press `alt+enter/return` to enter into complex mode, where you could pick `--Religion` *or* `--Ancient`. 
+
+## Kinds of Subdivisions
+
+There are five different kinds of subdivisions
+-   [Topic Subdivisions](http://id.loc.gov/authorities/subjects/collection_TopicSubdivisions), which represent actions, attributes, or aspects, of the first term. 
+    - For example `Helicopters--Flight testing`; `Drinking water--Aluminum content`; `Mental health--Nutritional aspects`. Topical subdivisions are used as a standard way of expressing concepts, methods, or techniques that are common to several fields.
+-   [GenreForm Subdivisions](http://id.loc.gov/authorities/subjects/collection_GenreFormSubdivisions), which indicate what the item **is** rather than what it **is about**. You would use this if you had a specific kind of note.
+    - For example, the most frequently used form subdivisions, are `--Bibliography`, `--Juvenile literature`, and `--Periodicals`
+-   [Temporal Subdivisions](http://id.loc.gov/authorities/subjects/collection_TemporalSubdivisions), which indicate time periods covered in the contents of the work. These are usually associated with a historical treatment of a topic and are used after the subdivision `--History`, 
+    - for example, `Women--History--Nineteenth Century`.
+-   [Geographic Subdivisions](http://id.loc.gov/authorities/subjects/collection_GeographicSubdivisions), which indicate the geographic area to which treatment of a topic is limited. They may designate where something is located, or where something is from, depending upon the topic.
+    - For example: 
+-   [Language Subdivisions](http://id.loc.gov/authorities/subjects/collection_LanguageSubdivisions), which indicate what language the item is in. 
+    - For example: `Bees--French Language`.
+    - If you click this link though, you'll notice that it is an empty page—this subdivision is being phased out!
+
+## More Info on Subdivisions
+
+If you're interested in reading more, here is documentation from the Library of Congress on [Types and purpose of subdivisions.](https://www.loc.gov/aba/publications/FreeSHM/H1075.pdf)
+
+And here is [another explainer](https://www.librarianshipstudies.com/2018/01/library-of-congress-subject-headings-lcsh.html#:~:text=are%20free-floating.-,SUBDIVISIONS,are%20listed%20in%20LCSH.,-In%20order%20to) of subdivisions.
