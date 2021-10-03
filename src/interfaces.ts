@@ -161,3 +161,9 @@ declare module 'obsidian' {
 		};
 	}
 }
+
+export interface passInformation {
+    headingObject: headings;
+    heading: string;
+    url: string;
+}
