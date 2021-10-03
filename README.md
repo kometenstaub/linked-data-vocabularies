@@ -52,7 +52,6 @@ The Modal shows the heading in bold, under it, it shows the aLabel and if existi
 ><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
 
 
-Subdivisions are inferred, usually you wouldn't want to choose them as authorized heading but only to spefify one.
 
 
 ## Recommendation
