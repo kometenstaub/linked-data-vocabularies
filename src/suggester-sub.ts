@@ -1,4 +1,4 @@
-import { App, SuggestModal, TFile } from 'obsidian';
+import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
 import type { passInformation, SuggesterItem } from './interfaces';
 import { SUBDIVISIONS } from './constants';
@@ -35,6 +35,13 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 	 * Add what function the Shift key has and refocus the cursor in it.
 	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
+	onOpen() {
+		if (Platform.isDesktopApp) {
+			this.focusInput();
+		} else if (Platform.isMobileApp) {
+			setTimeout(this.focusInput, 400);
+		}
+	}
 
 	focusInput() {
 		//@ts-ignore
