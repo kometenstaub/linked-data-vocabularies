@@ -78,7 +78,10 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	 * */
 	async updateSuggestions() {
 		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods.findHeading(value, SUBJECTS);
+		this.suggestions = await this.plugin.methods.findHeading(
+			value,
+			SUBJECTS
+		);
 		//@ts-expect-error
 		await super.updateSuggestions();
 		/**
@@ -138,13 +141,18 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		let heading = item.display;
 		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
 		const headingUrl = item.url;
-		const headingObj = await this.plugin.methods.getURL(item);
-		const headings = await this.plugin.methods.parseSKOS(headingObj);
 
 		if (evt.altKey) {
-			const data :passInformation = {headingObject: headings, heading: heading, url: headingUrl}
-			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open()
+			const data: passInformation = {
+				suggestItem: item,
+				heading: heading,
+				url: headingUrl,
+			};
+			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open();
 		} else {
+			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
+		const headingObj = await this.plugin.methods.getURL(item);
+			const headings = await this.plugin.methods.parseSKOS(headingObj);
 			await this.plugin.methods.writeYaml(
 				headings,
 				this.tfile,

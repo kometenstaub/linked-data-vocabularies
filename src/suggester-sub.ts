@@ -131,10 +131,14 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>>{
 		//const headingUrl = item.url;
 		//const headingObj = await this.plugin.methods.getURL(item);
 		//const headings = await this.plugin.methods.parseSKOS(headingObj);
+
 		const data = this.data
+		// parse the data of the authorized heading from the first modal
+		const headingObj = await this.plugin.methods.getURL(data.suggestItem);
+		const headings = await this.plugin.methods.parseSKOS(headingObj);
 
 		await this.plugin.methods.writeYaml(
-			data.headingObject,
+			headings,
 			this.tfile,
 			data.heading + '--' + heading,
 			data.url,

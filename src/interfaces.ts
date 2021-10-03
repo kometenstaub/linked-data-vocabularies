@@ -163,7 +163,7 @@ declare module 'obsidian' {
 }
 
 export interface passInformation {
-    headingObject: headings;
+    suggestItem: SuggesterItem;
     heading: string;
     url: string;
 }
