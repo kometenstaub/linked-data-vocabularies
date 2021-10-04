@@ -35,11 +35,8 @@ export class LCSHMethods {
 	 * @returns - a responseObject in form of {@link returnObjectLcsh[]}
 	 */
 	private async requestHeadingURL(url: string): Promise<returnObjectLcsh[]> {
-		let httpsUrl = '';
-		if (url.slice(0, 7) === 'http://') {
-			httpsUrl = url.replace('http://', 'https://');
-		}
-		const requestObj: RequestParam = { url: httpsUrl };
+		url = url.replace(/^https?:\/\//, 'https://');
+		const requestObj: RequestParam = { url: url };
 		const response = await request(requestObj);
 		const responseObject: returnObjectLcsh[] = JSON.parse(response);
 		return responseObject;
