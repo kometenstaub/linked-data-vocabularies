@@ -2,16 +2,23 @@ import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
 import type { passInformation, SuggesterItem } from './interfaces';
 import { SubSKOSModal } from './suggester-sub';
-import { SUBJECTS } from './constants';
+import { SUBJECT_HEADINGS } from './constants';
 export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
 	suggestions: any;
+	collection: string;
 
-	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
+	constructor(
+		app: App,
+		plugin: SKOSPlugin,
+		tfile: TFile,
+		collection: string
+	) {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
+		this.collection = collection;
 		this.setPlaceholder('Please start typing...');
 		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
 		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
@@ -24,20 +31,33 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			this.chooser.useSelectedItem(evt);
 			return false;
 		});
-		this.setInstructions([
-			{
-				command: 'shift ↵',
-				purpose: 'to insert as inline YAML at selection',
-			},
-			{
-				command: '↵',
-				purpose: 'to insert as YAML',
-			},
-			{
-				command: 'alt ↵',
-				purpose: 'to add a subdivision',
-			},
-		]);
+		if (collection === SUBJECT_HEADINGS) {
+			this.setInstructions([
+				{
+					command: 'shift ↵',
+					purpose: 'to insert as inline YAML at selection',
+				},
+				{
+					command: '↵',
+					purpose: 'to insert as YAML',
+				},
+				{
+					command: 'alt ↵',
+					purpose: 'to add a subdivision',
+				},
+			]);
+		} else {
+			this.setInstructions([
+				{
+					command: 'shift ↵',
+					purpose: 'to insert as inline YAML at selection',
+				},
+				{
+					command: '↵',
+					purpose: 'to insert as YAML',
+				},
+			]);
+		}
 	}
 
 	/**
@@ -80,7 +100,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		const { value } = this.inputEl;
 		this.suggestions = await this.plugin.methods.findHeading(
 			value,
-			SUBJECTS
+			this.collection
 		);
 		//@ts-expect-error
 		await super.updateSuggestions();

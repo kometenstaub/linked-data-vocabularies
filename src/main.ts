@@ -3,6 +3,13 @@ import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
 import { SKOSModal } from './suggester';
+import {
+	CULTURAL_HER_ORGANIZATIONS,
+	LCNAF,
+	LC_CLASSIFICATION,
+	SUBJECT_HEADINGS,
+} from './constants';
+import { AllSKOSModal } from './suggester-all';
 
 const DEFAULT_SETTINGS: SKOSSettings = {
 	elementCounter: '10',
@@ -15,6 +22,11 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	broaderMax: '3',
 	narrowerMax: '3',
 	relatedMax: '3',
+	lcshFilterChar: ':',
+	addLCSH: false,
+	addLCC: false,
+	addLCNAF: false,
+	addCulHO: false,
 };
 
 export default class SKOSPlugin extends Plugin {
@@ -25,7 +37,7 @@ export default class SKOSPlugin extends Plugin {
 	/**
 	 * override internal Obsidian function to get shorter name in command palette
 	 * @param command - type Command
-	 * @returns - 
+	 * @returns -
 	 */
 	addCommand = (command: Command) => {
 		var t = this;
@@ -46,18 +58,89 @@ export default class SKOSPlugin extends Plugin {
 
 		await this.loadSettings();
 
+		/**
+		 * universal commands for all collections with ability to filter
+		 */
 		this.addCommand({
-			id: 'query-lcsh-headings',
-			name: 'Query LCSH headings',
-			editorCallback: (
-				editor: Editor,
-				view: MarkdownView
-			) => {
+			id: 'query-all-loc',
+			name: 'Query LOC linked data',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
 				const tfile = view.file;
-				const chooser = new SKOSModal(this.app, this, tfile).open();
+				const chooser = new AllSKOSModal(this.app, this, tfile).open();
 				return chooser;
 			},
 		});
+
+		/**
+		 * individual commands for the collections
+		 */
+		if (this.settings.addLCSH) {
+			this.addCommand({
+				id: 'query-lcsh-headings',
+				name: 'Query LCSH headings',
+				editorCallback: (editor: Editor, view: MarkdownView) => {
+					const tfile = view.file;
+					const chooser = new SKOSModal(
+						this.app,
+						this,
+						tfile,
+						SUBJECT_HEADINGS
+					).open();
+					return chooser;
+				},
+			});
+		}
+
+		if (this.settings.addLCC) {
+			this.addCommand({
+				id: 'query-lcc',
+				name: 'Query LC Classification',
+				editorCallback: (editor: Editor, view: MarkdownView) => {
+					const tfile = view.file;
+					const chooser = new SKOSModal(
+						this.app,
+						this,
+						tfile,
+						LC_CLASSIFICATION
+					).open();
+					return chooser;
+				},
+			});
+		}
+
+		if (this.settings.addLCNAF) {
+			this.addCommand({
+				id: 'query-lcnaf',
+				name: 'Query LC Name Authority File',
+				editorCallback: (editor: Editor, view: MarkdownView) => {
+					const tfile = view.file;
+					const chooser = new SKOSModal(
+						this.app,
+						this,
+						tfile,
+						LCNAF
+					).open();
+					return chooser;
+				},
+			});
+		}
+
+		if (this.settings.addCulHO) {
+			this.addCommand({
+				id: 'query-lc-chso',
+				name: 'Query LC Cultural Heritage Organizations',
+				editorCallback: (editor: Editor, view: MarkdownView) => {
+					const tfile = view.file;
+					const chooser = new SKOSModal(
+						this.app,
+						this,
+						tfile,
+						CULTURAL_HER_ORGANIZATIONS
+					).open();
+					return chooser;
+				},
+			});
+		}
 
 		this.addSettingTab(new SKOSSettingTab(this.app, this));
 	}
