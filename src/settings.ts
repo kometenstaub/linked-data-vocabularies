@@ -66,28 +66,6 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				});
 			});
 
-		// setting for global loc parameter
-		new Setting(containerEl)
-			.setName('Configure global filter parameter')
-			.setDesc(
-				'Pick one of the options that will filter the collections in the global search.'
-			)
-			.addDropdown((dropdown) => {
-				dropdown.addOption(':', 'colon');
-				dropdown.addOption(';', 'semi-colon');
-				dropdown.addOption(',', 'comma');
-				dropdown.addOption('.', 'dot');
-
-				// select the currently saved option
-				dropdown.setValue(settings.lcshFilterChar);
-
-				dropdown.onChange(async (newValue) => {
-					// update and save the plugin settings
-					settings.lcshFilterChar = newValue;
-					await this.plugin.saveSettings();
-				});
-			});
-
 		// keys for YAML
 		new Setting(containerEl)
 			.setName('YAML Key for chosen heading')
@@ -219,9 +197,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			text: 'Reload required for these changes to take effect.',
 		});
 
+
 		new Setting(containerEl)
 			.setName('Add LCSH command')
-			.setDesc('Add command to search LC Authorized Subject Headings')
+			.setDesc('Add command to search LC Authorized Subject Headings. Keep this enabled if all commands below are disabled.')
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addLCSH)
@@ -231,9 +210,53 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 
+		containerEl.createEl('hr')
+		containerEl.createEl('h4', {
+			text: 'Experimental implementation!',
+		});
+		containerEl.createEl('p', {
+			text: "LCC, LCNAF and LCCHO are very different from the Subject Headings. Their implementation is experimental and they don't give BT/NT/RT in most cases, so it is only recommended for librarians.",
+		});
+
+
+		new Setting(containerEl)
+			.setName('Add LOC command')
+			.setDesc('Add command to search all implemented LOC collections.')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.addAllLoc)
+					.onChange((state) => {
+						this.plugin.settings.addAllLoc = state;
+						this.plugin.saveSettings();
+					});
+			});
+
+		// setting for global loc parameter
+		new Setting(containerEl)
+			.setName('Configure LOC filter parameter')
+			.setDesc(
+				'Pick one of the options that will filter the collections in the LOC search.'
+			)
+			.addDropdown((dropdown) => {
+				dropdown.addOption(':', 'colon');
+				dropdown.addOption(';', 'semi-colon');
+				dropdown.addOption(',', 'comma');
+				dropdown.addOption('.', 'dot');
+
+				// select the currently saved option
+				dropdown.setValue(settings.lcshFilterChar);
+
+				dropdown.onChange(async (newValue) => {
+					// update and save the plugin settings
+					settings.lcshFilterChar = newValue;
+					await this.plugin.saveSettings();
+				});
+			});
+
+
 		new Setting(containerEl)
 			.setName('Add LCC command')
-			.setDesc('Add command to search LC Classification')
+			.setDesc('Add command to search LC Classification.')
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addLCC)
@@ -245,7 +268,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Add LCNAF command')
-			.setDesc('Add command to search LC Name Authority File')
+			.setDesc('Add command to search LC Name Authority File.')
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addLCNAF)
@@ -257,7 +280,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Add LC Cultural Heritage Organizations command')
-			.setDesc('Add command to search LC Cultural Heritage Organizations')
+			.setDesc('Add command to search LC Cultural Heritage Organizations.')
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addCulHO)

@@ -23,10 +23,11 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	narrowerMax: '3',
 	relatedMax: '3',
 	lcshFilterChar: ':',
-	addLCSH: false,
+	addLCSH: true,
 	addLCC: false,
 	addLCNAF: false,
 	addCulHO: false,
+	addAllLoc: false,
 };
 
 export default class SKOSPlugin extends Plugin {
@@ -61,15 +62,21 @@ export default class SKOSPlugin extends Plugin {
 		/**
 		 * universal commands for all collections with ability to filter
 		 */
-		this.addCommand({
-			id: 'query-all-loc',
-			name: 'Query LOC linked data',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				const tfile = view.file;
-				const chooser = new AllSKOSModal(this.app, this, tfile).open();
-				return chooser;
-			},
-		});
+		if (this.settings.addAllLoc) {
+			this.addCommand({
+				id: 'query-all-loc',
+				name: 'Query LOC linked data',
+				editorCallback: (editor: Editor, view: MarkdownView) => {
+					const tfile = view.file;
+					const chooser = new AllSKOSModal(
+						this.app,
+						this,
+						tfile
+					).open();
+					return chooser;
+				},
+			});
+		}
 
 		/**
 		 * individual commands for the collections

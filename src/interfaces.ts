@@ -15,6 +15,7 @@ export interface SKOSSettings {
 	addLCC: boolean;
 	addLCNAF: boolean;
 	addCulHO: boolean;
+    addAllLoc: boolean;
 }
 
 /**
