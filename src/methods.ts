@@ -18,6 +18,11 @@ import {
 	NARROWER_URL,
 	RELATED_URL,
 	PREF_LABEL,
+	SUBJECT_HEADINGS,
+	SUBDIVISIONS,
+	LC_CLASSIFICATION,
+	LCNAF,
+	CULTURAL_HER_ORGANIZATIONS,
 } from './constants';
 
 export class LCSHMethods {
@@ -65,25 +70,80 @@ export class LCSHMethods {
 		}
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
-		let url: string = 'https://id.loc.gov/suggest2?q=' + encodedHeading;
-		url += '&counter=' + encodeURIComponent(counter);
-		url += '&searchtype=' + encodeURIComponent(searchType);
-		url += '&memberOf=' + encodeURIComponent(methodOf);
+		let url: string = '';
+		if (methodOf === '') {
+			url =
+				`https://id.loc.gov/authorities/subjects/suggest2?q=` +
+				encodedHeading;
+			url += '&counter=' + counter;
+			url += '&searchtype=' + searchType;
+		} else {
+			switch (methodOf) {
+				case SUBJECT_HEADINGS:
+					url =
+						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+					url += '&memberOf=' + methodOf;
+					break;
+				case SUBDIVISIONS:
+					url =
+						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+					url += '&memberOf=' + methodOf;
+					break;
+				case LC_CLASSIFICATION:
+					url =
+						`https://id.loc.gov/authorities/classification/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+					break;
+				case LCNAF:
+					url =
+						`https://id.loc.gov/authorities/names/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+					break;
+				case CULTURAL_HER_ORGANIZATIONS:
+					url =
+						`https://id.loc.gov/vocabulary/organizations/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+					break;
+				default:
+					url =
+						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
+						encodedHeading;
+					url += '&counter=' + counter;
+					url += '&searchtype=' + searchType;
+			}
+		}
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
-
 		requestObject.url = url;
 
 		let data = await request(requestObject);
 		const newData: suggest2 = JSON.parse(data);
 
+		let formerHeading = '';
 		// calculate heading results from received json
 		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
 			const display = suggestion.suggestLabel;
+			let subdivision = false;
+			if (formerHeading === display) {
+				subdivision = true;
+			}
+			formerHeading = display;
 			const aLabel = suggestion.aLabel; // authoritative label
 			const url = suggestion.uri;
 			const vLabel = suggestion.vLabel; // variant label
-			return { display, url, aLabel, vLabel };
+			return { display, url, aLabel, vLabel, subdivision };
 		});
 
 		// return data for modal

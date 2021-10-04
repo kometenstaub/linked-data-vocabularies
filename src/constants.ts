@@ -10,7 +10,16 @@ export const [BROADER_URL, NARROWER_URL, RELATED_URL] = [
 
 export const PREF_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel';
 
-export const [SUBJECTS, SUBDIVISIONS] = [
+export const [
+	SUBJECT_HEADINGS,
+	SUBDIVISIONS,
+	LC_CLASSIFICATION,
+	LCNAF,
+	CULTURAL_HER_ORGANIZATIONS,
+] = [
 	'http://id.loc.gov/authorities/subjects/collection_LCSHAuthorizedHeadings',
 	'http://id.loc.gov/authorities/subjects/collection_Subdivisions',
+	'http://id.loc.gov/authorities/classification',
+	'http://id.loc.gov/authorities/names',
+	'http://id.loc.gov/vocabulary/organizations',
 ];
