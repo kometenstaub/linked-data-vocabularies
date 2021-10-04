@@ -56,13 +56,19 @@ export class LCSHMethods {
 			url: '',
 		};
 
-		const counter = this.plugin.settings.elementCounter;
+		let counter = ''
+		if (parseInt(this.plugin.settings.elementCounter)) {
+			counter = this.plugin.settings.elementCounter
+		} else {
+			new Notice('The maximum number of elements to be shown is not an integer.')
+			throw Error('The maximum number of elements to be shown is not an integer.')
+		}
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
 		let url: string = 'https://id.loc.gov/suggest2?q=' + encodedHeading;
-		url += '&counter=' + counter;
-		url += '&searchtype=' + searchType;
-		url += '&memberOf=' + methodOf;
+		url += '&counter=' + encodeURIComponent(counter);
+		url += '&searchtype=' + encodeURIComponent(searchType);
+		url += '&memberOf=' + encodeURIComponent(methodOf);
 		// more parameters could eventually go here; Documentation:
 		//https://id.loc.gov/techcenter/searching.html
 
