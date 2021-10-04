@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.4.3...1.0.0) (2021-10-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* the old LCSH modal will have to be enabled manually again
+
+### Features
+
+* :zap: add more LOC collections ([237a64b](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/237a64bcebdd746f415196de95f218d76f500e0d))
+
 ### [0.4.3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.4.2...0.4.3) (2021-10-03)
 
 ### [0.4.2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.4.1...0.4.2) (2021-10-03)
