@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.5.1...0.6.0) (2021-10-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* hotkey for LCSH command will have to be reconfigured
+
+* :recycle: change LCSH command id ([64e841c](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/64e841cfedbb57a8b2a373b12405ae7bda498cef))
+
 ### [0.5.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.5.0...0.5.1) (2021-10-05)
 
 ## [0.5.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.4.5...0.5.0) (2021-10-05)
