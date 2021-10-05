@@ -21,11 +21,13 @@ As of 0.4.2 you can also add a subdivision after an authorized heading if you pr
 
 You can of course also use the mouse instead.
 
+There is also an implementation of [LCC](https://id.loc.gov/authorities/classification.html), [LCNAF](https://id.loc.gov/authorities/names.html) and [LCCHO](https://id.loc.gov/vocabulary/organizations.html). They are disabled by default and can be enabled in the settings. They will not add relations (BT/NT/RT) to the YAML and are only recommended for people familiar with them. For an explanation, please refer to the links.
+
 ## Configuration
 
 You can set the limit of queries to be display. 10 is the default setting.
 
-You can set the key names for `heading`, `broader`, `narrower` and `related` in the settings.
+You can set the key names for `heading`, `url`, `broader`, `narrower` and `related` in the settings.
 
 Furthermore, you can set the search type. 
 
