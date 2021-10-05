@@ -1,6 +1,6 @@
 import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
-import type { passInformation, SuggesterItem } from './interfaces';
+import type { headings, passInformation, SuggesterItem } from './interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import { SUBJECT_HEADINGS } from './constants';
 export class SKOSModal extends SuggestModal<Promise<any[]>> {
@@ -164,7 +164,17 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 		} else {
 			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
 			const headingObj = await this.plugin.methods.getURL(item);
-			const headings = await this.plugin.methods.parseSKOS(headingObj);
+			let headings: headings;
+			/**
+			 * only parse relations for LCSH
+			 * since writeYaml still checks for the length of every element, we need to pass
+			 * an empty object
+			 */
+			if (this.collection === SUBJECT_HEADINGS) {
+				headings = await this.plugin.methods.parseSKOS(headingObj);
+			} else {
+				headings = {broader: [], narrower: [], related: []}
+			}
 			await this.plugin.methods.writeYaml(
 				headings,
 				this.tfile,

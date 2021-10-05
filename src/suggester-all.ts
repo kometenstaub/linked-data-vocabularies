@@ -1,6 +1,6 @@
 import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from './main';
-import type { passInformation, SuggesterItem } from './interfaces';
+import type { passInformation, SuggesterItem, headings } from './interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import {
 	CULTURAL_HER_ORGANIZATIONS,
@@ -14,12 +14,14 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 	tfile: TFile;
 	suggestions: any;
 	globalSearch: boolean;
+	collection: string;
 
 	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
 		this.globalSearch = false;
+		this.collection = ''
 		const filterChar = this.plugin.settings.lcshFilterChar;
 		this.setPlaceholder(
 			`available filters: ${filterChar}sh, ${filterChar}naf, ${filterChar}c, ${filterChar}cho`
@@ -104,6 +106,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 
 				// search in subject headings
 				if (value.slice(1, 4).toLowerCase() === 'sh ') {
+					this.collection = SUBJECT_HEADINGS
 					const search = value.slice(4);
 					this.suggestions = await this.plugin.methods.findHeading(
 						search,
@@ -112,6 +115,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				}
 				// name authority file
 				else if (value.slice(1, 5).toLowerCase() === 'naf ') {
+					this.collection = LCNAF
 					const search = value.slice(5);
 					this.suggestions = await this.plugin.methods.findHeading(
 						search,
@@ -120,6 +124,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				}
 				// classification
 				else if (value.slice(1, 3).toLowerCase() === 'c ') {
+					this.collection = LC_CLASSIFICATION
 					const search = value.slice(3);
 					this.suggestions = await this.plugin.methods.findHeading(
 						search,
@@ -128,6 +133,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				}
 				// cultural heritage organizations
 				else if (value.slice(1, 5).toLowerCase() === 'cho ') {
+					this.collection = CULTURAL_HER_ORGANIZATIONS
 					const search = value.slice(5);
 					this.suggestions = await this.plugin.methods.findHeading(
 						search,
@@ -250,7 +256,17 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 		} else {
 			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
 			const headingObj = await this.plugin.methods.getURL(item);
-			const headings = await this.plugin.methods.parseSKOS(headingObj);
+			let headings: headings;
+			/**
+			 * only parse relations for LCSH
+			 * since writeYaml still checks for the length of every element, we need to pass
+			 * an empty object
+			 */
+			if (this.collection === SUBJECT_HEADINGS || this.collection === '') {
+				headings = await this.plugin.methods.parseSKOS(headingObj);
+			} else {
+				headings = {broader: [], narrower: [], related: []}
+			}
 			await this.plugin.methods.writeYaml(
 				headings,
 				this.tfile,
