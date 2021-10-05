@@ -1,6 +1,6 @@
 {
 	"name": "linked-data-vocabularies",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "Add SKOS heading classification to YAML.",
 	"main": "src/main.ts",
 	"scripts": {
