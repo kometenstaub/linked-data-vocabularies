@@ -83,7 +83,7 @@ export default class SKOSPlugin extends Plugin {
 		 */
 		if (this.settings.addLCSH) {
 			this.addCommand({
-				id: 'query-lcsh-headings',
+				id: 'query-lcsh',
 				name: 'Query LCSH (Subject Headings)',
 				editorCallback: (editor: Editor, view: MarkdownView) => {
 					const tfile = view.file;
