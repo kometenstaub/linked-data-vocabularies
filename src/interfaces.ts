@@ -1,4 +1,3 @@
-import type SKOSModal from './settings';
 export interface SKOSSettings {
 	elementCounter: string;
 	broaderKey: string;

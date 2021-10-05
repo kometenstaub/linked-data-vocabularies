@@ -1,6 +1,5 @@
 import {
 	App,
-	MarkdownEditView,
 	Notice,
 	request,
 	RequestParam,

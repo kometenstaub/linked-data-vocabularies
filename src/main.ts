@@ -1,4 +1,4 @@
-import { Command, Editor, MarkdownView, Plugin, View } from 'obsidian';
+import { Command, Editor, MarkdownView, Plugin } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
