@@ -61,67 +61,67 @@ export class LCSHMethods {
 			url: '',
 		};
 
-		let counter = ''
+		let counter = '';
 		if (parseInt(this.plugin.settings.elementCounter)) {
-			counter = this.plugin.settings.elementCounter
+			counter = this.plugin.settings.elementCounter;
 		} else {
-			new Notice('The maximum number of elements to be shown is not an integer.')
-			throw Error('The maximum number of elements to be shown is not an integer.')
+			new Notice(
+				'The maximum number of elements to be shown is not an integer.'
+			);
+			throw Error(
+				'The maximum number of elements to be shown is not an integer.'
+			);
 		}
 		const searchType = this.plugin.settings.lcshSearchType;
 		const encodedHeading = encodeURIComponent(heading);
 		let url: string = '';
+		let urlEnd = '&counter=' + encodeURIComponent(counter);
+		urlEnd += '&searchtype=' + encodeURIComponent(searchType);
 		if (methodOf === '') {
 			url =
 				`https://id.loc.gov/authorities/subjects/suggest2?q=` +
 				encodedHeading;
-			url += '&counter=' + counter;
-			url += '&searchtype=' + searchType;
+			url += '&counter=' + encodeURIComponent(counter);
+			url += '&searchtype=' + encodeURIComponent(searchType);
 		} else {
 			switch (methodOf) {
 				case SUBJECT_HEADINGS:
 					url =
 						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 					url += '&memberOf=' + methodOf;
 					break;
 				case SUBDIVISIONS:
 					url =
 						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 					url += '&memberOf=' + methodOf;
 					break;
 				case LC_CLASSIFICATION:
 					url =
 						`https://id.loc.gov/authorities/classification/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 					break;
 				case LCNAF:
 					url =
 						`https://id.loc.gov/authorities/names/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 					break;
 				case CULTURAL_HER_ORGANIZATIONS:
 					url =
 						`https://id.loc.gov/vocabulary/organizations/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 					break;
 				default:
 					url =
 						`https://id.loc.gov/authorities/subjects/suggest2?q=` +
 						encodedHeading;
-					url += '&counter=' + counter;
-					url += '&searchtype=' + searchType;
+					url += urlEnd;
 			}
 		}
 		// more parameters could eventually go here; Documentation:
