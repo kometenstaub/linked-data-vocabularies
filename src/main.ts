@@ -84,7 +84,7 @@ export default class SKOSPlugin extends Plugin {
 		if (this.settings.addLCSH) {
 			this.addCommand({
 				id: 'query-lcsh-headings',
-				name: 'Query LCSH headings',
+				name: 'Query LCSH (Subject Headings)',
 				editorCallback: (editor: Editor, view: MarkdownView) => {
 					const tfile = view.file;
 					const chooser = new SKOSModal(
@@ -101,7 +101,7 @@ export default class SKOSPlugin extends Plugin {
 		if (this.settings.addLCC) {
 			this.addCommand({
 				id: 'query-lcc',
-				name: 'Query LC Classification',
+				name: 'Query LCC (Classification)',
 				editorCallback: (editor: Editor, view: MarkdownView) => {
 					const tfile = view.file;
 					const chooser = new SKOSModal(
@@ -118,7 +118,7 @@ export default class SKOSPlugin extends Plugin {
 		if (this.settings.addLCNAF) {
 			this.addCommand({
 				id: 'query-lcnaf',
-				name: 'Query LC Name Authority File',
+				name: 'Query LCNAF (Name Authority File)',
 				editorCallback: (editor: Editor, view: MarkdownView) => {
 					const tfile = view.file;
 					const chooser = new SKOSModal(
@@ -135,7 +135,7 @@ export default class SKOSPlugin extends Plugin {
 		if (this.settings.addCulHO) {
 			this.addCommand({
 				id: 'query-lc-chso',
-				name: 'Query LC Cultural Heritage Organizations',
+				name: 'Query LCCHO (Cultural Heritage Organizations)',
 				editorCallback: (editor: Editor, view: MarkdownView) => {
 					const tfile = view.file;
 					const chooser = new SKOSModal(

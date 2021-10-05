@@ -197,10 +197,11 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			text: 'Reload required for these changes to take effect.',
 		});
 
-
 		new Setting(containerEl)
 			.setName('Add LCSH command')
-			.setDesc('Add command to search LC Authorized Subject Headings. Keep this enabled if all commands below are disabled.')
+			.setDesc(
+				'Add command to search LC Authorized Subject Headings. Keep this enabled if all commands below are disabled.'
+			)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addLCSH)
@@ -210,18 +211,16 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl('hr')
-		containerEl.createEl('h4', {
-			text: 'Experimental implementation!',
-		});
+		containerEl.createEl('hr');
+		
 		containerEl.createEl('p', {
-			text: "LCC, LCNAF and LCCHO are very different from the Subject Headings. Their implementation is experimental and they don't give BT/NT/RT in most cases, so it is only recommended for librarians.",
+			text: "LCC, LCNAF and LCCHO are very different from LCSH.\
+			They are only recommended for people who are familiar with them.",
 		});
-
 
 		new Setting(containerEl)
 			.setName('Add LOC command')
-			.setDesc('Add command to search all implemented LOC collections.')
+			.setDesc('Add command to search all implemented Library of Congress collections.')
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addAllLoc)
@@ -253,7 +252,6 @@ export default class SKOSSettingTab extends PluginSettingTab {
 				});
 			});
 
-
 		new Setting(containerEl)
 			.setName('Add LCC command')
 			.setDesc('Add command to search LC Classification.')
@@ -279,8 +277,10 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Add LC Cultural Heritage Organizations command')
-			.setDesc('Add command to search LC Cultural Heritage Organizations.')
+			.setName('Add LCCHO command')
+			.setDesc(
+				'Add command to search LC Cultural Heritage Organizations.'
+			)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addCulHO)
