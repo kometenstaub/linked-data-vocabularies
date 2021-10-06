@@ -75,7 +75,7 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 	 * */
 	async updateSuggestions() {
 		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods.findHeading(
+		this.suggestions = await this.plugin.methods_loc.findHeading(
 			value,
 			SUBDIVISIONS
 		);
@@ -130,13 +130,13 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 		let heading = item.display;
 		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
 		//const headingUrl = item.url;
-		//const headingObj = await this.plugin.methods.getURL(item);
-		//const headings = await this.plugin.methods.parseSKOS(headingObj);
+		//const headingObj = await this.plugin.methods_loc.getURL(item);
+		//const headings = await this.plugin.methods_loc.parseSKOS(headingObj);
 
 		const data = this.data;
 		// parse the data of the authorized heading from the first modal
-		const headingObj = await this.plugin.methods.getURL(data.suggestItem);
-		const headings = await this.plugin.methods.parseSKOS(headingObj);
+		const headingObj = await this.plugin.methods_loc.getURL(data.suggestItem);
+		const headings = await this.plugin.methods_loc.parseSKOS(headingObj);
 
 		const writeMethods = new WriteMethods(this.app, this.plugin);
 		await writeMethods.writeYaml(

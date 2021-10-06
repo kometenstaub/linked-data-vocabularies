@@ -103,7 +103,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 	 * */
 	async updateSuggestions() {
 		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods.findHeading(
+		this.suggestions = await this.plugin.methods_loc.findHeading(
 			value,
 			this.collection
 		);
@@ -168,7 +168,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open();
 		} else {
 			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
-			const headingObj = await this.plugin.methods.getURL(item);
+			const headingObj = await this.plugin.methods_loc.getURL(item);
 			let headings: headings;
 			/**
 			 * only parse relations for LCSH
@@ -176,7 +176,7 @@ export class SKOSModal extends SuggestModal<Promise<any[]>> {
 			 * an empty object
 			 */
 			if (this.collection === SUBJECT_HEADINGS) {
-				headings = await this.plugin.methods.parseSKOS(headingObj);
+				headings = await this.plugin.methods_loc.parseSKOS(headingObj);
 			} else {
 				headings = { broader: [], narrower: [], related: [] };
 			}

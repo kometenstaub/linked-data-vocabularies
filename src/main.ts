@@ -31,7 +31,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 };
 
 export default class SKOSPlugin extends Plugin {
-	methods = new LCSHMethods(this.app, this);
+	methods_loc = new LCSHMethods(this.app, this);
 	//@ts-ignore
 	settings: SKOSSettings;
 

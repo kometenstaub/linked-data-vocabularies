@@ -109,7 +109,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				if (value.slice(1, 4).toLowerCase() === 'sh ') {
 					this.collection = SUBJECT_HEADINGS
 					const search = value.slice(4);
-					this.suggestions = await this.plugin.methods.findHeading(
+					this.suggestions = await this.plugin.methods_loc.findHeading(
 						search,
 						SUBJECT_HEADINGS
 					);
@@ -118,7 +118,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				else if (value.slice(1, 5).toLowerCase() === 'naf ') {
 					this.collection = LCNAF
 					const search = value.slice(5);
-					this.suggestions = await this.plugin.methods.findHeading(
+					this.suggestions = await this.plugin.methods_loc.findHeading(
 						search,
 						LCNAF
 					);
@@ -127,7 +127,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				else if (value.slice(1, 3).toLowerCase() === 'c ') {
 					this.collection = LC_CLASSIFICATION
 					const search = value.slice(3);
-					this.suggestions = await this.plugin.methods.findHeading(
+					this.suggestions = await this.plugin.methods_loc.findHeading(
 						search,
 						LC_CLASSIFICATION
 					);
@@ -136,7 +136,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				else if (value.slice(1, 5).toLowerCase() === 'cho ') {
 					this.collection = CULTURAL_HER_ORGANIZATIONS
 					const search = value.slice(5);
-					this.suggestions = await this.plugin.methods.findHeading(
+					this.suggestions = await this.plugin.methods_loc.findHeading(
 						search,
 						CULTURAL_HER_ORGANIZATIONS
 					);
@@ -145,7 +145,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 				//@ts-expect-error
 				await super.updateSuggestions();
 			} else {
-				this.suggestions = await this.plugin.methods.findHeading(
+				this.suggestions = await this.plugin.methods_loc.findHeading(
 					value,
 					''
 				);
@@ -256,7 +256,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open();
 		} else {
 			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
-			const headingObj = await this.plugin.methods.getURL(item);
+			const headingObj = await this.plugin.methods_loc.getURL(item);
 			let headings: headings;
 			/**
 			 * only parse relations for LCSH
@@ -264,7 +264,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 			 * an empty object
 			 */
 			if (this.collection === SUBJECT_HEADINGS || this.collection === '') {
-				headings = await this.plugin.methods.parseSKOS(headingObj);
+				headings = await this.plugin.methods_loc.parseSKOS(headingObj);
 			} else {
 				headings = {broader: [], narrower: [], related: []}
 			}
