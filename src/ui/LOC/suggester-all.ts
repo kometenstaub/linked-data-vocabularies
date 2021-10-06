@@ -8,6 +8,7 @@ import {
 	LC_CLASSIFICATION,
 	SUBJECT_HEADINGS,
 } from '../../constants';
+import { WriteMethods } from '../../methods/methods-write'
 
 export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
@@ -267,7 +268,8 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 			} else {
 				headings = {broader: [], narrower: [], related: []}
 			}
-			await this.plugin.methods.writeYaml(
+			const writeMethods = new WriteMethods(this.app, this.plugin)
+			await writeMethods.writeYaml(
 				headings,
 				this.tfile,
 				heading,

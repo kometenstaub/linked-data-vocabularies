@@ -2,6 +2,7 @@ import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
 import type { passInformation, SuggesterItem } from '../../interfaces';
 import { SUBDIVISIONS } from '../../constants';
+import { WriteMethods } from 'src/methods/methods-write';
 export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
@@ -137,7 +138,8 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 		const headingObj = await this.plugin.methods.getURL(data.suggestItem);
 		const headings = await this.plugin.methods.parseSKOS(headingObj);
 
-		await this.plugin.methods.writeYaml(
+		const writeMethods = new WriteMethods(this.app, this.plugin);
+		await writeMethods.writeYaml(
 			headings,
 			this.tfile,
 			data.heading + '--' + heading,
