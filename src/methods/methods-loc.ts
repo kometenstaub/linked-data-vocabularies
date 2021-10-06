@@ -9,9 +9,9 @@ import {
 import type {
 	HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging,
 	SuggesterItem,
-} from './interfaces';
-import type SKOSPlugin from './main';
-import type { headings, suggest2, returnObjectLcsh } from './interfaces';
+} from '../interfaces';
+import type SKOSPlugin from '../main';
+import type { headings, suggest2, returnObjectLcsh } from '../interfaces';
 import {
 	BROADER_URL,
 	NARROWER_URL,
@@ -22,7 +22,7 @@ import {
 	LC_CLASSIFICATION,
 	LCNAF,
 	CULTURAL_HER_ORGANIZATIONS,
-} from './constants';
+} from '../constants';
 
 export class LCSHMethods {
 	app: App;

@@ -1,6 +1,6 @@
 import { Command, Editor, MarkdownView, Plugin } from 'obsidian';
 import SKOSSettingTab from './settings';
-import { LCSHMethods } from './methods';
+import { LCSHMethods } from './methods/methods-loc';
 import type { SKOSSettings } from './interfaces';
 import { SKOSModal } from './ui/LOC/suggester';
 import {
