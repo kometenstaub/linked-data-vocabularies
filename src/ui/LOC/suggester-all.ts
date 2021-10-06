@@ -1,13 +1,13 @@
 import { App, Platform, SuggestModal, TFile } from 'obsidian';
-import type SKOSPlugin from './main';
-import type { passInformation, SuggesterItem, headings } from './interfaces';
+import type SKOSPlugin from '../../main';
+import type { passInformation, SuggesterItem, headings } from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import {
 	CULTURAL_HER_ORGANIZATIONS,
 	LCNAF,
 	LC_CLASSIFICATION,
 	SUBJECT_HEADINGS,
-} from './constants';
+} from '../../constants';
 
 export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;

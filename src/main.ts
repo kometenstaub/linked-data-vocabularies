@@ -2,14 +2,14 @@ import { Command, Editor, MarkdownView, Plugin } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods';
 import type { SKOSSettings } from './interfaces';
-import { SKOSModal } from './suggester';
+import { SKOSModal } from './ui/LOC/suggester';
 import {
 	CULTURAL_HER_ORGANIZATIONS,
 	LCNAF,
 	LC_CLASSIFICATION,
 	SUBJECT_HEADINGS,
 } from './constants';
-import { AllSKOSModal } from './suggester-all';
+import { AllSKOSModal } from './ui/LOC/suggester-all';
 
 const DEFAULT_SETTINGS: SKOSSettings = {
 	elementCounter: '10',

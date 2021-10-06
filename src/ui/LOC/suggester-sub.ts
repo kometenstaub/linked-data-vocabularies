@@ -1,7 +1,7 @@
 import { App, Platform, SuggestModal, TFile } from 'obsidian';
-import type SKOSPlugin from './main';
-import type { passInformation, SuggesterItem } from './interfaces';
-import { SUBDIVISIONS } from './constants';
+import type SKOSPlugin from '../../main';
+import type { passInformation, SuggesterItem } from '../../interfaces';
+import { SUBDIVISIONS } from '../../constants';
 export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
