@@ -4,7 +4,13 @@ This plugin adds YAML keys for the selected heading, url (optional), and broader
 
 Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API is implemented.
 
-**Please do not make more than 10 requests per minute. The initial request plus each heading that gets added in broader/narrower/related terms counts as one request.** Please refer to [this](https://loc.gov/legal/) for more details.
+</br>
+
+**Please do not make more than 10 requests per minute. The initial request plus each heading that gets added in broader/narrower/related terms should count as one request.** Please refer to [this](https://loc.gov/legal/) for more details.
+
+**I have made a PR to remove this plugin from the community plugins and another to deprecate the already installed version. Please don't install/use it until I have removed this notice.**
+
+</br>
 
 See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
 
