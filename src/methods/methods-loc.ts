@@ -1,11 +1,12 @@
-import {
-	App,
-	Notice,
-	request,
-	RequestParam,
-} from 'obsidian';
+import { App, Notice, request, RequestParam } from 'obsidian';
 import type SKOSPlugin from '../main';
-import type { headings, suggest2, returnObjectLcsh, HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging, SuggesterItem} from '../interfaces';
+import type {
+	headings,
+	suggest2,
+	returnObjectLcsh,
+	HTTPIDLOCGovOntologiesRecordInfoLanguageOfCataloging,
+	SuggesterItem,
+} from '../interfaces';
 import {
 	BROADER_URL,
 	NARROWER_URL,
@@ -216,13 +217,13 @@ export class LCSHMethods {
 			numberOfHeadings: string
 		) => {
 			let count: number = 0;
-			let limit: boolean = false;
-			if (numberOfHeadings !== '') {
-				limit = true;
+			if (parseInt(numberOfHeadings) > 3 || numberOfHeadings === '') {
+				count = 3;
+			} else {
 				count = parseInt(numberOfHeadings);
 			}
 			for (let url of urls) {
-				if (limit && count === 0) {
+				if (count === 0) {
 					break;
 				}
 				responseObject = await this.requestHeadingURL(url + '.json');
@@ -235,9 +236,7 @@ export class LCSHMethods {
 								if (subsubelement['@language'] === 'en') {
 									headingsArr.push(subsubelement['@value']);
 								}
-								if (limit) {
-									count--;
-								}
+								count--;
 							}
 						}
 						// we already have the heading name, no need to check the other objects
@@ -271,5 +270,4 @@ export class LCSHMethods {
 
 		return headingObj;
 	}
-
 }

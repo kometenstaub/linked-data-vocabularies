@@ -126,7 +126,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.broaderKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entries.'
+				'If set to 0, it will not be added.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -134,14 +134,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
+							(Number.isInteger(num) && num >= 0 && num <= 3)
 						) {
 							settings.broaderMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer greater than or equal to 0.'
+								'Please enter an integer between 0 and 3.'
 							);
 						}
 					});
@@ -149,7 +148,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.narrowerKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entries.'
+				'If set to 0, it will not be added.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -157,14 +156,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
+							(Number.isInteger(num) && num >= 0 && num <= 3)
 						) {
 							settings.narrowerMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer greater than or equal to 0.'
+								'Please enter an integer between 0 and 3.'
 							);
 						}
 					});
@@ -172,7 +170,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.relatedKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entries.'
+				'If set to 0, it will not be added.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -180,14 +178,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
+							(Number.isInteger(num) && num >= 0 && num <= 3)
 						) {
 							settings.relatedMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer greater than or equal to 0.'
+								'Please enter an integer between 0 and 3.'
 							);
 						}
 					});

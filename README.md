@@ -41,7 +41,7 @@ The default search type is `keyword`.
 
 From my experience, keywords gives better results, but only gives good results when you type out the word fully. So `archeolo` wouldn't show `Archeology`, for that you need to type the full word.
 
-You can also set a maximum number of headings to be added per type. The default value is 3. The larger you set it, the longer it will need to process.
+You can also set a maximum number of headings to be added per type. The default value is 2, the maximum value you can set is 3. If you set it to 0, it won't be added.
 
 ## Modal
 
