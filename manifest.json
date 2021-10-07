@@ -1,7 +1,7 @@
 {
 	"id": "linked-data-vocabularies",
 	"name": "Linked Data Vocabularies",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"minAppVersion": "0.12.15",
 	"description": "Add SKOS heading classification to YAML.",
 	"author": "kometenstaub",

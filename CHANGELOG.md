@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.6.0...0.6.1) (2021-10-07)
+
+
+### Features
+
+* limit number of searches effectively ([8c66786](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/8c667864b56806c65ba6c579121a62b0c10521b5))
+
 ## [0.6.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.5.1...0.6.0) (2021-10-05)
 
 
