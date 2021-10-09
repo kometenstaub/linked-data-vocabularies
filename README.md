@@ -10,6 +10,12 @@ Currently, the LCSH [Suggest2](https://id.loc.gov/techcenter/searching.html) API
 
 **I have made a PR to remove this plugin from the community plugins and another to deprecate the already installed version. Please don't install/use it until I have removed this notice.**
 
+According to @brimwats, overuse results in a soft-block and that this is more aimed at Google querying their site thousands of times per minute and not users of plugins like this. 
+
+I have plans to make this a fully local plugin though, one that will only require the initial download of the data and parsing with another plugin to extract only the needed data which this plugin can use.
+
+When this is done, a new PR will be made to re-add this plugin.
+
 </br>
 
 See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
