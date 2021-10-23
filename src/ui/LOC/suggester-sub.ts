@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, Notice, TFile } from 'obsidian';
+import { App, FuzzySuggestModal, Notice, Platform, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
 import type { passInformation, SuggesterItem, uriToPrefLabel } from '../../interfaces';
 import { SUBDIVISIONS } from '../../constants';
@@ -73,20 +73,20 @@ export class SubSKOSModal extends FuzzySuggestModal<Promise<any[]>> {
 	 * Add what function the Shift key has and refocus the cursor in it.
 	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
-	//onOpen() {
-	//	if (Platform.isDesktopApp) {
-	//		this.focusInput();
-	//	} else if (Platform.isMobileApp) {
-	//		setTimeout(this.focusInput, 400);
-	//	}
-	//}
+	onOpen() {
+		if (Platform.isDesktopApp) {
+			this.focusInput();
+		} else if (Platform.isMobileApp) {
+			setTimeout(this.focusInput, 400);
+		}
+	}
 
-	//focusInput() {
-	//	//@ts-ignore
-	//	document.getElementsByClassName('prompt-input')[0].focus();
-	//	//@ts-ignore
-	//	document.getElementsByClassName('prompt-input')[0].select();
-	//}
+	focusInput() {
+		//@ts-ignore
+		document.getElementsByClassName('prompt-input')[0].focus();
+		//@ts-ignore
+		document.getElementsByClassName('prompt-input')[0].select();
+	}
 
 	/**
 	 * overwrites the updateSuggestions method (which isn't exposed in the API)
