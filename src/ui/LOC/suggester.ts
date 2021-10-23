@@ -153,7 +153,7 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
                 headings,
                 this.tfile,
                 heading,
-                item.uri,
+                'https://id.loc.gov/authorities/subjects/' + item.uri,
                 evt
             );
         }
