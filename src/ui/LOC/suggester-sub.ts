@@ -1,19 +1,20 @@
-import { App, Platform, SuggestModal, TFile } from 'obsidian';
+import { App, FuzzySuggestModal, Notice, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type { passInformation, SuggesterItem } from '../../interfaces';
+import type { passInformation, SuggesterItem, uriToPrefLabel } from '../../interfaces';
 import { SUBDIVISIONS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
-export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
+export class SubSKOSModal extends FuzzySuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
 	suggestions: any;
-	data: passInformation;
+    lcshSubdivSuggester!: SuggesterItem[];
+	data: SuggesterItem;
 
 	constructor(
 		app: App,
 		plugin: SKOSPlugin,
 		tfile: TFile,
-		data: passInformation
+		data: SuggesterItem
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -35,26 +36,57 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 				purpose: 'to insert as YAML',
 			},
 		]);
+
+        const adapter = this.app.vault.adapter;
+        const dir = this.plugin.manifest.dir;
+        (async () => {
+            if (
+                (await adapter.exists(`${dir}/lcshSubdivSuggester.json`))
+            ) {
+                const lcshSubdivSuggester = await adapter.read(
+                    `${dir}/lcshSubdivSuggester.json`
+                );
+                this.lcshSubdivSuggester = await JSON.parse(
+                    lcshSubdivSuggester
+                );
+            } else {
+                const text = 'The JSON file could not be read.';
+                new Notice(text);
+                throw Error(text);
+            }
+        })();
+    
+
+	}
+
+	getItems(): Promise<any[]>[] {
+		throw new Error('Method not implemented.');
+	}
+	getItemText(item: Promise<any[]>): string {
+		throw new Error('Method not implemented.');
+	}
+	onChooseItem(item: Promise<any[]>, evt: MouseEvent | KeyboardEvent): void {
+		throw new Error('Method not implemented.');
 	}
 
 	/**
 	 * Add what function the Shift key has and refocus the cursor in it.
 	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
-	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
+	//onOpen() {
+	//	if (Platform.isDesktopApp) {
+	//		this.focusInput();
+	//	} else if (Platform.isMobileApp) {
+	//		setTimeout(this.focusInput, 400);
+	//	}
+	//}
 
-	focusInput() {
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].focus();
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].select();
-	}
+	//focusInput() {
+	//	//@ts-ignore
+	//	document.getElementsByClassName('prompt-input')[0].focus();
+	//	//@ts-ignore
+	//	document.getElementsByClassName('prompt-input')[0].select();
+	//}
 
 	/**
 	 * overwrites the updateSuggestions method (which isn't exposed in the API)
@@ -73,19 +105,6 @@ export class SubSKOSModal extends SuggestModal<Promise<any[]>> {
 	 *
 	 *
 	 * */
-	async updateSuggestions() {
-		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods_loc.findHeading(
-			value,
-			SUBDIVISIONS
-		);
-		//@ts-expect-error
-		await super.updateSuggestions();
-		/**
-		 * dereference suggestions for memory efficiency
-		 */
-		this.suggestions = null;
-	}
 
 	getSuggestions() {
 		return this.suggestions;

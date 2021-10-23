@@ -1,66 +1,64 @@
-import { App, Notice, request, RequestParam } from 'obsidian';
+import { App, Notice } from 'obsidian';
 import type SKOSPlugin from '../main';
-import type {
-	headings,
-	SuggesterItem,
-} from '../interfaces';
-import {
-	SUBJECT_HEADINGS,
-	SUBDIVISIONS,
-} from '../constants';
+import type { headings, SuggesterItem, uriToPrefLabel } from '../interfaces';
 
 export class LCSHMethods {
-	app: App;
-	plugin: SKOSPlugin;
+    app: App;
+    plugin: SKOSPlugin;
+    lcshUriToPrefLabel!: uriToPrefLabel;
 
-	constructor(app: App, plugin: SKOSPlugin) {
-		this.app = app;
-		this.plugin = plugin;
-	}
+    constructor(app: App, plugin: SKOSPlugin) {
+        this.app = app;
+        this.plugin = plugin;
+    }
 
+    public async resolveUris(item: SuggesterItem) {
+        const broader = item.bt;
+        const narrower = item.nt;
+        const related = item.rt;
 
-	/**
-	 *
-	 * @param heading | the input from the {@link SKOSModal.updateSuggestions | SuggesterModal }
-	 * @returns - {@link SuggesterItem[] }, the array with information that populates
-	 * 				SuggestModal in {@link SKOSModal.renderSuggestion }
-	 */
-	public async findHeading(
-		heading: string,
-		methodOf: string
-	): Promise<SuggesterItem[]> {
+        let broaderHeadings: string[] = [];
+        let narrowerHeadings: string[] = [];
+        let relatedHeadings: string[] = [];
 
-		let counter = '';
-		if (parseInt(this.plugin.settings.elementCounter)) {
-			counter = this.plugin.settings.elementCounter;
-		} else {
-			new Notice(
-				'The maximum number of elements to be shown is not an integer.'
-			);
-			throw Error(
-				'The maximum number of elements to be shown is not an integer.'
-			);
-		}
+        const adapter = this.app.vault.adapter;
+        const dir = this.plugin.manifest.dir;
+        if (await adapter.exists(`${dir}/lcshUriToPrefLabel.json`)) {
+            const lcshUriToPrefLabel = await adapter.read(
+                `${dir}/lcshUriToPrefLabel.json`
+            );
+            this.lcshUriToPrefLabel = await JSON.parse(lcshUriToPrefLabel);
+        } else {
+            const text = 'The JSON file could not be read.';
+            new Notice(text);
+            throw Error(text);
+        }
 
+        if (broader !== undefined) {
+            for (let uri of broader) {
+                const heading = this.lcshUriToPrefLabel[uri];
+                broaderHeadings.push(heading);
+            }
+        }
+        if (narrower !== undefined) {
+            for (let uri of narrower) {
+                const heading = this.lcshUriToPrefLabel[uri];
+                narrowerHeadings.push(heading);
+            }
+        }
+        if (related !== undefined) {
+            for (let uri of related) {
+                const heading = this.lcshUriToPrefLabel[uri];
+                relatedHeadings.push(heading);
+            }
+        }
 
-		let formerHeading = '';
-		// calculate heading results from received json
-		const headings: SuggesterItem[] = newData['hits'].map((suggestion) => {
-			const display = suggestion.suggestLabel;
-			let subdivision = false;
-			if (formerHeading === display) {
-				subdivision = true;
-			}
-			formerHeading = display;
-			const aLabel = suggestion.aLabel; // authoritative label
-			const url = suggestion.uri;
-			const vLabel = suggestion.vLabel; // variant label
-			return { display, url, aLabel, vLabel, subdivision };
-		});
+        const returnItem: headings = {
+            broader: broaderHeadings,
+            narrower: narrowerHeadings,
+            related: relatedHeadings,
+        };
 
-		// return data for modal
-		return headings;
-	}
-
-
+        return returnItem;
+    }
 }

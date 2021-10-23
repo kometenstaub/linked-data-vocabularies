@@ -44,8 +44,6 @@ declare module 'obsidian' {
 
 export interface passInformation {
 	suggestItem: SuggesterItem;
-	heading: string;
-	url: string;
 }
 
 
