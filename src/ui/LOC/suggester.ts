@@ -9,6 +9,7 @@ import type {
 import { SubSKOSModal } from './suggester-sub';
 import { SUBJECT_HEADINGS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
+import * as fuzzysort from 'fuzzysort';
 
 export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
     plugin: SKOSPlugin;
@@ -120,38 +121,44 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
 
     getItems(): SuggesterItem[] {
         let input = this.inputEl.value.trim();
-        input = input.toLocaleLowerCase();
+        //input = input.toLocaleLowerCase();
         let results = [];
-        let matches = 0;
+        //let matches = 0;
         if (this.lcshSuggester !== null) {
-            for (
-                let i = 0;
-                i < this.lcshSuggester.length && matches < 1000;
-                i++
-            ) {
-                let item = this.lcshSuggester[i];
-                if (
-                    item.pL.toLocaleLowerCase().startsWith(input) ||
-                    item.aL?.toLocaleLowerCase().startsWith(input) //||
-                    //item.pL.toLocaleLowerCase().includes(input) ||
-                    //item.aL?.toLocaleLowerCase().includes(input)
-
-                ) {
-                    results.push(this.lcshSuggester[i]);
-                    matches++;
-                }
+            const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {key:'pL', limit:500})
+            //console.log(fuzzyResult)
+            for (let el of fuzzyResult) {
+                results.push(el.obj)
             }
+            //for (
+            //    let i = 0;
+            //    i < this.lcshSuggester.length && matches < 500;
+            //    i++
+            //) {
+            //    let item = this.lcshSuggester[i];
+            //    if (
+            //        item.pL.toLocaleLowerCase().startsWith(input) ||
+            //        item.aL?.toLocaleLowerCase().startsWith(input) //||
+            //        //item.pL.toLocaleLowerCase().includes(input) ||
+            //        //item.aL?.toLocaleLowerCase().includes(input)
+
+            //    ) {
+            //        results.push(this.lcshSuggester[i]);
+            //        matches++;
+            //    }
+            //}
         }
         // returns all the items, so it needs to be shortened
+        //@ts-ignore
         return results;
     }
     getItemText(item: SuggesterItem): string {
         if (item.aL && item.note && (item.aL !== item.pL)) {
-            return item.pL + ' -- ' + item.aL + ' -- ' + item.note;
+            return item.pL + ' — ' + item.aL + ' — ' + item.note;
         } else if (item.aL && !item.note && (item.pL !== item.pL)) {
-            return item.pL + ' -- ' + item.aL 
+            return item.pL + ' — ' + item.aL 
         } else if (!item.aL && item.note) {
-            return item.pL + ' -- ' + item.note 
+            return item.pL + ' — ' + item.note 
         } else {
             return item.pL
         }
