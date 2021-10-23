@@ -45,26 +45,26 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 
-		new Setting(containerEl)
-			.setName('Configure sorting order for Modal')
-			.setDesc(
-				'Choose the search type. \
-		Left anchored searches are ordered alphabetically, are case and diacritic insensitive.\
-		Keyword searches are in descending relevance order.'
-			)
-			.addDropdown((dropdown) => {
-				dropdown.addOption('keyword', 'Keyword search');
-				dropdown.addOption('leftanchored', 'Left anchored search');
+		//new Setting(containerEl)
+		//	.setName('Configure sorting order for Modal')
+		//	.setDesc(
+		//		'Choose the search type. \
+		//Left anchored searches are ordered alphabetically, are case and diacritic insensitive.\
+		//Keyword searches are in descending relevance order.'
+		//	)
+		//	.addDropdown((dropdown) => {
+		//		dropdown.addOption('keyword', 'Keyword search');
+		//		dropdown.addOption('leftanchored', 'Left anchored search');
 
-				// select the currently saved option
-				dropdown.setValue(settings.lcshSearchType);
+		//		// select the currently saved option
+		//		dropdown.setValue(settings.lcshSearchType);
 
-				dropdown.onChange(async (newValue) => {
-					// update and save the plugin settings
-					settings.lcshSearchType = newValue;
-					await this.plugin.saveSettings();
-				});
-			});
+		//		dropdown.onChange(async (newValue) => {
+		//			// update and save the plugin settings
+		//			settings.lcshSearchType = newValue;
+		//			await this.plugin.saveSettings();
+		//		});
+		//	});
 
 		// keys for YAML
 		new Setting(containerEl)
@@ -126,7 +126,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.broaderKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added.'
+				'If set to 0, it will not be added. Leave empty to add all entres.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -134,13 +134,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0 && num <= 3)
+							(Number.isInteger(num) && num >= 0 || value === '')
 						) {
 							settings.broaderMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer between 0 and 3.'
+								'Please enter an integer greater than or equal to 0.'
 							);
 						}
 					});
@@ -148,7 +148,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.narrowerKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added.'
+				'If set to 0, it will not be added. Leave empty to add all entries.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -156,13 +156,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0 && num <= 3)
+							(Number.isInteger(num) && num >= 0 || value === '')
 						) {
 							settings.narrowerMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer between 0 and 3.'
+								'Please enter an integer greater than or equal to 0.'
 							);
 						}
 					});
@@ -170,7 +170,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.relatedKey}'`)
 			.setDesc(
-				'If set to 0, it will not be added.'
+				'If set to 0, it will not be added. Leave empty to add all entries.'
 			)
 			.addText((text) => {
 				text.setPlaceholder('')
@@ -178,13 +178,13 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						const num = Number.parseInt(value);
 						if (
-							(Number.isInteger(num) && num >= 0 && num <= 3)
+							(Number.isInteger(num) && num >= 0 || value === '')
 						) {
 							settings.relatedMax = value;
 							await this.plugin.saveSettings();
 						} else {
 							new Notice(
-								'Please enter an integer between 0 and 3.'
+								'Please enter an integer greater than or equal to 0.'
 							);
 						}
 					});

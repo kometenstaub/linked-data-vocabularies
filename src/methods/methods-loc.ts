@@ -34,20 +34,34 @@ export class LCSHMethods {
             throw Error(text);
         }
 
-        if (broader !== undefined) {
-            for (let uri of broader) {
+        const { settings } = this.plugin;
+        let broaderMax = 0;
+        settings.broaderMax !== ''
+            ? (broaderMax = parseInt(settings.broaderMax))
+            : null;
+        let narrowerMax = 0;
+        settings.narrowerMax !== ''
+            ? (narrowerMax = parseInt(settings.narrowerMax))
+            : null;
+        let relatedMax = 0;
+        settings.relatedMax !== ''
+            ? (relatedMax = parseInt(settings.relatedMax))
+            : null;
+
+        if (broader !== undefined && broaderMax > 0) {
+            for (let uri of broader.slice(0, broaderMax)) {
                 const heading = this.lcshUriToPrefLabel[uri];
                 broaderHeadings.push(heading);
             }
         }
-        if (narrower !== undefined) {
-            for (let uri of narrower) {
+        if (narrower !== undefined && narrowerMax > 0) {
+            for (let uri of narrower.slice(0, narrowerMax)) {
                 const heading = this.lcshUriToPrefLabel[uri];
                 narrowerHeadings.push(heading);
             }
         }
-        if (related !== undefined) {
-            for (let uri of related) {
+        if (related !== undefined && relatedMax > 0) {
+            for (let uri of related.slice(0, relatedMax)) {
                 const heading = this.lcshUriToPrefLabel[uri];
                 relatedHeadings.push(heading);
             }
