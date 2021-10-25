@@ -83,9 +83,9 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.setDesc('Leave empty if no URL YAML key should be added.')
 			.addText((text) => {
 				text.setPlaceholder('related')
-					.setValue(settings.urlKey)
+					.setValue(settings.uriKey)
 					.onChange(async (value) => {
-						settings.urlKey = value.trim();
+						settings.uriKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});

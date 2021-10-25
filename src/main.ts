@@ -12,7 +12,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
     narrowerKey: 'narrower',
     relatedKey: 'related',
     headingKey: 'heading',
-    urlKey: 'url',
+    uriKey: 'uri',
     broaderMax: '3',
     narrowerMax: '3',
     relatedMax: '3',

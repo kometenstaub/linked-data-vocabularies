@@ -102,8 +102,8 @@ export class WriteMethods {
 		const { settings } = this.plugin;
 
 		newFrontMatter.push(settings.headingKey + ': ' + heading);
-		if (settings.urlKey !== '') {
-			newFrontMatter.push(settings.urlKey + ': ' + url);
+		if (settings.uriKey !== '') {
+			newFrontMatter.push(settings.uriKey + ': ' + url);
 		}
 		/**
 		 * It will be zero if there are no headings or when the user chose 0 in the settings,

@@ -4,7 +4,7 @@ export interface SKOSSettings {
 	narrowerKey: string;
 	relatedKey: string;
 	headingKey: string;
-	urlKey: string;
+	uriKey: string;
 	broaderMax: string;
 	narrowerMax: string;
 	relatedMax: string;
