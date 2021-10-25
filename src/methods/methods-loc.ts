@@ -1,4 +1,4 @@
-import { App, Notice } from 'obsidian';
+import { App, normalizePath, Notice } from 'obsidian';
 import type SKOSPlugin from '../main';
 import type { headings, SuggesterItem, uriToPrefLabel } from '../interfaces';
 
@@ -22,11 +22,10 @@ export class LCSHMethods {
         let relatedHeadings: string[] = [];
 
         const adapter = this.app.vault.adapter;
-        const dir = this.plugin.manifest.dir;
-        if (await adapter.exists(`${dir}/lcshUriToPrefLabel.json`)) {
-            const lcshUriToPrefLabel = await adapter.read(
-                `${dir}/lcshUriToPrefLabel.json`
-            );
+        const dir = this.plugin.settings.inputFolder;
+        const path = normalizePath(`${dir}/lcshUriToPrefLabel.json`);
+        if (await adapter.exists(path)) {
+            const lcshUriToPrefLabel = await adapter.read(path);
             this.lcshUriToPrefLabel = await JSON.parse(lcshUriToPrefLabel);
         } else {
             const text = 'The JSON file could not be read.';

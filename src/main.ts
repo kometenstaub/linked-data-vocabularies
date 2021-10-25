@@ -1,13 +1,14 @@
-import { Command, Editor, MarkdownView, Plugin } from 'obsidian';
+import { Command, Editor, MarkdownView, normalizePath, Notice, Plugin } from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods/methods-loc';
-import type { SKOSSettings } from './interfaces';
+import type { SKOSSettings, SuggesterItem } from './interfaces';
 import { SKOSModal } from './ui/LOC/suggester';
 //import { AllSKOSModal } from './ui/LOC/suggester-all';
 import { SUBJECT_HEADINGS } from './constants';
 
 const DEFAULT_SETTINGS: SKOSSettings = {
-    elementCounter: '10',
+    inputFolder: '',
+    elementLimit: '500',
     broaderKey: 'broader',
     narrowerKey: 'narrower',
     relatedKey: 'related',
@@ -16,18 +17,20 @@ const DEFAULT_SETTINGS: SKOSSettings = {
     broaderMax: '3',
     narrowerMax: '3',
     relatedMax: '3',
-    lcshFilterChar: ':',
+    lcSensitivity: '-10000',
+    //loadLcsh: true,
+    //lcshFilterChar: ':',
     addLCSH: true,
-    addLCC: false,
-    addLCNAF: false,
-    addCulHO: false,
-    addAllLoc: false,
+    //addLCC: false,
+    //addLCNAF: false,
+    //addCulHO: false,
+    //addAllLoc: false,
 };
 
 export default class SKOSPlugin extends Plugin {
     methods_loc = new LCSHMethods(this.app, this);
-    //@ts-ignore
-    settings: SKOSSettings;
+    settings!: SKOSSettings;
+    loadedLcshSuggester!: SuggesterItem[];
 
     /**
      * override internal Obsidian function to get shorter name in command palette
@@ -52,6 +55,24 @@ export default class SKOSPlugin extends Plugin {
         console.log('loading Linked Data Vocabularies plugin');
 
         await this.loadSettings();
+
+        // find a way for loading the file at the beginning without blocking
+        // -- something for later
+        //const { adapter } = this.app.vault;
+        //const dir = this.settings.inputFolder;
+        //setTimeout(async () => {
+        //    const path = normalizePath(`${dir}/lcshSuggester.json`);
+        //    if (await adapter.exists(path)) {
+        //        const lcshSuggester = await adapter.read(path);
+        //        this.loadedLcshSuggester = await JSON.parse(lcshSuggester);
+        //    } else {
+        //        const text = 'The JSON file could not be read.';
+        //        new Notice(text);
+        //        throw Error(text);
+        //    }
+        //}, 100);
+
+        // commented commands shall be readded when they are re-implemented locally
 
         // /**
         //  * universal commands for all collections with ability to filter

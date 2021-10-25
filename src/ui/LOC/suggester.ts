@@ -1,4 +1,11 @@
-import { App, FuzzySuggestModal, Notice, Platform, TFile } from 'obsidian';
+import {
+    App,
+    FuzzySuggestModal,
+    normalizePath,
+    Notice,
+    Platform,
+    TFile,
+} from 'obsidian';
 import type SKOSPlugin from '../../main';
 import type { headings, SuggesterItem } from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
@@ -37,13 +44,15 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
             return false;
         });
 
-        const adapter = this.app.vault.adapter;
-        const dir = this.plugin.manifest.dir;
+        const { adapter } = this.app.vault;
+        //const dir = this.plugin.manifest.dir;
+        // when loading onload is implemented, the condition needs to be checked
+        //if (!this.plugin.settings.loadLcsh) {
+        const dir = this.plugin.settings.inputFolder;
         (async () => {
-            if (await adapter.exists(`${dir}/lcshSuggester.json`)) {
-                const lcshSuggester = await adapter.read(
-                    `${dir}/lcshSuggester.json`
-                );
+            const path = normalizePath(`${dir}/lcshSuggester.json`);
+            if (await adapter.exists(path)) {
+                const lcshSuggester = await adapter.read(path);
                 this.lcshSuggester = await JSON.parse(lcshSuggester);
             } else {
                 const text = 'The JSON file could not be read.';
@@ -51,6 +60,9 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
                 throw Error(text);
             }
         })();
+        //} else {
+        //    this.lcshSuggester = this.plugin.loadedLcshSuggester
+        //}
         if (collection === SUBJECT_HEADINGS) {
             this.setInstructions([
                 {
@@ -102,11 +114,12 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
     getItems(): SuggesterItem[] {
         let input = this.inputEl.value.trim();
         let results = [];
+        const { settings } = this.plugin
         if (this.lcshSuggester !== null) {
             const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {
                 key: 'pL',
-                limit: 500,
-                threshold: -10000,
+                limit: parseInt(settings.elementLimit),
+                threshold: parseInt(settings.lcSensitivity),
             });
             for (let el of fuzzyResult) {
                 results.push(el.obj);
@@ -158,5 +171,4 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
             );
         }
     }
-
 }
