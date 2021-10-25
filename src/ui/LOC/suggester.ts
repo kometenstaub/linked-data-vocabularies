@@ -53,7 +53,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
             const path = normalizePath(`${dir}/lcshSuggester.json`);
             if (await adapter.exists(path)) {
                 const lcshSuggester = await adapter.read(path);
-                this.lcshSuggester = await JSON.parse(lcshSuggester);
+                this.lcshSuggester = JSON.parse(lcshSuggester);
             } else {
                 const text = 'The JSON file could not be read.';
                 new Notice(text);
