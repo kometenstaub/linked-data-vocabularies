@@ -1,9 +1,9 @@
 import {
     App,
-    FuzzySuggestModal,
     normalizePath,
     Notice,
     Platform,
+    SuggestModal,
     TFile,
 } from 'obsidian';
 import type SKOSPlugin from '../../main';
@@ -14,7 +14,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 
-export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
+export class SKOSModal extends SuggestModal<SuggesterItem> {
     plugin: SKOSPlugin;
     tfile: TFile;
     suggestions: any;
@@ -111,10 +111,10 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
         document.getElementsByClassName('prompt-input')[0].select();
     }
 
-    getItems(): SuggesterItem[] {
+    getSuggestions(): SuggesterItem[] {
         let input = this.inputEl.value.trim();
         let results = [];
-        const { settings } = this.plugin
+        const { settings } = this.plugin;
         if (this.lcshSuggester !== null) {
             const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {
                 key: 'pL',
@@ -128,19 +128,23 @@ export class SKOSModal extends FuzzySuggestModal<SuggesterItem> {
         //@ts-ignore
         return results;
     }
-    getItemText(item: SuggesterItem): string {
-        if (item.aL && item.note && item.aL !== item.pL) {
-            return item.pL + ' — ' + item.aL + ' — ' + item.note;
-        } else if (item.aL && !item.note && item.pL !== item.pL) {
-            return item.pL + ' — ' + item.aL;
-        } else if (!item.aL && item.note) {
-            return item.pL + ' — ' + item.note;
-        } else {
-            return item.pL;
+    renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
+        const { aL, pL, note } = item;
+
+        const el1 = el.createEl('b');
+        el1.appendText(pL);
+        //el.createEl('br')
+        const el2 = el.createEl('div');
+        if (aL && note && aL !== pL) {
+            el2.appendText(aL + '—' + note);
+        } else if (aL && !note && aL !== pL) {
+            el2.appendText(aL);
+        } else if (!aL && note) {
+            el2.appendText(note);
         }
     }
 
-    async onChooseItem(
+    async onChooseSuggestion(
         item: SuggesterItem,
         evt: MouseEvent | KeyboardEvent
     ): Promise<void> {
