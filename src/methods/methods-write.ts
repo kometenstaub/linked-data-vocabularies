@@ -19,7 +19,7 @@ export class WriteMethods {
      * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
      * @param heading - The selected heading from th heading from the SuggesterModal
      * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
-	 * @param lcc - The LC classification, if present
+     * @param lcc - The LC classification, if present
      */
     public async writeYaml(
         headingObj: headings,
@@ -101,12 +101,23 @@ export class WriteMethods {
         } // the shift key is activated
         else if (evt.shiftKey) {
             let newFrontMatter: string[] = [];
-            const yaml = this.buildYaml(
-                newFrontMatter,
-                headingObj,
-                heading,
-                url
-            );
+            let yaml: string[] = [];
+            if (lcc) {
+                yaml = this.buildYaml(
+                    newFrontMatter,
+                    headingObj,
+                    heading,
+                    url,
+                    lcc
+                );
+            } else {
+                yaml = this.buildYaml(
+                    newFrontMatter,
+                    headingObj,
+                    heading,
+                    url
+                );
+            }
             let inlineYaml: string = '';
             for (let line of yaml) {
                 inlineYaml += line.replace(':', '::') + '\n';
