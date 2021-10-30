@@ -129,18 +129,33 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
         return results;
     }
     renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
-        const { aL, pL, note } = item;
-
-        const el1 = el.createEl('b');
+        const { aL, pL, note, lcc } = item;
+        const el0 = el.createDiv();
+        const el1 = el0.createEl('b');
         el1.appendText(pL);
         //el.createEl('br')
-        const el2 = el.createEl('div');
+        const el2 = el.createDiv();
         if (aL && note && aL !== pL) {
-            el2.appendText(aL + '—' + note);
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(aL + ' — ' + note);
+            } else {
+                el2.appendText(aL + ' — ' + note);
+            }
         } else if (aL && !note && aL !== pL) {
-            el2.appendText(aL);
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(aL);
+            } else {
+                el2.appendText(aL);
+            }
         } else if (!aL && note) {
-            el2.appendText(note);
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(note);
+            } else {
+                el2.appendText(note);
+            }
         }
     }
 

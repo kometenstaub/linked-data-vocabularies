@@ -76,6 +76,7 @@ export interface SuggesterItem {
     nt?: string[]; // narrower
     rt?: string[]; //related
     note?: string;
+    lcc?: string;
 }
 
 export interface uriToPrefLabel {
