@@ -10,7 +10,7 @@ export interface SKOSSettings {
     narrowerMax: string;
     relatedMax: string;
 	lcSensitivity: string;
-	//loadLcsh: boolean;
+	loadLcsh: boolean;
     //lcshFilterChar: string;
     addLCSH: boolean;
     //addLCC: boolean;

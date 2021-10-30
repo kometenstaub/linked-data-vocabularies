@@ -44,25 +44,25 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
             return false;
         });
 
-        const { adapter } = this.app.vault;
         //const dir = this.plugin.manifest.dir;
         // when loading onload is implemented, the condition needs to be checked
-        //if (!this.plugin.settings.loadLcsh) {
-        const dir = this.plugin.settings.inputFolder;
-        (async () => {
-            const path = normalizePath(`${dir}/lcshSuggester.json`);
-            if (await adapter.exists(path)) {
-                const lcshSuggester = await adapter.read(path);
-                this.lcshSuggester = JSON.parse(lcshSuggester);
-            } else {
-                const text = 'The JSON file could not be read.';
-                new Notice(text);
-                throw Error(text);
-            }
-        })();
-        //} else {
-        //    this.lcshSuggester = this.plugin.loadedLcshSuggester
-        //}
+        if (this.plugin.settings.loadLcsh) {
+            this.lcshSuggester = this.plugin.loadedLcshSuggester;
+        } else {
+            const { adapter } = this.app.vault;
+            const dir = this.plugin.settings.inputFolder;
+            (async () => {
+                const path = normalizePath(`${dir}/lcshSuggester.json`);
+                if (await adapter.exists(path)) {
+                    const lcshSuggester = await adapter.read(path);
+                    this.lcshSuggester = JSON.parse(lcshSuggester);
+                } else {
+                    const text = 'The JSON file could not be read.';
+                    new Notice(text);
+                    throw Error(text);
+                }
+            })();
+        }
         if (collection === SUBJECT_HEADINGS) {
             this.setInstructions([
                 {

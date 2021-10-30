@@ -255,6 +255,21 @@ export default class SKOSSettingTab extends PluginSettingTab {
                     });
             });
 
+
+        new Setting(containerEl)
+            .setName('Load LCSH onload.')
+            .setDesc(
+                'This will increase performance when opening the modal, but will load the data into memory on startup.'
+            )
+            .addToggle((toggle) => {
+                toggle
+                    .setValue(this.plugin.settings.loadLcsh)
+                    .onChange((state) => {
+                        this.plugin.settings.loadLcsh = state;
+                        this.plugin.saveSettings();
+                    });
+            });
+
         // new Setting(containerEl)
         // 	.setName('Load LCSH when Obsidian starts')
         // 	.setDesc(

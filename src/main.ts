@@ -1,4 +1,11 @@
-import { Command, Editor, MarkdownView, normalizePath, Notice, Plugin } from 'obsidian';
+import {
+    Command,
+    Editor,
+    MarkdownView,
+    normalizePath,
+    Notice,
+    Plugin,
+} from 'obsidian';
 import SKOSSettingTab from './settings';
 import { LCSHMethods } from './methods/methods-loc';
 import type { SKOSSettings, SuggesterItem } from './interfaces';
@@ -18,7 +25,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
     narrowerMax: '3',
     relatedMax: '3',
     lcSensitivity: '-10000',
-    //loadLcsh: true,
+    loadLcsh: true,
     //lcshFilterChar: ':',
     addLCSH: true,
     //addLCC: false,
@@ -56,21 +63,21 @@ export default class SKOSPlugin extends Plugin {
 
         await this.loadSettings();
 
-        // find a way for loading the file at the beginning without blocking
-        // -- something for later
-        //const { adapter } = this.app.vault;
-        //const dir = this.settings.inputFolder;
-        //setTimeout(async () => {
-        //    const path = normalizePath(`${dir}/lcshSuggester.json`);
-        //    if (await adapter.exists(path)) {
-        //        const lcshSuggester = await adapter.read(path);
-        //        this.loadedLcshSuggester = await JSON.parse(lcshSuggester);
-        //    } else {
-        //        const text = 'The JSON file could not be read.';
-        //        new Notice(text);
-        //        throw Error(text);
-        //    }
-        //}, 100);
+        if (this.settings.loadLcsh) {
+            const { adapter } = this.app.vault;
+            const dir = this.settings.inputFolder;
+            setTimeout(async () => {
+                const path = normalizePath(`${dir}/lcshSuggester.json`);
+                if (await adapter.exists(path)) {
+                    const lcshSuggester = await adapter.read(path);
+                    this.loadedLcshSuggester = await JSON.parse(lcshSuggester);
+                } else {
+                    const text = 'The JSON file could not be read.';
+                    new Notice(text);
+                    throw Error(text);
+                }
+            }, 100);
+        }
 
         // commented commands shall be readded when they are re-implemented locally
 
