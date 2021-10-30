@@ -107,8 +107,6 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
     focusInput() {
         //@ts-ignore
         document.getElementsByClassName('prompt-input')[0].focus();
-        //@ts-ignore
-        document.getElementsByClassName('prompt-input')[0].select();
     }
 
     getSuggestions(): SuggesterItem[] {
