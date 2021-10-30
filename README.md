@@ -28,7 +28,7 @@ You can set the limit of queries to be display. 200 is the default setting.
 
 You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` and `related` in the settings.
 
-(`lcc` is the LC Classification.)
+`lcc` is the LC Classification.
 
 All but `heading` can be disabled in the settings.
 
