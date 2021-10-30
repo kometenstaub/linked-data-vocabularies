@@ -183,3 +183,10 @@ There are five different kinds of subdivisions
 If you're interested in reading more, here is documentation from the Library of Congress on [Types and purpose of subdivisions.](https://www.loc.gov/aba/publications/FreeSHM/H1075.pdf)
 
 And here is [another explainer](https://www.librarianshipstudies.com/2018/01/library-of-congress-subject-headings-lcsh.html#:~:text=are%20free-floating.-,SUBDIVISIONS,are%20listed%20in%20LCSH.,-In%20order%20to) of subdivisions.
+
+
+</br>
+
+## Credits
+
+This plugin uses the 'fuzzysort' npm module (https://www.npmjs.com/package/fuzzysort, https://github.com/farzher/fuzzysort). The license file can be found [here](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/blob/master/esbuild.js).
