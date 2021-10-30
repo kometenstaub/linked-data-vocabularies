@@ -21,39 +21,22 @@ As of 0.4.2 you can also add a subdivision after an authorized heading if you pr
 
 You can of course also use the mouse instead.
 
-There is also an implementation of [LCC](https://id.loc.gov/authorities/classification.html), [LCNAF](https://id.loc.gov/authorities/names.html) and [LCCHO](https://id.loc.gov/vocabulary/organizations.html). They are disabled by default and can be enabled in the settings. They will not add relations (BT/NT/RT) to the YAML and are only recommended for people familiar with them. For an explanation, please refer to the links.
 
 ## Configuration
 
-You can set the limit of queries to be display. 10 is the default setting.
+You can set the limit of queries to be display. 200 is the default setting.
 
-You can set the key names for `heading`, `url`, `broader`, `narrower` and `related` in the settings.
+You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` and `related` in the settings.
 
-Furthermore, you can set the search type. 
+(`lcc` is the LC Classification.)
 
-> Left anchored searches are ordered alphabetically, case and diacritic insensitive.
->
->Keyword searches are in descending relevance order, using the same search ranking as the main search page.
-> 
-><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
-
-The default search type is `keyword`.
-
-From my experience, keywords gives better results, but only gives good results when you type out the word fully. So `archeolo` wouldn't show `Archeology`, for that you need to type the full word.
-
-You can also set a maximum number of headings to be added per type. The default value is 2, the maximum value you can set is 3. If you set it to 0, it won't be added.
+All but `heading` can be disabled in the settings.
 
 ## Modal
 
-The Modal shows the heading in bold, under it, it shows the aLabel and if existing, the vLabel.
+The Modal shows the heading in bold, under it, if existing, it shows the variant label.
 
-> aLabel will only return a resource whose authoritative label exactly matches the searched term. For example, aLabel:"International librarianship".
->
-> vLabel will only return a resource which has a variant label exactly matching the searched term. For example, vLabel:"Librarianship, International".
-> 
-><cite>[Source](https://id.loc.gov/techcenter/searching.html)</cite>
-
-
+Next to the heading it shows, if existing, the LC classification.
 
 
 ## Recommendation
