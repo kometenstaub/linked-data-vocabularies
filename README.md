@@ -34,7 +34,7 @@ All but `heading` can be disabled in the settings.
 
 ## Modal
 
-The Modal shows the heading in bold, under it, if existing, it shows the variant label.
+The Modal shows the heading in bold, under it, if existing, it shows the variant label and the note.
 
 Next to the heading it shows, if existing, the LC classification.
 
