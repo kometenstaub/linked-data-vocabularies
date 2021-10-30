@@ -24,7 +24,9 @@ You can of course also use the mouse instead.
 
 ## Configuration
 
-You can set the limit of queries to be display. 200 is the default setting.
+**You need to input the folder in your vault where the JSON files are stored.**
+
+You can set the limit of queries to be displayed. 200 is the default setting. You can also set the fuzzy search sensitivity.
 
 You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` and `related` in the settings.
 
