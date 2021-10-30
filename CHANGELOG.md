@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.6.1...1.0.1) (2021-10-30)
+
+
+### Features
+
+* :sparkles: add option for loading LCSH onload ([0c99b9a](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/0c99b9a3be68b95b37714ceda373d0c183ef4e31))
+* :sparkles: display LCC ([5628cc3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/5628cc33997ef239f09e7c54ae94b42fd681b244))
+* :sparkles: implement fuzzy search ([8f7714b](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/8f7714b10dc260840ffd80b46390345a340f5c3d))
+* :sparkles: limit heading number according to user settings ([a1d99db](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/a1d99db905ecfddb668881eea1ceba1fa2d01db6))
+* :sparkles: load from path given in settings instead of static path ([131bcca](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/131bcca27ce029b1a09a89f7d0c64e015d12abfc))
+* :sparkles: main suggester for LCSH implemented ([2267f38](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/2267f38634465673ded74c66b372333ea538a558))
+* :sparkles: re-implement SubdivSuggester ([2b6e5f7](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/2b6e5f793f5ffab9f3ee0bd63b613422c245f8df))
+* :sparkles: write LCC if present ([480ab66](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/480ab662eaab26dadc7b9a6e843e8db7a4f20fc6))
+* suggester for lcsh shows entries ([c47fe79](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/c47fe79e4592bcb92272a1975a4daf2b307c97eb))
+
+
+### Bug Fixes
+
+* :bug: LCC works for inline YAML now ([df05ba2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/df05ba2cdac338b3057ad8abc3280e4b4d5f7af8))
+* :bug: LCSH URL now correct ([32a9eda](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/32a9eda58a7df95248b8527400621d8ab41b4538))
+
 ## [1.0.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.6.1...1.0.0) (2021-10-30)
 
 
