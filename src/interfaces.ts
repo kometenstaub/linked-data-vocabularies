@@ -6,6 +6,7 @@ export interface SKOSSettings {
     relatedKey: string;
     headingKey: string;
     uriKey: string;
+    lccKey: string;
     broaderMax: string;
     narrowerMax: string;
     relatedMax: string;

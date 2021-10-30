@@ -75,11 +75,11 @@ export default class SKOSSettingTab extends PluginSettingTab {
                 text.setPlaceholder(
                     'Enter a number greater than 0. Default: -10000'
                 )
-                    .setValue(settings.elementLimit)
+                    .setValue(settings.lcSensitivity)
                     .onChange(async (value) => {
                         const num = Number.parseInt(value);
                         if (Number.isInteger(num) && num <= 0) {
-                            settings.elementLimit = value;
+                            settings.lcSensitivity = value;
                             await this.plugin.saveSettings();
                         } else {
                             new Notice(
@@ -115,7 +115,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
             .setName('YAML Key for chosen heading')
             //.setDesc('')
             .addText((text) => {
-                text.setPlaceholder('related')
+                text.setPlaceholder('heading')
                     .setValue(settings.headingKey)
                     .onChange(async (value) => {
                         settings.headingKey = value.trim();
@@ -126,10 +126,21 @@ export default class SKOSSettingTab extends PluginSettingTab {
             .setName('YAML Key for URI of chosen heading')
             .setDesc('Leave empty if no URI YAML key should be added.')
             .addText((text) => {
-                text.setPlaceholder('related')
+                text.setPlaceholder('uri')
                     .setValue(settings.uriKey)
                     .onChange(async (value) => {
                         settings.uriKey = value.trim();
+                        await this.plugin.saveSettings();
+                    });
+            });
+        new Setting(containerEl)
+            .setName('YAML Key for LC classification of chosen heading')
+            .setDesc('Leave empty if no LCC YAML key should be added.')
+            .addText((text) => {
+                text.setPlaceholder('lcc')
+                    .setValue(settings.lccKey)
+                    .onChange(async (value) => {
+                        settings.lccKey = value.trim();
                         await this.plugin.saveSettings();
                     });
             });

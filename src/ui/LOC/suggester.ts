@@ -180,14 +180,26 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
             } else {
                 headings = { broader: [], narrower: [], related: [] };
             }
+            const lcc = item.lcc;
             const writeMethods = new WriteMethods(this.app, this.plugin);
-            await writeMethods.writeYaml(
-                headings,
-                this.tfile,
-                heading,
-                'https://id.loc.gov/authorities/subjects/' + item.uri,
-                evt
-            );
+            if (lcc !== undefined) {
+                await writeMethods.writeYaml(
+                    headings,
+                    this.tfile,
+                    heading,
+                    'https://id.loc.gov/authorities/subjects/' + item.uri,
+                    evt,
+                    lcc
+                );
+            } else {
+                await writeMethods.writeYaml(
+                    headings,
+                    this.tfile,
+                    heading,
+                    'https://id.loc.gov/authorities/subjects/' + item.uri,
+                    evt
+                );
+            }
         }
     }
 }
