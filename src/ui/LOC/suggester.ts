@@ -156,6 +156,8 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
             } else {
                 el2.appendText(note);
             }
+        } else if (lcc) {
+            el0.appendText(' — LCC: ' + lcc);
         }
     }
 

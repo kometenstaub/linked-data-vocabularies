@@ -1,48 +1,49 @@
-import { App, FuzzySuggestModal, Notice, Platform, TFile } from 'obsidian';
+import { App, SuggestModal, Notice, Platform, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type { passInformation, SuggesterItem, uriToPrefLabel } from '../../interfaces';
-import { SUBDIVISIONS } from '../../constants';
+import type { SuggesterItem } from '../../interfaces';
+//import { SUBDIVISIONS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
-export class SubSKOSModal extends FuzzySuggestModal<Promise<any[]>> {
-	plugin: SKOSPlugin;
-	tfile: TFile;
-	suggestions: any;
+import * as fuzzysort from 'fuzzysort';
+import { LCSHMethods } from 'src/methods/methods-loc';
+import type { headings } from '../../interfaces';
+export class SubSKOSModal extends SuggestModal<SuggesterItem> {
+    plugin: SKOSPlugin;
+    tfile: TFile;
+    suggestions: any;
     lcshSubdivSuggester!: SuggesterItem[];
-	data: SuggesterItem;
+    data: SuggesterItem;
 
-	constructor(
-		app: App,
-		plugin: SKOSPlugin,
-		tfile: TFile,
-		data: SuggesterItem
-	) {
-		super(app);
-		this.plugin = plugin;
-		this.tfile = tfile;
-		this.data = data;
-		this.setPlaceholder('Please start typing...');
-		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
-			// @ts-ignore
-			this.chooser.useSelectedItem(evt);
-			return false;
-		});
-		this.setInstructions([
-			{
-				command: 'shift ↵',
-				purpose: 'to insert as inline YAML at selection',
-			},
-			{
-				command: '↵',
-				purpose: 'to insert as YAML',
-			},
-		]);
+    constructor(
+        app: App,
+        plugin: SKOSPlugin,
+        tfile: TFile,
+        data: SuggesterItem
+    ) {
+        super(app);
+        this.plugin = plugin;
+        this.tfile = tfile;
+        this.data = data;
+        this.setPlaceholder('Please start typing...');
+        this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
+            // @ts-ignore
+            this.chooser.useSelectedItem(evt);
+            return false;
+        });
+        this.setInstructions([
+            {
+                command: 'shift ↵',
+                purpose: 'to insert as inline YAML at selection',
+            },
+            {
+                command: '↵',
+                purpose: 'to insert as YAML',
+            },
+        ]);
 
         const adapter = this.app.vault.adapter;
-        const dir = this.plugin.manifest.dir;
+        const dir = this.plugin.settings.inputFolder;
         (async () => {
-            if (
-                (await adapter.exists(`${dir}/lcshSubdivSuggester.json`))
-            ) {
+            if (await adapter.exists(`${dir}/lcshSubdivSuggester.json`)) {
                 const lcshSubdivSuggester = await adapter.read(
                     `${dir}/lcshSubdivSuggester.json`
                 );
@@ -55,115 +56,108 @@ export class SubSKOSModal extends FuzzySuggestModal<Promise<any[]>> {
                 throw Error(text);
             }
         })();
-    
+    }
 
-	}
+    /**
+     * Add what function the Shift key has and refocus the cursor in it.
+     * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
+     */
+    onOpen() {
+        if (Platform.isDesktopApp) {
+            this.focusInput();
+        } else if (Platform.isMobileApp) {
+            setTimeout(this.focusInput, 400);
+        }
+    }
 
-	getItems(): Promise<any[]>[] {
-		throw new Error('Method not implemented.');
-	}
-	getItemText(item: Promise<any[]>): string {
-		throw new Error('Method not implemented.');
-	}
-	onChooseItem(item: Promise<any[]>, evt: MouseEvent | KeyboardEvent): void {
-		throw new Error('Method not implemented.');
-	}
+    focusInput() {
+        //@ts-ignore
+        document.getElementsByClassName('prompt-input')[0].focus();
+        //@ts-ignore
+        document.getElementsByClassName('prompt-input')[0].select();
+    }
 
-	/**
-	 * Add what function the Shift key has and refocus the cursor in it.
-	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
-	 */
-	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
+    getSuggestions(): SuggesterItem[] {
+        let input = this.inputEl.value.trim();
+        let results = [];
+        const { settings } = this.plugin;
+        if (this.lcshSubdivSuggester !== null) {
+            const fuzzyResult = fuzzysort.go(input, this.lcshSubdivSuggester, {
+                key: 'pL',
+                limit: parseInt(settings.elementLimit),
+                threshold: parseInt(settings.lcSensitivity),
+            });
+            for (let el of fuzzyResult) {
+                results.push(el.obj);
+            }
+        }
+        //@ts-ignore
+        return results;
+    }
 
-	focusInput() {
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].focus();
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].select();
-	}
+    /**
+     *
+     * @param value - takes the {@link SuggesterItem}
+     * @param el - append HTML to be displayed to it
+     */
 
-	/**
-	 * overwrites the updateSuggestions method (which isn't exposed in the API)
-	 * to make it asynchronous
-	 *
-	 * @remarks
-	 *
-	 * (because of the data that is requested in {@link LCSHMethods.findHeading}
-	 * it needs to be async)
-	 *
-	 * {@link SKOSModal.updateSuggestion | super.updateSuggestions} calls
-	 * {@link SKOSModal.getSuggestions | getSuggestions } that returns the suggestions,
-	 * a property which was set by {@link SKOSModal.asyncGetSuggestions | asyncGetSuggestions } before
-	 *
-	 * Thank you Licat!
-	 *
-	 *
-	 * */
+    //@ts-ignore
+    renderSuggestion(item: SuggesterItem, el: HTMLElement) {
+        const { aL, pL, note, lcc } = item;
+        const el0 = el.createDiv();
+        const el1 = el0.createEl('b');
+        el1.appendText(pL);
+        //el.createEl('br')
+        const el2 = el.createDiv();
+        if (aL && note && aL !== pL) {
+            el2.appendText(aL + ' — ' + note);
+        } else if (aL && !note && aL !== pL) {
+            el2.appendText(aL);
+        } else if (!aL && note) {
+            el2.appendText(note);
+        }
+    }
 
-	getSuggestions() {
-		return this.suggestions;
-	}
+    /**
+     * Gets the JSON content for each URL
+     * returns all the headings and parse them
+     * then writes them to the current file's YAML
+     *
+     * @param item - @see the type definition
+     * @param evt - @see the type definition
+     */
 
-	/**
-	 *
-	 * @param value - takes the {@link SuggesterItem}
-	 * @param el - append HTML to be displayed to it
-	 */
+    //@ts-ignore
+    async onChooseSuggestion(
+        item: SuggesterItem,
+        evt: MouseEvent | KeyboardEvent
+    ) {
+        // original heading
+        const heading = item.pL;
+        const methods_loc = new LCSHMethods(this.app, this.plugin);
+        // get relations for original heading
+        let headings = await methods_loc.resolveUris(this.data);
 
-	//@ts-ignore
-	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		const { display, vLabel, aLabel } = value;
+        const data = this.data;
 
-		const el1 = el.createEl('b');
-		const heading = display.replace(/.+?\(USE (.+?)\)/, '$1');
-		el1.appendText(heading);
-		//el.createEl('br')
-		const el2 = el.createEl('div');
-		if (vLabel && vLabel !== display) {
-			el2.appendText(aLabel + ' — ' + vLabel);
-		} else if (aLabel !== display) {
-			el2.appendText(aLabel);
-		}
-	}
-
-	/**
-	 * Gets the JSON content for each URL
-	 * returns all the headings and parse them
-	 * then writes them to the current file's YAML
-	 *
-	 * @param item - @see the type definition
-	 * @param evt - @see the type definition
-	 */
-
-	//@ts-ignore
-	async onChooseSuggestion(
-		item: SuggesterItem,
-		evt: MouseEvent | KeyboardEvent
-	) {
-		let heading = item.display;
-		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
-		//const headingUrl = item.url;
-		//const headingObj = await this.plugin.methods_loc.getURL(item);
-		//const headings = await this.plugin.methods_loc.parseSKOS(headingObj);
-
-		const data = this.data;
-		// parse the data of the authorized heading from the first modal
-		const headingObj = await this.plugin.methods_loc.getURL(data.suggestItem);
-		const headings = await this.plugin.methods_loc.parseSKOS(headingObj);
-
-		const writeMethods = new WriteMethods(this.app, this.plugin);
-		await writeMethods.writeYaml(
-			headings,
-			this.tfile,
-			data.heading + '--' + heading,
-			data.url,
-			evt
-		);
-	}
+        const writeMethods = new WriteMethods(this.app, this.plugin);
+        if (data.lcc !== undefined) {
+            await writeMethods.writeYaml(
+                headings,
+                this.tfile,
+                data.pL + '--' + heading,
+                'https://id.loc.gov/authorities/subjects/' + data.uri,
+                evt,
+                data.lcc
+            );
+        } else {
+            await writeMethods.writeYaml(
+                headings,
+                this.tfile,
+                data.pL + '--' + heading,
+                'https://id.loc.gov/authorities/subjects/' + data.uri,
+                evt
+            );
+        }
+    }
 }

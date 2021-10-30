@@ -15,7 +15,7 @@ import { SUBJECT_HEADINGS } from './constants';
 
 const DEFAULT_SETTINGS: SKOSSettings = {
     inputFolder: '',
-    elementLimit: '500',
+    elementLimit: '100',
     broaderKey: 'broader',
     narrowerKey: 'narrower',
     relatedKey: 'related',
