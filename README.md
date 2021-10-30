@@ -2,7 +2,7 @@
 
 This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings. It also supports inserting it as inline YAML at the current selection for use with [Dataview](https://github.com/blacksmithgu/obsidian-dataview).
 
-**To generate the necessary data, you have to install the [Linked Data Helper](https://github.com/kometenstaub/linked-data-helper) plugin.**
+**To generate the necessary data, you have to install the [Linked Data Helper](https://github.com/kometenstaub/linked-data-helper) plugin.** To sync the data using Obsidian Sync, you will have to enable `Sync all other types` in the Sync settings.
 
 See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
 
