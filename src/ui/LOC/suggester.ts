@@ -1,193 +1,207 @@
-import { App, Platform, SuggestModal, TFile } from 'obsidian';
+import {
+    App,
+    normalizePath,
+    Notice,
+    Platform,
+    SuggestModal,
+    TFile,
+} from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type {
-	headings,
-	passInformation,
-	SuggesterItem,
-} from '../../interfaces';
+import type { headings, SuggesterItem } from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import { SUBJECT_HEADINGS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
-export class SKOSModal extends SuggestModal<Promise<any[]>> {
-	plugin: SKOSPlugin;
-	tfile: TFile;
-	suggestions: any;
-	collection: string;
+import * as fuzzysort from 'fuzzysort';
+import { LCSHMethods } from 'src/methods/methods-loc';
 
-	constructor(
-		app: App,
-		plugin: SKOSPlugin,
-		tfile: TFile,
-		collection: string
-	) {
-		super(app);
-		this.plugin = plugin;
-		this.tfile = tfile;
-		this.collection = collection;
-		this.setPlaceholder('Please start typing...');
-		//https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
-		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
-			// @ts-ignore
-			this.chooser.useSelectedItem(evt);
-			return false;
-		});
-		this.scope.register(['Alt'], 'Enter', (evt: KeyboardEvent) => {
-			// @ts-ignore
-			this.chooser.useSelectedItem(evt);
-			return false;
-		});
-		if (collection === SUBJECT_HEADINGS) {
-			this.setInstructions([
-				{
-					command: 'shift ↵',
-					purpose: 'to insert as inline YAML at selection',
-				},
-				{
-					command: '↵',
-					purpose: 'to insert as YAML',
-				},
-				{
-					command: 'alt ↵',
-					purpose: 'to add a subdivision',
-				},
-			]);
-		} else {
-			this.setInstructions([
-				{
-					command: 'shift ↵',
-					purpose: 'to insert as inline YAML at selection',
-				},
-				{
-					command: '↵',
-					purpose: 'to insert as YAML',
-				},
-			]);
-		}
-	}
+export class SKOSModal extends SuggestModal<SuggesterItem> {
+    plugin: SKOSPlugin;
+    tfile: TFile;
+    suggestions: any;
+    collection: string;
+    lcshSuggester!: SuggesterItem[];
 
-	/**
-	 * Add what function the Shift key has and refocus the cursor in it.
-	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
-	 */
-	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
+    constructor(
+        app: App,
+        plugin: SKOSPlugin,
+        tfile: TFile,
+        collection: string
+    ) {
+        super(app);
+        this.plugin = plugin;
+        this.tfile = tfile;
+        this.collection = collection;
+        this.setPlaceholder('Please start typing...');
+        //https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
+        this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
+            // @ts-ignore
+            this.chooser.useSelectedItem(evt);
+            return false;
+        });
+        this.scope.register(['Alt'], 'Enter', (evt: KeyboardEvent) => {
+            // @ts-ignore
+            this.chooser.useSelectedItem(evt);
+            return false;
+        });
 
-	focusInput() {
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].focus();
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].select();
-	}
+        //const dir = this.plugin.manifest.dir;
+        // when loading onload is implemented, the condition needs to be checked
+        if (this.plugin.settings.loadLcsh) {
+            this.lcshSuggester = this.plugin.loadedLcshSuggester;
+        } else {
+            const { adapter } = this.app.vault;
+            const dir = this.plugin.settings.inputFolder;
+            (async () => {
+                const path = normalizePath(`${dir}/lcshSuggester.json`);
+                if (await adapter.exists(path)) {
+                    const lcshSuggester = await adapter.read(path);
+                    this.lcshSuggester = JSON.parse(lcshSuggester);
+                } else {
+                    const text = 'The JSON file could not be read.';
+                    new Notice(text);
+                    throw Error(text);
+                }
+            })();
+        }
+        if (collection === SUBJECT_HEADINGS) {
+            this.setInstructions([
+                {
+                    command: 'shift ↵',
+                    purpose: 'to insert as inline YAML at selection',
+                },
+                {
+                    command: '↵',
+                    purpose: 'to insert as YAML',
+                },
+                {
+                    command: 'alt ↵',
+                    purpose: 'to add a subdivision',
+                },
+            ]);
+        } else {
+            this.setInstructions([
+                {
+                    command: 'shift ↵',
+                    purpose: 'to insert as inline YAML at selection',
+                },
+                {
+                    command: '↵',
+                    purpose: 'to insert as YAML',
+                },
+            ]);
+        }
+    }
 
-	/**
-	 * overwrites the updateSuggestions method (which isn't exposed in the API)
-	 * to make it asynchronous
-	 *
-	 * @remarks
-	 *
-	 * (because of the data that is requested in {@link LCSHMethods.findHeading}
-	 * it needs to be async)
-	 *
-	 * {@link SKOSModal.updateSuggestion | super.updateSuggestions} calls
-	 * {@link SKOSModal.getSuggestions | getSuggestions } that returns the suggestions,
-	 * a property which was set by {@link SKOSModal.asyncGetSuggestions | asyncGetSuggestions } before
-	 *
-	 * Thank you Licat!
-	 *
-	 *
-	 * */
-	async updateSuggestions() {
-		const { value } = this.inputEl;
-		this.suggestions = await this.plugin.methods_loc.findHeading(
-			value,
-			this.collection
-		);
-		//@ts-expect-error
-		await super.updateSuggestions();
-		/**
-		 * dereference suggestions for memory efficiency
-		 */
-		this.suggestions = null;
-	}
+    /**
+     * Add what function the Shift key has and refocus the cursor in it.
+     * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
+     */
+    onOpen() {
+        if (Platform.isDesktopApp) {
+            this.focusInput();
+        } else if (Platform.isMobileApp) {
+            setTimeout(this.focusInput, 400);
+        }
+    }
 
-	getSuggestions() {
-		return this.suggestions;
-	}
+    focusInput() {
+        //@ts-ignore
+        document.getElementsByClassName('prompt-input')[0].focus();
+        //@ts-ignore
+        document.getElementsByClassName('prompt-input')[0].select();
+    }
 
-	/**
-	 *
-	 * @param value - takes the {@link SuggesterItem}
-	 * @param el - append HTML to be displayed to it
-	 */
+    getSuggestions(): SuggesterItem[] {
+        let input = this.inputEl.value.trim();
+        let results = [];
+        const { settings } = this.plugin;
+        if (this.lcshSuggester !== null) {
+            const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {
+                key: 'pL',
+                limit: parseInt(settings.elementLimit),
+                threshold: parseInt(settings.lcSensitivity),
+            });
+            for (let el of fuzzyResult) {
+                results.push(el.obj);
+            }
+        }
+        //@ts-ignore
+        return results;
+    }
+    renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
+        const { aL, pL, note, lcc } = item;
+        const el0 = el.createDiv();
+        const el1 = el0.createEl('b');
+        el1.appendText(pL);
+        //el.createEl('br')
+        const el2 = el.createDiv();
+        if (aL && note && aL !== pL) {
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(aL + ' — ' + note);
+            } else {
+                el2.appendText(aL + ' — ' + note);
+            }
+        } else if (aL && !note && aL !== pL) {
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(aL);
+            } else {
+                el2.appendText(aL);
+            }
+        } else if (!aL && note) {
+            if (lcc) {
+                el0.appendText(' — LCC: ' + lcc);
+                el2.appendText(note);
+            } else {
+                el2.appendText(note);
+            }
+        } else if (lcc) {
+            el0.appendText(' — LCC: ' + lcc);
+        }
+    }
 
-	//@ts-ignore
-	renderSuggestion(value: SuggesterItem, el: HTMLElement) {
-		const { display, vLabel, aLabel } = value;
-
-		const el1 = el.createEl('b');
-		const heading = display.replace(/.+?\(USE (.+?)\)/, '$1');
-		el1.appendText(heading);
-		//el.createEl('br')
-		const el2 = el.createEl('div');
-		if (vLabel && vLabel !== display) {
-			el2.appendText(aLabel + ' — ' + vLabel);
-		} else if (aLabel !== display) {
-			el2.appendText(aLabel);
-		}
-	}
-
-	/**
-	 * Gets the JSON content for each URL
-	 * returns all the headings and parse them
-	 * then writes them to the current file's YAML
-	 *
-	 * @param item - @see the type definition
-	 * @param evt - @see the type definition
-	 */
-
-	//@ts-ignore
-	async onChooseSuggestion(
-		item: SuggesterItem,
-		evt: MouseEvent | KeyboardEvent
-	) {
-		let heading = item.display;
-		heading = heading.replace(/.+?\(USE (.+?)\)/, '$1');
-		const headingUrl = item.url;
-
-		if (evt.altKey) {
-			const data: passInformation = {
-				suggestItem: item,
-				heading: heading,
-				url: headingUrl,
-			};
-			new SubSKOSModal(this.app, this.plugin, this.tfile, data).open();
-		} else {
-			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
-			const headingObj = await this.plugin.methods_loc.getURL(item);
-			let headings: headings;
-			/**
-			 * only parse relations for LCSH
-			 * since writeYaml still checks for the length of every element, we need to pass
-			 * an empty object
-			 */
-			if (this.collection === SUBJECT_HEADINGS) {
-				headings = await this.plugin.methods_loc.parseSKOS(headingObj);
-			} else {
-				headings = { broader: [], narrower: [], related: [] };
-			}
-			const writeMethods = new WriteMethods(this.app, this.plugin);
-			await writeMethods.writeYaml(
-				headings,
-				this.tfile,
-				heading,
-				headingUrl,
-				evt
-			);
-		}
-	}
+    async onChooseSuggestion(
+        item: SuggesterItem,
+        evt: MouseEvent | KeyboardEvent
+    ): Promise<void> {
+        let heading = item.pL;
+        if (evt.altKey) {
+            new SubSKOSModal(this.app, this.plugin, this.tfile, item).open();
+        } else {
+            let headings: headings;
+            const methods_loc = new LCSHMethods(this.app, this.plugin);
+            // parse them here, otherwise if Alt key is pressed, the second modal is delayed
+            /**
+             * only parse relations for LCSH
+             * since writeYaml still checks for the length of every element, we need to pass
+             * an empty object
+             */
+            if (this.collection === SUBJECT_HEADINGS) {
+                headings = await methods_loc.resolveUris(item);
+            } else {
+                headings = { broader: [], narrower: [], related: [] };
+            }
+            const lcc = item.lcc;
+            const writeMethods = new WriteMethods(this.app, this.plugin);
+            if (lcc !== undefined) {
+                await writeMethods.writeYaml(
+                    headings,
+                    this.tfile,
+                    heading,
+                    'https://id.loc.gov/authorities/subjects/' + item.uri,
+                    evt,
+                    lcc
+                );
+            } else {
+                await writeMethods.writeYaml(
+                    headings,
+                    this.tfile,
+                    heading,
+                    'https://id.loc.gov/authorities/subjects/' + item.uri,
+                    evt
+                );
+            }
+        }
+    }
 }
