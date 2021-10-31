@@ -3,7 +3,7 @@
 	"name": "Linked Data Vocabularies",
 	"version": "1.0.1",
 	"minAppVersion": "0.12.15",
-	"description": "Add SKOS heading classification to YAML.",
+	"description": "Add linked data to the YAML of your notes.",
 	"author": "kometenstaub",
 	"authorUrl": "https://github.com/kometenstaub",
 	"isDesktopOnly": false
