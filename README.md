@@ -38,7 +38,7 @@ All but `heading` can be disabled in the settings.
 
 The Modal shows the heading in bold, under it, if existing, it shows the variant label and the note.
 
-Next to the heading it shows, if existing, the LC classification.
+Next to the heading it shows, if existing, the LC Classification.
 
 
 ## Recommendation
@@ -52,11 +52,7 @@ Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs)
 Thank you [@brimwats](https://github.com/brimwats) for this explanation of Linked Data!
 
 ## Introduction
-This plugin allows the use of structured linked data vocabularies as metadata in Obsidian notes. There are some concepts that should be understood when using this plugin. There are two sections below, one for non-technical users and ones for technical users (those familiar with linked data).
-
-## Technical Information
-
-This plugin uses a JSON-based API to allow the browsing of linked data vocabularies constructed in SKOS. An endpoint must be provided. Local vocabularies are not supported, as an index would have to be built to implement fast parsing/a lookup table of some sort, and parsing the file would not work on mobile.
+This plugin allows the use of structured linked data vocabularies as metadata in Obsidian notes. There are some concepts that should be understood when using this plugin. 
 
 ## Non-Technical Information
 
