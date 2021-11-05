@@ -9,7 +9,6 @@ import {
 import type SKOSPlugin from '../../main';
 import type { headings, SuggesterItem } from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
-import { SUBJECT_HEADINGS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
