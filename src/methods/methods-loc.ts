@@ -26,7 +26,7 @@ export class LCSHMethods {
         const path = normalizePath(`${dir}/lcshUriToPrefLabel.json`);
         if (await adapter.exists(path)) {
             const lcshUriToPrefLabel = await adapter.read(path);
-            this.lcshUriToPrefLabel = await JSON.parse(lcshUriToPrefLabel);
+            this.lcshUriToPrefLabel = JSON.parse(lcshUriToPrefLabel);
         } else {
             const text = 'The JSON file could not be read.';
             new Notice(text);
