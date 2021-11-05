@@ -18,19 +18,12 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
     plugin: SKOSPlugin;
     tfile: TFile;
     suggestions: any;
-    collection: string;
     lcshSuggester!: SuggesterItem[];
 
-    constructor(
-        app: App,
-        plugin: SKOSPlugin,
-        tfile: TFile,
-        collection: string
-    ) {
+    constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
         super(app);
         this.plugin = plugin;
         this.tfile = tfile;
-        this.collection = collection;
         this.setPlaceholder('Please start typing...');
         //https://discord.com/channels/686053708261228577/840286264964022302/871783556576325662
         this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
@@ -63,33 +56,20 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
                 }
             })();
         }
-        if (collection === SUBJECT_HEADINGS) {
-            this.setInstructions([
-                {
-                    command: 'shift ↵',
-                    purpose: 'to insert as inline YAML at selection',
-                },
-                {
-                    command: '↵',
-                    purpose: 'to insert as YAML',
-                },
-                {
-                    command: 'alt ↵',
-                    purpose: 'to add a subdivision',
-                },
-            ]);
-        } else {
-            this.setInstructions([
-                {
-                    command: 'shift ↵',
-                    purpose: 'to insert as inline YAML at selection',
-                },
-                {
-                    command: '↵',
-                    purpose: 'to insert as YAML',
-                },
-            ]);
-        }
+        this.setInstructions([
+            {
+                command: 'shift ↵',
+                purpose: 'to insert as inline YAML at selection',
+            },
+            {
+                command: '↵',
+                purpose: 'to insert as YAML',
+            },
+            {
+                command: 'alt ↵',
+                purpose: 'to add a subdivision',
+            },
+        ]);
     }
 
     /**
@@ -175,11 +155,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
              * since writeYaml still checks for the length of every element, we need to pass
              * an empty object
              */
-            if (this.collection === SUBJECT_HEADINGS) {
-                headings = await methods_loc.resolveUris(item);
-            } else {
-                headings = { broader: [], narrower: [], related: [] };
-            }
+            headings = await methods_loc.resolveUris(item);
             const lcc = item.lcc;
             const writeMethods = new WriteMethods(this.app, this.plugin);
             if (lcc !== undefined) {

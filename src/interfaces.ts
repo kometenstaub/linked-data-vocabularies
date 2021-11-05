@@ -26,17 +26,6 @@ export interface headings {
     related: string[];
 }
 
-/**
- * Represents the data which is passed to {@link SKOSModal.renderSuggestion } after having called the {@link suggest2 | Suggest2 API}
- * from within {@link SKOSModal.async updateSuggestions}
- */
-//export interface SuggesterItem {
-//	display: string; // the heading that is displayed to the user
-//	url: string; // the URL for getting the necessary data
-//	aLabel: string;
-//	vLabel: string;
-//	subdivision: boolean;
-//}
 declare module 'obsidian' {
     interface App {
         commands: {

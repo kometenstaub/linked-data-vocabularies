@@ -11,7 +11,6 @@ import { LCSHMethods } from './methods/methods-loc';
 import type { SKOSSettings, SuggesterItem } from './interfaces';
 import { SKOSModal } from './ui/LOC/suggester';
 //import { AllSKOSModal } from './ui/LOC/suggester-all';
-import { SUBJECT_HEADINGS } from './constants';
 
 const DEFAULT_SETTINGS: SKOSSettings = {
     inputFolder: '',
@@ -114,7 +113,6 @@ export default class SKOSPlugin extends Plugin {
                     this.app,
                     this,
                     tfile,
-                    SUBJECT_HEADINGS
                 ).open();
                 return chooser;
             },
