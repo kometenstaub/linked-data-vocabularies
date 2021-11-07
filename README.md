@@ -34,6 +34,12 @@ You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` an
 
 All but `heading` can be disabled in the settings.
 
+### For a better user experience
+
+There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
+
+Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
+
 ## Modal
 
 The Modal shows the heading in bold, under it, if existing, it shows the variant label and the note.

@@ -92,7 +92,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
         let input = this.inputEl.value.trim();
         let results = [];
         const { settings } = this.plugin;
-        if (this.lcshSuggester !== null) {
+        if (this.lcshSuggester !== undefined) {
             const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {
                 key: 'pL',
                 limit: parseInt(settings.elementLimit),

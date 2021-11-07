@@ -12,6 +12,9 @@ import type { SKOSSettings, SuggesterItem } from './interfaces';
 import { SKOSModal } from './ui/LOC/suggester';
 //import { AllSKOSModal } from './ui/LOC/suggester-all';
 
+//@ts-ignore
+import Worker from './workers/readJson.worker';
+
 const DEFAULT_SETTINGS: SKOSSettings = {
     inputFolder: '',
     elementLimit: '100',
@@ -70,7 +73,18 @@ export default class SKOSPlugin extends Plugin {
                 const path = normalizePath(`${dir}/lcshSuggester.json`);
                 if (await adapter.exists(path)) {
                     const lcshSuggester = await adapter.read(path);
-                    this.loadedLcshSuggester = await JSON.parse(lcshSuggester);
+                    // use web worker so that Obsidian is responsive onload;
+                    // works well on desktop, on Android reading the file in the main thread takes the longest time
+                    let worker = Worker();
+                    worker.postMessage(lcshSuggester);
+                    worker.onerror = (event: any) => {
+                        new Notice(
+                            'The LCSH Suggester JSON file could not be parsed.'
+                        );
+                    };
+                    worker.onmessage = (event: any) => {
+                        this.loadedLcshSuggester = event.data;
+                    };
                 } else {
                     const text = 'The JSON file could not be read.';
                     new Notice(text);
@@ -109,11 +123,7 @@ export default class SKOSPlugin extends Plugin {
             name: 'Query LCSH (Subject Headings)',
             editorCallback: (editor: Editor, view: MarkdownView) => {
                 const tfile = view.file;
-                const chooser = new SKOSModal(
-                    this.app,
-                    this,
-                    tfile,
-                ).open();
+                const chooser = new SKOSModal(this.app, this, tfile).open();
                 return chooser;
             },
         });

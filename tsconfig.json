@@ -15,10 +15,11 @@
       "dom",
       "es5",
       "scripthost",
-      "es2015"
+      "es6",
+      "es7"
     ]
   },
   "include": [
-    "src/**.ts"
+    "src/"
     ]
 }
