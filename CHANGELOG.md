@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.2...1.0.3) (2021-11-07)
+
+
+### Performance
+
+* :zap: onload LCSH parsing is done in web worker ([391dee7](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/391dee7f9453eb54090a4be9976512a4f4c7aa0c))
+
 ### [1.0.2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.1...1.0.2) (2021-11-05)
 
 ### [1.0.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/0.6.1...1.0.1) (2021-10-30)
