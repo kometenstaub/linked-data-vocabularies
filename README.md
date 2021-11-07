@@ -32,6 +32,8 @@ You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` an
 
 `lcc` is the LC Classification.
 
+**Note: With the data made available on Oct. 25, `lcc` is broken and has to be disabled in the settings. It may be removed in the future. This is also responsible for a UI bug at the moment. (It doesn't display the classification but instead `LCC: [object Object]`.)**
+
 All but `heading` can be disabled in the settings.
 
 ### For a better user experience
