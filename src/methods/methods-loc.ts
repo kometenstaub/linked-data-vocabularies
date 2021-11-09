@@ -49,20 +49,33 @@ export class LCSHMethods {
 
         if (broader !== undefined && broaderMax > 0) {
             for (let uri of broader.slice(0, broaderMax)) {
-                const heading = this.lcshUriToPrefLabel[uri];
-                broaderHeadings.push(heading);
+                if (uri.startsWith('sh')) {
+                    const heading = this.lcshUriToPrefLabel[uri];
+                    broaderHeadings.push(heading);
+                } else {
+                    // if it doesn't start with 'sh', then it's not a URI but an already resolved skolem IRI
+                    broaderHeadings.push(uri);
+                }
             }
         }
         if (narrower !== undefined && narrowerMax > 0) {
             for (let uri of narrower.slice(0, narrowerMax)) {
-                const heading = this.lcshUriToPrefLabel[uri];
-                narrowerHeadings.push(heading);
+                if (uri.startsWith('sh')) {
+                    const heading = this.lcshUriToPrefLabel[uri];
+                    narrowerHeadings.push(heading);
+                } else {
+                    narrowerHeadings.push(uri);
+                }
             }
         }
         if (related !== undefined && relatedMax > 0) {
             for (let uri of related.slice(0, relatedMax)) {
-                const heading = this.lcshUriToPrefLabel[uri];
-                relatedHeadings.push(heading);
+                if (uri.startsWith('sh')) {
+                    const heading = this.lcshUriToPrefLabel[uri];
+                    relatedHeadings.push(heading);
+                } else {
+                    relatedHeadings.push(uri);
+                }
             }
         }
 
