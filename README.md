@@ -176,4 +176,4 @@ And here is [another explainer](https://www.librarianshipstudies.com/2018/01/lib
 
 ## Credits
 
-This plugin uses the 'fuzzysort' npm module (https://www.npmjs.com/package/fuzzysort, https://github.com/farzher/fuzzysort). The license file can be found [here](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/blob/master/esbuild.js).
+This plugin uses the 'fuzzysort' npm module (https://www.npmjs.com/package/fuzzysort, https://github.com/farzher/fuzzysort). The license file can be found [here](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/blob/main/esbuild.mjs).
