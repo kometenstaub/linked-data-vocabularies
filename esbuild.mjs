@@ -36,11 +36,12 @@ This module is MIT-licensed:
 */
 `;
 
-const copyManifest = {
-	name: 'copy-manifest',
+const copyManifestAndStyles = {
+	name: 'copy-manifest-and-styles',
 	setup: (build) => {
 		build.onEnd(() => {
 			fs.copyFileSync('manifest.json', 'build/manifest.json');
+			fs.copyFileSync('src/styles.css', 'build/styles.css')
 		});
 	},
 };
@@ -65,7 +66,7 @@ const isProd = process.env.BUILD === 'production';
 			},
 			outfile: 'build/main.js',
 			logLevel: 'info',
-			plugins: [copyManifest, inlineWorkerPlugin()],
+			plugins: [copyManifestAndStyles, inlineWorkerPlugin()],
 		});
 	} catch (err) {
 		console.error(err);
