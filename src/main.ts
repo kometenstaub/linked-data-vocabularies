@@ -43,22 +43,14 @@ export default class SKOSPlugin extends Plugin {
     loadedLcshSuggester!: SuggesterItem[];
 
     /**
-     * override internal Obsidian function to get shorter name in command palette
+     * calls the base class's addCommand function, force overwrite the command name
      * @param command - type Command
      * @returns -
      */
-    addCommand = (command: Command) => {
-        var t = this;
-        return (
-            (command.id = this.manifest.id + ':' + command.id),
-            //command.name = this.manifest.name + ": " + command.name,
-            (command.name = 'Linked Vocabs: ' + command.name),
-            this.app.commands.addCommand(command),
-            this.register(function () {
-                return t.app.commands.removeCommand(command.id);
-            }),
-            command
-        );
+    addCommand = (command: Command): Command => {
+        const newCommand = super.addCommand(command)
+        newCommand.name = 'Linked Vocabs: ' + command.name
+        return newCommand
     };
 
     async onload() {
