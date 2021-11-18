@@ -48,9 +48,9 @@ export default class SKOSPlugin extends Plugin {
      * @returns -
      */
     addCommand = (command: Command): Command => {
-        const newCommand = super.addCommand(command)
-        newCommand.name = 'Linked Vocabs: ' + command.name
-        return newCommand
+        const newCommand = super.addCommand(command);
+        newCommand.name = 'Linked Vocabs: ' + command.name;
+        return newCommand;
     };
 
     async onload() {
@@ -61,12 +61,10 @@ export default class SKOSPlugin extends Plugin {
         if (this.settings.loadLcsh) {
             const { adapter } = this.app.vault;
             const dir = this.settings.inputFolder;
-            setTimeout(async () => {
                 const path = normalizePath(`${dir}/lcshSuggester.json`);
                 if (await adapter.exists(path)) {
                     const lcshSuggester = await adapter.read(path);
-                    // use web worker so that Obsidian is responsive onload;
-                    // works well on desktop, on Android reading the file in the main thread takes the longest time
+                    // use web worker so that Obsidian is more responsive onload;
                     let worker = Worker();
                     worker.postMessage(lcshSuggester);
                     worker.onerror = (event: any) => {
@@ -82,7 +80,6 @@ export default class SKOSPlugin extends Plugin {
                     new Notice(text);
                     throw Error(text);
                 }
-            }, 100);
         }
 
         // commented commands shall be readded when they are re-implemented locally
