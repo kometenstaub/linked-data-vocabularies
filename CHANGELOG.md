@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.7...1.0.8) (2021-11-18)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: terminate worker ([c5e5ef3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/c5e5ef3fb0de8cebc588f3b3ecc7f0ee59e09854))
+
 ### [1.0.7](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.6...1.0.7) (2021-11-11)
 
 ### [1.0.6](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.5...1.0.6) (2021-11-11)
