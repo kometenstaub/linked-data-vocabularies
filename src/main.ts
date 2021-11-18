@@ -74,6 +74,7 @@ export default class SKOSPlugin extends Plugin {
                 };
                 worker.onmessage = (event: any) => {
                     this.loadedLcshSuggester = event.data;
+                    worker.terminate();
                 };
             } else {
                 const text = 'The JSON file could not be read.';
