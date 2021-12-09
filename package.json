@@ -6,7 +6,10 @@
     "scripts": {
         "dev": "cross-env BUILD=dev node esbuild.mjs",
         "build": "cross-env BUILD=production node esbuild.mjs",
-        "release": "standard-version"
+        "release": "standard-version",
+        "lint": "npx eslint src/",
+        "test": "jest",
+        "format": "npx prettier --write src/ tests/*.ts"
     },
     "standard-version": {
         "t": "",
