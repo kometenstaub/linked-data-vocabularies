@@ -9,7 +9,7 @@
         "release": "standard-version",
         "lint": "npx eslint src/",
         "test": "jest",
-        "format": "npx prettier --write src/ tests/*.ts"
+        "format": "npx prettier --write src/"
     },
     "standard-version": {
         "t": "",
