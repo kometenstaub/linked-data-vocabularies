@@ -16,7 +16,6 @@ import { LCSHMethods } from 'src/methods/methods-loc';
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
-	suggestions: any;
 	lcshSuggester!: SuggesterItem[];
 
 	constructor(app: App, plugin: SKOSPlugin, tfile: TFile) {
