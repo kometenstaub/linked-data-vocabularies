@@ -1,6 +1,10 @@
 import { App, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type { passInformation, SuggesterItem, headings } from '../../interfaces';
+import type {
+	passInformation,
+	SuggesterItem,
+	headings,
+} from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import {
 	CULTURAL_HER_ORGANIZATIONS,
@@ -8,7 +12,7 @@ import {
 	LC_CLASSIFICATION,
 	SUBJECT_HEADINGS,
 } from '../../constants';
-import { WriteMethods } from '../../methods/methods-write'
+import { WriteMethods } from '../../methods/methods-write';
 
 export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 	plugin: SKOSPlugin;
@@ -22,7 +26,7 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 		this.plugin = plugin;
 		this.tfile = tfile;
 		this.globalSearch = false;
-		this.collection = ''
+		this.collection = '';
 		const filterChar = this.plugin.settings.lcshFilterChar;
 		this.setPlaceholder(
 			`available filters: ${filterChar}sh, ${filterChar}naf, ${filterChar}c, ${filterChar}cho`
@@ -107,39 +111,43 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 
 				// search in subject headings
 				if (value.slice(1, 4).toLowerCase() === 'sh ') {
-					this.collection = SUBJECT_HEADINGS
+					this.collection = SUBJECT_HEADINGS;
 					const search = value.slice(4);
-					this.suggestions = await this.plugin.methods_loc.findHeading(
-						search,
-						SUBJECT_HEADINGS
-					);
+					this.suggestions =
+						await this.plugin.methods_loc.findHeading(
+							search,
+							SUBJECT_HEADINGS
+						);
 				}
 				// name authority file
 				else if (value.slice(1, 5).toLowerCase() === 'naf ') {
-					this.collection = LCNAF
+					this.collection = LCNAF;
 					const search = value.slice(5);
-					this.suggestions = await this.plugin.methods_loc.findHeading(
-						search,
-						LCNAF
-					);
+					this.suggestions =
+						await this.plugin.methods_loc.findHeading(
+							search,
+							LCNAF
+						);
 				}
 				// classification
 				else if (value.slice(1, 3).toLowerCase() === 'c ') {
-					this.collection = LC_CLASSIFICATION
+					this.collection = LC_CLASSIFICATION;
 					const search = value.slice(3);
-					this.suggestions = await this.plugin.methods_loc.findHeading(
-						search,
-						LC_CLASSIFICATION
-					);
+					this.suggestions =
+						await this.plugin.methods_loc.findHeading(
+							search,
+							LC_CLASSIFICATION
+						);
 				}
 				// cultural heritage organizations
 				else if (value.slice(1, 5).toLowerCase() === 'cho ') {
-					this.collection = CULTURAL_HER_ORGANIZATIONS
+					this.collection = CULTURAL_HER_ORGANIZATIONS;
 					const search = value.slice(5);
-					this.suggestions = await this.plugin.methods_loc.findHeading(
-						search,
-						CULTURAL_HER_ORGANIZATIONS
-					);
+					this.suggestions =
+						await this.plugin.methods_loc.findHeading(
+							search,
+							CULTURAL_HER_ORGANIZATIONS
+						);
 				}
 
 				//@ts-expect-error
@@ -263,12 +271,15 @@ export class AllSKOSModal extends SuggestModal<Promise<any[]>> {
 			 * since writeYaml still checks for the length of every element, we need to pass
 			 * an empty object
 			 */
-			if (this.collection === SUBJECT_HEADINGS || this.collection === '') {
+			if (
+				this.collection === SUBJECT_HEADINGS ||
+				this.collection === ''
+			) {
 				headings = await this.plugin.methods_loc.parseSKOS(headingObj);
 			} else {
-				headings = {broader: [], narrower: [], related: []}
+				headings = { broader: [], narrower: [], related: [] };
 			}
-			const writeMethods = new WriteMethods(this.app, this.plugin)
+			const writeMethods = new WriteMethods(this.app, this.plugin);
 			await writeMethods.writeYaml(
 				headings,
 				this.tfile,
