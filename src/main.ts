@@ -48,8 +48,9 @@ export default class SKOSPlugin extends Plugin {
      * @returns -
      */
     addCommand = (command: Command): Command => {
+        const commandName = command.name
         const newCommand = super.addCommand(command);
-        newCommand.name = 'Linked Vocabs: ' + command.name;
+        newCommand.name = 'Linked Vocabs: ' + commandName;
         return newCommand;
     };
 
