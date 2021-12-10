@@ -58,6 +58,7 @@ export default class SKOSPlugin extends Plugin {
 		console.log('loading Linked Data Vocabularies plugin');
 
 		await this.loadSettings();
+		this.addSettingTab(new SKOSSettingTab(this.app, this));
 
 		if (this.settings.loadLcsh) {
 			const { adapter } = this.app.vault;
@@ -171,7 +172,6 @@ export default class SKOSPlugin extends Plugin {
 		// 	});
 		// }
 
-		this.addSettingTab(new SKOSSettingTab(this.app, this));
 	}
 
 	onunload() {
