@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.10](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.9...1.0.10) (2021-12-10)
+
+
+### Bug Fixes
+
+* add setting tab before parsing of JSON ([18b0d03](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/18b0d03c9b65b8df5ee4dd881e10c1001ab2cebb))
+
 ### [1.0.9](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.8...1.0.9) (2021-12-09)
 
 
