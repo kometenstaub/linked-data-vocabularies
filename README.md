@@ -1,10 +1,30 @@
 # Obsidian Linked Data Vocabularies Plugin
 
+Currently, Library of Congress Subject Headings are supported.
+
 This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings. It also supports inserting it as inline YAML at the current selection for use with [Dataview](https://github.com/blacksmithgu/obsidian-dataview).
 
 **To generate the necessary data, you have to install the [Linked Data Helper](https://github.com/kometenstaub/linked-data-helper) plugin.** To sync the data using Obsidian Sync, you will have to enable `Sync all other types` in the Sync settings.
 
 See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
+
+## Configuration
+
+**You need to input the folder in your vault where the JSON files are stored.**
+
+You can set the limit of queries to be displayed. 100 is the default setting. You can also set the fuzzy search sensitivity.
+
+You can set the key names for `heading`, `uri`, `lcc`,  `broader`, `narrower` and `related` in the settings.
+
+`lcc` is the LC Classification.
+
+All but `heading` can be disabled in the settings.
+
+### For a better user experience
+
+There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
+
+Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
 
 ## Usage
 
@@ -21,31 +41,11 @@ As of 0.4.2 you can also add a subdivision after an authorized heading if you pr
 
 You can of course also use the mouse instead.
 
-
-## Configuration
-
-**You need to input the folder in your vault where the JSON files are stored.**
-
-You can set the limit of queries to be displayed. 200 is the default setting. You can also set the fuzzy search sensitivity.
-
-You can set the key names for `heading`, `url`, `lcc`,  `broader`, `narrower` and `related` in the settings.
-
-`lcc` is the LC Classification.
-
-All but `heading` can be disabled in the settings.
-
-### For a better user experience
-
-There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
-
-Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
-
 ## Modal
 
 The Modal shows the heading in bold, under it, if existing, it shows the variant label and the note.
 
 Next to the heading it shows, if existing, the LC Classification.
-
 
 ## Recommendation
 
@@ -57,12 +57,11 @@ Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs)
 
 Thank you [@brimwats](https://github.com/brimwats) for this explanation of Linked Data!
 
-## Introduction
 This plugin allows the use of structured linked data vocabularies as metadata in Obsidian notes. There are some concepts that should be understood when using this plugin. 
 
-## Non-Technical Information
-
 See another explanation [here](https://www.librarianshipstudies.com/2017/03/vocabulary-control.html?m=1) and [here](https://www.ala.org/alcts/resources/z687/skos).
+
+---
 
 When a cultural heritage institution like a library receives a new item, there are several steps that must be taken before it is made available. Most importantly, the item must be **cataloged** with **subject headings**. A **subject heading** is a term that is meant to serve as a keyword or topic explanation for the book. If you have ever used tags or keywords, you understand the purpose. **Cataloging** means that an item is given at least one a subject heading such as "Poodle" or (more often) multiple headings such as "1. Dogs" and "2. Poodles." 
 
