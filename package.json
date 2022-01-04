@@ -29,7 +29,8 @@
                 "hidden": false,
                 "section": "Bug Fixes"
             }
-        ]
+        ],
+        "releaseCommitMessageFormat": "Linked Data Vocabs Release: {{currentTag}}"
     },
     "keywords": [],
     "author": "kometenstaub",
