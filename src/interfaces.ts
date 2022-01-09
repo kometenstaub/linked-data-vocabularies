@@ -1,3 +1,5 @@
+import type { TFile } from 'obsidian';
+
 export interface SKOSSettings {
 	inputFolder: string;
 	elementLimit: string;
@@ -25,6 +27,11 @@ export interface headings {
 	narrower: string[];
 	related: string[];
 }
+
+export interface keyValuePairs {
+	[key: string]: string;
+}
+
 
 declare module 'obsidian' {
 	interface App {

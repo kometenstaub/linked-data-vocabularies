@@ -7,7 +7,7 @@ import {
 	TFile,
 } from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type { headings, SuggesterItem } from '../../interfaces';
+import type { headings, keyValuePairs, SuggesterItem } from '../../interfaces';
 import { SubSKOSModal } from './suggester-sub';
 import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
@@ -221,6 +221,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		item: SuggesterItem,
 		evt: MouseEvent | KeyboardEvent
 	): Promise<void> {
+		const { settings } = this.plugin;
 		let heading = item.pL;
 		if (evt.altKey) {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, item).open();
@@ -235,25 +236,19 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			 */
 			headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
-			const writeMethods = new WriteMethods(this.app, this.plugin);
-			if (lcc !== undefined) {
-				await writeMethods.writeYaml(
-					headings,
-					this.tfile,
-					heading,
-					'https://id.loc.gov/authorities/subjects/' + item.uri,
-					evt,
-					lcc
-				);
-			} else {
-				await writeMethods.writeYaml(
-					headings,
-					this.tfile,
-					heading,
-					'https://id.loc.gov/authorities/subjects/' + item.uri,
-					evt
-				);
+			const uri = 'https://id.loc.gov/authorities/subjects/' + item.uri;
+			// the heading is always added
+			const keys: keyValuePairs = {
+				[settings.headingKey]: heading,
+			};
+			if (settings.uriKey !== '') {
+				keys[settings.uriKey] = uri;
 			}
+			if (lcc !== undefined && settings.lccKey !== '') {
+				keys[settings.lccKey] = lcc;
+			}
+			const writeMethods = new WriteMethods(this.app, this.plugin);
+			await writeMethods.writeYaml(headings, this.tfile, evt, keys);
 		}
 	}
 }

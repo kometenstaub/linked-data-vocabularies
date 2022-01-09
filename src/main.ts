@@ -171,7 +171,6 @@ export default class SKOSPlugin extends Plugin {
 		// 		},
 		// 	});
 		// }
-
 	}
 
 	onunload() {
