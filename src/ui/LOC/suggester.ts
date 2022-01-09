@@ -236,13 +236,13 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			 */
 			headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
-			const uri = 'https://id.loc.gov/authorities/subjects/' + item.uri;
 			// the heading is always added
 			const keys: keyValuePairs = {
 				[settings.headingKey]: heading,
 			};
 			if (settings.uriKey !== '') {
-				keys[settings.uriKey] = uri;
+				keys[settings.uriKey] =
+					'https://id.loc.gov/authorities/subjects/' + item.uri;
 			}
 			if (lcc !== undefined && settings.lccKey !== '') {
 				keys[settings.lccKey] = lcc;
