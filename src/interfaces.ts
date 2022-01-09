@@ -32,7 +32,6 @@ export interface keyValuePairs {
 	[key: string]: string;
 }
 
-
 declare module 'obsidian' {
 	interface App {
 		commands: {
