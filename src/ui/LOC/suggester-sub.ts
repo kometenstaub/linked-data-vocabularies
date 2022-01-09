@@ -1,11 +1,11 @@
-import { App, SuggestModal, Notice, Platform, TFile } from 'obsidian';
+import { App, Notice, Platform, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
-import type { SuggesterItem } from '../../interfaces';
+import type { keyValuePairs, SuggesterItem } from '../../interfaces';
 //import { SUBDIVISIONS } from '../../constants';
 import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
-import type { headings } from '../../interfaces';
+
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
@@ -130,32 +130,26 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		item: SuggesterItem,
 		evt: MouseEvent | KeyboardEvent
 	) {
-		// original heading
-		const heading = item.pL;
-		const methods_loc = new LCSHMethods(this.app, this.plugin);
-		// get relations for original heading
-		let headings = await methods_loc.resolveUris(this.data);
-
 		const data = this.data;
+		const { settings } = this.plugin;
+		// subheading
+		const heading = item.pL;
+		// get relations for original heading
+		const methods_loc = new LCSHMethods(this.app, this.plugin);
+		let headings = await methods_loc.resolveUris(data);
+
+		const keys: keyValuePairs = {
+			[settings.headingKey]: data.pL + '--' + heading,
+		};
+		if (settings.uriKey !== '') {
+			keys[settings.uriKey] =
+				'https://id.loc.gov/authorities/subjects/' + data.uri;
+		}
+		if (data.lcc !== undefined && settings.lccKey !== '') {
+			keys[settings.lccKey] = data.lcc;
+		}
 
 		const writeMethods = new WriteMethods(this.app, this.plugin);
-		if (data.lcc !== undefined) {
-			await writeMethods.writeYaml(
-				headings,
-				this.tfile,
-				data.pL + '--' + heading,
-				'https://id.loc.gov/authorities/subjects/' + data.uri,
-				evt,
-				data.lcc
-			);
-		} else {
-			await writeMethods.writeYaml(
-				headings,
-				this.tfile,
-				data.pL + '--' + heading,
-				'https://id.loc.gov/authorities/subjects/' + data.uri,
-				evt
-			);
-		}
+		await writeMethods.writeYaml(headings, this.tfile, evt, keys);
 	}
 }
