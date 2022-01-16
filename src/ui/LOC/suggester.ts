@@ -1,5 +1,5 @@
 import {
-	App,
+	App, Instruction,
 	normalizePath,
 	Notice,
 	Platform,
@@ -13,6 +13,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
+import {BASIC_INSTRUCTIONS} from "../../constants";
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -55,20 +56,13 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				}
 			})();
 		}
-		this.setInstructions([
-			{
-				command: 'shift ↵',
-				purpose: 'to insert as inline YAML at selection',
-			},
-			{
-				command: '↵',
-				purpose: 'to insert as YAML',
-			},
+		const extraInstructions: Instruction[] = [
 			{
 				command: 'alt ↵',
 				purpose: 'to add a subdivision',
 			},
-		]);
+		];
+		this.setInstructions(BASIC_INSTRUCTIONS.concat(extraInstructions));
 	}
 
 	/**

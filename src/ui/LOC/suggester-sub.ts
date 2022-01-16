@@ -6,6 +6,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
+import {BASIC_INSTRUCTIONS} from "../../constants";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -29,16 +30,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 			this.chooser.useSelectedItem(evt);
 			return false;
 		});
-		this.setInstructions([
-			{
-				command: 'shift ↵',
-				purpose: 'to insert as inline YAML at selection',
-			},
-			{
-				command: '↵',
-				purpose: 'to insert as YAML',
-			},
-		]);
+		this.setInstructions(BASIC_INSTRUCTIONS);
 
 		const adapter = this.app.vault.adapter;
 		const dir = this.plugin.settings.inputFolder;
