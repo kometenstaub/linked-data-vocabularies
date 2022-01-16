@@ -3,7 +3,6 @@ import {
 	Instruction,
 	normalizePath,
 	Notice,
-	Platform,
 	SuggestModal,
 	TFile,
 } from 'obsidian';

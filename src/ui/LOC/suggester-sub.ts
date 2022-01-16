@@ -1,4 +1,4 @@
-import { App, Notice, Platform, SuggestModal, TFile } from 'obsidian';
+import { App, Notice, SuggestModal, TFile } from 'obsidian';
 import type SKOSPlugin from '../../main';
 import type { keyValuePairs, SuggesterItem } from '../../interfaces';
 //import { SUBDIVISIONS } from '../../constants';

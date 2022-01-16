@@ -3,7 +3,6 @@ import type {
 	extraKeys,
 	headings,
 	keyValuePairs,
-	SKOSSettings,
 } from '../interfaces';
 import type SKOSPlugin from '../main';
 
