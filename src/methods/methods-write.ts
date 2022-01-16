@@ -1,9 +1,5 @@
 import { App, Notice, TFile, MarkdownView } from 'obsidian';
-import type {
-	extraKeys,
-	headings,
-	keyValuePairs,
-} from '../interfaces';
+import type { extraKeys, headings, keyValuePairs } from '../interfaces';
 import type SKOSPlugin from '../main';
 
 export class WriteMethods {
