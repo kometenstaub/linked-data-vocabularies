@@ -11,6 +11,10 @@ export class WriteMethods {
 		this.plugin = plugin;
 	}
 
+	public writeLocYaml() {
+
+	}
+
 	// Thank you for the inspiration: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
 	/**
 	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
@@ -21,11 +25,11 @@ export class WriteMethods {
 	 * @param keys - The key-value pairs that are added to the YAML
 	 */
 	public async writeYaml(
-		headingObj: headings,
 		tfile: TFile,
 		evt: KeyboardEvent | MouseEvent,
-		keys: keyValuePairs
-	): Promise<void> {
+		keys: keyValuePairs,
+		headingObj: headings,
+): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);

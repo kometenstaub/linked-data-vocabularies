@@ -230,7 +230,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				keys[settings.lccKey] = lcc;
 			}
 			const writeMethods = new WriteMethods(this.app, this.plugin);
-			await writeMethods.writeYaml(headings, this.tfile, evt, keys);
+			await writeMethods.writeYaml(this.tfile, evt, keys, headings);
 		}
 	}
 }
