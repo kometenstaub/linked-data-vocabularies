@@ -6,7 +6,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
-import {BASIC_INSTRUCTIONS} from "../../constants";
+import { BASIC_INSTRUCTIONS } from '../../constants';
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -133,6 +133,6 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		}
 
 		const writeMethods = new WriteMethods(this.app, this.plugin);
-		await writeMethods.writeYaml(this.tfile, evt, keys, headings);
+		await writeMethods.writeLocYaml(this.tfile, evt, keys, headings);
 	}
 }

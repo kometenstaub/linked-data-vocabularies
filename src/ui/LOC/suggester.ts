@@ -1,5 +1,6 @@
 import {
-	App, Instruction,
+	App,
+	Instruction,
 	normalizePath,
 	Notice,
 	Platform,
@@ -13,7 +14,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
-import {BASIC_INSTRUCTIONS} from "../../constants";
+import { BASIC_INSTRUCTIONS } from '../../constants';
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -93,112 +94,112 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
 		const { aL, pL, note, lcc } = item;
 		const el0 = el.createDiv();
-		const el1 = el0.createEl('b', { cls: 'linked-vocabs-lcsh-prefLabel' });
+		const el1 = el0.createEl('b', { cls: ['linked-vocabs', 'lcsh-prefLabel'] });
 		el1.appendText(pL);
 		//el.createEl('br')
 		if (aL && note && aL !== pL) {
 			if (lcc) {
 				el0.createEl('div', {
 					text: ' — ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc-pre' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-pre'],
 				});
 				el0.createEl('div', {
 					text: 'LCC: ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc' ],
+					cls: ['linked-vocabs', 'lcsh-lcc'],
 				});
 				el0.createEl('div', {
 					text: lcc,
-					cls: [ 'linked-vocabs', 'lcsh-lcc-classification' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-classification'],
 				});
 				const subDiv = el.createDiv();
 				subDiv.createEl('div', {
 					text: aL,
-					cls: [ 'linked-vocabs', 'lcsh-altLabel' ],
+					cls: ['linked-vocabs', 'lcsh-altLabel'],
 				});
 				subDiv.createEl('div', {
 					text: ' — ',
-					cls: [ 'linked-vocabs', 'lcsh-note-pre' ],
+					cls: ['linked-vocabs', 'lcsh-note-pre'],
 				});
 				subDiv.createEl('div', {
 					text: note,
-					cls: [ 'linked-vocabs', 'lcsh-note' ],
+					cls: ['linked-vocabs', 'lcsh-note'],
 				});
 			} else {
 				el.createEl('div', {
 					text: aL,
-					cls: [ 'linked-vocabs', 'lcsh-altLabel' ],
+					cls: ['linked-vocabs', 'lcsh-altLabel'],
 				});
 				el.createEl('div', {
 					text: ' — ',
-					cls: [ 'linked-vocabs', 'lcsh-note-pre' ],
+					cls: ['linked-vocabs', 'lcsh-note-pre'],
 				});
 				el.createEl('div', {
 					text: note,
-					cls: [ 'linked-vocabs', 'lcsh-note' ],
+					cls: ['linked-vocabs', 'lcsh-note'],
 				});
 			}
 		} else if (aL && !note && aL !== pL) {
 			if (lcc) {
 				el0.createEl('div', {
 					text: ' — ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc-pre' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-pre'],
 				});
 				el0.createEl('div', {
 					text: 'LCC: ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc' ],
+					cls: ['linked-vocabs', 'lcsh-lcc'],
 				});
 				el0.createEl('div', {
 					text: lcc,
-					cls: [ 'linked-vocabs', 'lcsh-lcc-classification' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-classification'],
 				});
 				const subDiv = el.createDiv();
 				subDiv.createEl('div', {
 					text: aL,
-					cls: [ 'linked-vocabs', 'lcsh-altLabel' ],
+					cls: ['linked-vocabs', 'lcsh-altLabel'],
 				});
 			} else {
 				el.createEl('div', {
 					text: aL,
-					cls: [ 'linked-vocabs', 'lcsh-altLabel' ],
+					cls: ['linked-vocabs', 'lcsh-altLabel'],
 				});
 			}
 		} else if (!aL && note) {
 			if (lcc) {
 				el0.createEl('div', {
 					text: ' — ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc-pre' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-pre'],
 				});
 				el0.createEl('div', {
 					text: 'LCC: ',
-					cls: [ 'linked-vocabs', 'lcsh-lcc' ],
+					cls: ['linked-vocabs', 'lcsh-lcc'],
 				});
 				el0.createEl('div', {
 					text: lcc,
-					cls: [ 'linked-vocabs', 'lcsh-lcc-classification' ],
+					cls: ['linked-vocabs', 'lcsh-lcc-classification'],
 				});
 				const subDiv = el.createDiv();
 				subDiv.createEl('div', {
 					text: note,
-					cls: [ 'linked-vocabs', 'lcsh-note' ],
+					cls: ['linked-vocabs', 'lcsh-note'],
 				});
 			} else {
 				el.createEl('div', {
 					text: note,
-					cls: [ 'linked-vocabs', 'lcsh-note' ],
+					cls: ['linked-vocabs', 'lcsh-note'],
 				});
 			}
 		} else if (lcc) {
 			el0.createEl('div', {
 				text: ' — ',
-				cls: [ 'linked-vocabs', 'lcsh-lcc-pre' ],
+				cls: ['linked-vocabs', 'lcsh-lcc-pre'],
 			});
 			el0.createEl('div', {
 				text: 'LCC: ',
-				cls: [ 'linked-vocabs', 'lcsh-lcc' ],
+				cls: ['linked-vocabs', 'lcsh-lcc'],
 			});
 			el0.createEl('div', {
 				text: lcc,
-				cls: [ 'linked-vocabs', 'lcsh-lcc-classification' ],
+				cls: ['linked-vocabs', 'lcsh-lcc-classification'],
 			});
 		}
 	}
@@ -230,7 +231,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				keys[settings.lccKey] = lcc;
 			}
 			const writeMethods = new WriteMethods(this.app, this.plugin);
-			await writeMethods.writeYaml(this.tfile, evt, keys, headings);
+			await writeMethods.writeLocYaml(this.tfile, evt, keys, headings);
 		}
 	}
 }

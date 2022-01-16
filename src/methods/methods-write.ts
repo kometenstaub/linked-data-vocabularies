@@ -1,5 +1,10 @@
 import { App, Notice, TFile, MarkdownView } from 'obsidian';
-import type { headings, keyValuePairs } from '../interfaces';
+import type {
+	extraKeys,
+	headings,
+	keyValuePairs,
+	SKOSSettings,
+} from '../interfaces';
 import type SKOSPlugin from '../main';
 
 export class WriteMethods {
@@ -11,25 +16,32 @@ export class WriteMethods {
 		this.plugin = plugin;
 	}
 
-	public writeLocYaml() {
-
+	public async writeLocYaml(
+		tfile: TFile,
+		evt: KeyboardEvent | MouseEvent,
+		keys: keyValuePairs,
+		headingObj: headings
+	): Promise<void> {
+		//@ts-expect-error This type is finer and passed into a broader type
+		await this.writeYaml(tfile, evt, keys, headingObj);
 	}
 
 	// Thank you for the inspiration: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
 	/**
 	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
 	 * YAML or inline YAML for use with {@link https://github.com/blacksmithgu/obsidian-dataview | Dataview}
-	 * @param headingObj - The object containing all the broader, narrower and related headings from {@link parseSKOS}
+	 * @param moreKeys - The object containing all the broader, narrower and related headings from {@link parseSKOS}
 	 * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
 	 * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
 	 * @param keys - The key-value pairs that are added to the YAML
 	 */
-	public async writeYaml(
+	private async writeYaml(
 		tfile: TFile,
 		evt: KeyboardEvent | MouseEvent,
 		keys: keyValuePairs,
-		headingObj: headings,
-): Promise<void> {
+		// will be made optional in the future for other vocabs that don't have BT/NT/RT relations
+		moreKeys: extraKeys
+	): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);
@@ -39,7 +51,7 @@ export class WriteMethods {
 			if (!fileCache?.frontmatter) {
 				let newFrontMatter: string[] = ['---'];
 				newFrontMatter.concat(
-					this.buildYaml(newFrontMatter, headingObj, keys)
+					this.buildYaml(newFrontMatter, keys, moreKeys)
 				);
 				newFrontMatter.push('---');
 				const reversedFrontMatter = newFrontMatter.reverse();
@@ -59,7 +71,7 @@ export class WriteMethods {
 
 				let addedFrontmatter: string[] = [];
 				addedFrontmatter.concat(
-					this.buildYaml(addedFrontmatter, headingObj, keys)
+					this.buildYaml(addedFrontmatter, keys, moreKeys)
 				);
 
 				let lineCount: number = 0;
@@ -74,7 +86,7 @@ export class WriteMethods {
 		else if (evt.shiftKey) {
 			let newFrontMatter: string[] = [];
 			let yaml: string[] = [];
-			yaml = this.buildYaml(newFrontMatter, headingObj, keys);
+			yaml = this.buildYaml(newFrontMatter, keys, moreKeys);
 			let inlineYaml: string = '';
 			for (let line of yaml) {
 				inlineYaml += line.replace(':', '::') + '\n';
@@ -90,22 +102,29 @@ export class WriteMethods {
 	 * @param keys - The key-value pairs that are added to the YAML
 	 * @returns - the YAML lines as an array which can then be written to the file
 	 */
-	buildYaml(
+	private buildYaml(
 		newFrontMatter: string[],
-		headingObj: headings,
-		keys: keyValuePairs
+		keys: keyValuePairs,
+		headingObj?: extraKeys
 	): string[] {
-		const { settings } = this.plugin;
-
 		for (const [key, value] of Object.entries(keys)) {
 			newFrontMatter.push(key + ': ' + value);
 		}
+		if (headingObj !== undefined) {
+			return this.addHeadings(headingObj, newFrontMatter);
+		} else {
+			return newFrontMatter;
+		}
+	}
 
+	private addHeadings(headingObject: extraKeys, newFrontMatter: string[]) {
+		const { settings } = this.plugin;
 		/**
 		 * It will be zero if there are no headings or when the user chose 0 in the settings,
-		 * because {@link LCSHMethods.fillValues} breaks if the number is 0 or at the user defined limit,
-		 * so the array with headings will only contain as many heaindgs as the user chose
+		 * because {@link LCSHMethods.resolveUris} breaks if the number is 0 or at the user defined limit,
+		 * so the array with headings will only contain as many headings as the user chose
 		 */
+		const headingObj = headingObject as unknown as headings;
 		if (headingObj.broader.length > 0) {
 			let broaderHeadings: string[] = headingObj.broader;
 			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
@@ -129,12 +148,13 @@ export class WriteMethods {
 		}
 		return newFrontMatter;
 	}
+
 	/**
 	 *
 	 * @param headingsArray | the array of headings returned from {@link buildYaml}
 	 * @returns - an array where each element is surrounded with double quotes
 	 */
-	surroundWithQuotes(headingsArray: string[]): string[] {
+	private surroundWithQuotes(headingsArray: string[]): string[] {
 		let newHeadingsArray: string[] = [];
 		for (let heading of headingsArray) {
 			newHeadingsArray.push('"' + heading + '"');
@@ -146,7 +166,10 @@ export class WriteMethods {
 	 * @param splitContent - the currently active file, each line being one array element
 	 * @param tfile - the currently active file, @see TFile
 	 */
-	async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
+	private async writeYamlToFile(
+		splitContent: string[],
+		tfile: TFile
+	): Promise<void> {
 		const newFileContent = splitContent.join('\n');
 		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
@@ -162,7 +185,7 @@ export class WriteMethods {
 	 * @param inlineYaml - the inline YAML as string
 	 * @param tfile - the currently active file, @see TFile
 	 */
-	writeInlineYamlToSel(inlineYaml: string, tfile: TFile) {
+	private writeInlineYamlToSel(inlineYaml: string, tfile: TFile) {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (this.app.workspace.getActiveFile() === tfile) {
 			const activeEditor = activeView?.editor;

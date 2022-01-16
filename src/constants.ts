@@ -1,4 +1,4 @@
-import type {Instruction} from "obsidian";
+import type { Instruction } from 'obsidian';
 
 export const BASIC_INSTRUCTIONS: Instruction[] = [
 	{
@@ -9,4 +9,4 @@ export const BASIC_INSTRUCTIONS: Instruction[] = [
 		command: '↵',
 		purpose: 'to insert as YAML',
 	},
-]
+];

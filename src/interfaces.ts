@@ -28,6 +28,10 @@ export interface headings {
 	related: string[];
 }
 
+export interface extraKeys {
+	[key: string]: string[];
+}
+
 export interface keyValuePairs {
 	[key: string]: string;
 }
