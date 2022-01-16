@@ -139,7 +139,7 @@ export class WriteMethods {
 	}
 	/**
 	 * Writes the YAML to the currently active file, if it is active.
-	 * @param splitContent - the curerntly active file, each line being one array element
+	 * @param splitContent - the currently active file, each line being one array element
 	 * @param tfile - the currently active file, @see TFile
 	 */
 	async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
