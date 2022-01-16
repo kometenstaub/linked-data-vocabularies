@@ -108,7 +108,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	}
 
 	/**
-	 * Gets the JSON content for each URL
+	 * Gets the JSON content for each URI
 	 * returns all the headings and parse them
 	 * then writes them to the current file's YAML
 	 *
