@@ -12,6 +12,7 @@ import { SubSKOSModal } from './suggester-sub';
 import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
+import { focus } from './utils';
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -75,16 +76,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
 	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
-
-	focusInput() {
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].focus();
+		focus();
 	}
 
 	getSuggestions(): SuggesterItem[] {
@@ -228,12 +220,8 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		} else {
 			let headings: headings;
 			const methods_loc = new LCSHMethods(this.app, this.plugin);
-			// parse them here, otherwise if Alt key is pressed, the second modal is delayed
-			/**
-			 * only parse relations for LCSH
-			 * since writeYaml still checks for the length of every element, we need to pass
-			 * an empty object
-			 */
+			// parse them here and not
+			// before condition, otherwise if Alt key is pressed, the second modal would be delayed
 			headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
 			// the heading is always added

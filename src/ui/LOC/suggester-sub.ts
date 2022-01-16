@@ -5,11 +5,11 @@ import type { keyValuePairs, SuggesterItem } from '../../interfaces';
 import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
+import { focus } from './utils';
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
 	tfile: TFile;
-	suggestions: any;
 	lcshSubdivSuggester!: SuggesterItem[];
 	data: SuggesterItem;
 
@@ -60,19 +60,10 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 
 	/**
 	 * Add what function the Shift key has and refocus the cursor in it.
-	 * For mobile it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
+	 * For mobile, it requires a timeout, because the modal needs time to appear until the cursor can be placed in it,
 	 */
 	onOpen() {
-		if (Platform.isDesktopApp) {
-			this.focusInput();
-		} else if (Platform.isMobileApp) {
-			setTimeout(this.focusInput, 400);
-		}
-	}
-
-	focusInput() {
-		//@ts-ignore
-		document.getElementsByClassName('prompt-input')[0].focus();
+		focus();
 	}
 
 	getSuggestions(): SuggesterItem[] {
@@ -95,7 +86,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 
 	/**
 	 *
-	 * @param value - takes the {@link SuggesterItem}
+	 * @param item - takes the {@link SuggesterItem}
 	 * @param el - append HTML to be displayed to it
 	 */
 
