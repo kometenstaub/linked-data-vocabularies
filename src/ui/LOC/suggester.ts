@@ -1,8 +1,9 @@
 import {
 	App,
-	Instruction,
+	Instruction, Keymap,
 	normalizePath,
 	Notice,
+	Platform,
 	SuggestModal,
 	TFile,
 } from 'obsidian';
@@ -32,6 +33,11 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			return false;
 		});
 		this.scope.register(['Alt'], 'Enter', (evt: KeyboardEvent) => {
+			// @ts-ignore
+			this.chooser.useSelectedItem(evt);
+			return false;
+		});
+		this.scope.register(['Mod'], 'Enter', (evt: KeyboardEvent) => {
 			// @ts-ignore
 			this.chooser.useSelectedItem(evt);
 			return false;
@@ -211,7 +217,15 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	): Promise<void> {
 		const { settings } = this.plugin;
 		let heading = item.pL;
-		if (evt.altKey) {
+		if (
+			//(evt.metaKey && (Platform.isMacOS || Platform.isIosApp)) ||
+			//(evt.ctrlKey && (!Platform.isMacOS && !Platform.isIosApp))
+			Keymap.isModEvent(evt)
+		) {
+			let itemUri = 'https://id.loc.gov/authorities/subjects/' + item.uri;
+			itemUri = encodeURI(itemUri);
+			window.open(itemUri);
+		} else if (evt.altKey) {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, item).open();
 		} else {
 			let headings: headings;
