@@ -10,3 +10,5 @@ export const BASIC_INSTRUCTIONS: Instruction[] = [
 		purpose: 'to insert as YAML',
 	},
 ];
+
+export const BASE_URI = 'https://id.loc.gov/authorities/subjects/';

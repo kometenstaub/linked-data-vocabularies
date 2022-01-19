@@ -15,7 +15,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
-import { BASIC_INSTRUCTIONS } from '../../constants';
+import { BASE_URI, BASIC_INSTRUCTIONS } from '../../constants';
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -219,7 +219,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		const { settings } = this.plugin;
 		let heading = item.pL;
 		if (Keymap.isModEvent(evt)) {
-			let itemUri = 'https://id.loc.gov/authorities/subjects/' + item.uri;
+			let itemUri = BASE_URI + item.uri;
 			itemUri = encodeURI(itemUri);
 			window.open(itemUri);
 		} else if (evt.altKey) {
@@ -236,8 +236,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				[settings.headingKey]: heading,
 			};
 			if (settings.uriKey !== '') {
-				keys[settings.uriKey] =
-					'https://id.loc.gov/authorities/subjects/' + item.uri;
+				keys[settings.uriKey] = BASE_URI + item.uri;
 			}
 			if (lcc !== undefined && settings.lccKey !== '') {
 				keys[settings.lccKey] = lcc;
