@@ -15,7 +15,7 @@ import { WriteMethods } from 'src/methods/methods-write';
 import * as fuzzysort from 'fuzzysort';
 import { LCSHMethods } from 'src/methods/methods-loc';
 import { focus } from './utils';
-import { BASE_URI, BASIC_INSTRUCTIONS } from '../../constants';
+import { BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE } from '../../constants';
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -69,6 +69,17 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				purpose: 'to add a subdivision',
 			},
 		];
+		if (Platform.isMacOS) {
+			extraInstructions.push({
+				command: 'cmd ↵',
+				purpose: BROWSER_PURPOSE,
+			});
+		} else {
+			extraInstructions.push({
+				command: 'ctrl ↵',
+				purpose: BROWSER_PURPOSE,
+			});
+		}
 		this.setInstructions(BASIC_INSTRUCTIONS.concat(extraInstructions));
 	}
 
