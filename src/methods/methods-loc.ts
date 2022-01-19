@@ -17,9 +17,9 @@ export class LCSHMethods {
 		const narrower = item.nt;
 		const related = item.rt;
 
-		let broaderHeadings: string[] = [];
-		let narrowerHeadings: string[] = [];
-		let relatedHeadings: string[] = [];
+		const broaderHeadings: string[] = [];
+		const narrowerHeadings: string[] = [];
+		const relatedHeadings: string[] = [];
 
 		const adapter = this.app.vault.adapter;
 		const dir = this.plugin.settings.inputFolder;
@@ -48,7 +48,7 @@ export class LCSHMethods {
 			: null;
 
 		if (broader !== undefined && broaderMax > 0) {
-			for (let uri of broader.slice(0, broaderMax)) {
+			for (const uri of broader.slice(0, broaderMax)) {
 				if (uri.startsWith('sh')) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					broaderHeadings.push(heading);
@@ -59,7 +59,7 @@ export class LCSHMethods {
 			}
 		}
 		if (narrower !== undefined && narrowerMax > 0) {
-			for (let uri of narrower.slice(0, narrowerMax)) {
+			for (const uri of narrower.slice(0, narrowerMax)) {
 				if (uri.startsWith('sh')) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					narrowerHeadings.push(heading);
@@ -69,7 +69,7 @@ export class LCSHMethods {
 			}
 		}
 		if (related !== undefined && relatedMax > 0) {
-			for (let uri of related.slice(0, relatedMax)) {
+			for (const uri of related.slice(0, relatedMax)) {
 				if (uri.startsWith('sh')) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					relatedHeadings.push(heading);

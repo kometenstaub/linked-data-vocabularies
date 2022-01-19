@@ -59,8 +59,8 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	}
 
 	getSuggestions(): SuggesterItem[] {
-		let input = this.inputEl.value.trim();
-		let results = [];
+		const input = this.inputEl.value.trim();
+		const results = [];
 		const { settings } = this.plugin;
 		if (this.lcshSubdivSuggester !== null) {
 			const fuzzyResult = fuzzysort.go(input, this.lcshSubdivSuggester, {
@@ -68,7 +68,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 				limit: parseInt(settings.elementLimit),
 				threshold: parseInt(settings.lcSensitivity),
 			});
-			for (let el of fuzzyResult) {
+			for (const el of fuzzyResult) {
 				results.push(el.obj);
 			}
 		}
@@ -84,7 +84,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 
 	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
-		const { aL, pL, note, lcc } = item;
+		const { aL, pL, note } = item;
 		const el0 = el.createDiv();
 		const el1 = el0.createEl('b');
 		el1.appendText(pL);
@@ -119,7 +119,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		const heading = item.pL;
 		// get relations for original heading
 		const methods_loc = new LCSHMethods(this.app, this.plugin);
-		let headings = await methods_loc.resolveUris(data);
+		const headings = await methods_loc.resolveUris(data);
 
 		const keys: keyValuePairs = {
 			[settings.headingKey]: data.pL + '--' + heading,

@@ -92,8 +92,8 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	}
 
 	getSuggestions(): SuggesterItem[] {
-		let input = this.inputEl.value.trim();
-		let results = [];
+		const input = this.inputEl.value.trim();
+		const results = [];
 		const { settings } = this.plugin;
 		if (this.lcshSuggester !== undefined) {
 			const fuzzyResult = fuzzysort.go(input, this.lcshSuggester, {
@@ -101,7 +101,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				limit: parseInt(settings.elementLimit),
 				threshold: parseInt(settings.lcSensitivity),
 			});
-			for (let el of fuzzyResult) {
+			for (const el of fuzzyResult) {
 				results.push(el.obj);
 			}
 		}
@@ -228,7 +228,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		evt: MouseEvent | KeyboardEvent
 	): Promise<void> {
 		const { settings } = this.plugin;
-		let heading = item.pL;
+		const heading = item.pL;
 		if (Keymap.isModEvent(evt)) {
 			let itemUri = BASE_URI + item.uri;
 			itemUri = encodeURI(itemUri);
@@ -236,11 +236,10 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		} else if (evt.altKey) {
 			new SubSKOSModal(this.app, this.plugin, this.tfile, item).open();
 		} else {
-			let headings: headings;
 			const methods_loc = new LCSHMethods(this.app, this.plugin);
 			// parse them here and not
 			// before condition, otherwise if Alt key is pressed, the second modal would be delayed
-			headings = await methods_loc.resolveUris(item);
+			const headings: headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
 			// the heading is always added
 			const keys: keyValuePairs = {

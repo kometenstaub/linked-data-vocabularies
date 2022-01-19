@@ -41,17 +41,17 @@ export class WriteMethods {
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);
 			const fileCache = this.app.metadataCache.getFileCache(tfile);
-			let splitContent = fileContent.split('\n');
+			const splitContent = fileContent.split('\n');
 			// if the current file has no frontmatter
 			if (!fileCache?.frontmatter) {
-				let newFrontMatter: string[] = ['---'];
+				const newFrontMatter: string[] = ['---'];
 				newFrontMatter.concat(
 					this.buildYaml(newFrontMatter, keys, moreKeys)
 				);
 				newFrontMatter.push('---');
 				const reversedFrontMatter = newFrontMatter.reverse();
 
-				for (let property of reversedFrontMatter) {
+				for (const property of reversedFrontMatter) {
 					splitContent.unshift(property);
 				}
 				await this.writeYamlToFile(splitContent, tfile);
@@ -69,8 +69,8 @@ export class WriteMethods {
 					this.buildYaml(addedFrontmatter, keys, moreKeys)
 				);
 
-				let lineCount: number = 0;
-				for (let line of addedFrontmatter) {
+				let lineCount = 0;
+				for (const line of addedFrontmatter) {
 					splitContent.splice(end.line + lineCount, 0, line);
 					lineCount++;
 				}
@@ -79,10 +79,10 @@ export class WriteMethods {
 			}
 		} // the shift key is activated
 		else if (evt.shiftKey) {
-			let newFrontMatter: string[] = [];
+			const newFrontMatter: string[] = [];
 			const yaml: string[] = this.buildYaml(newFrontMatter, keys, moreKeys);
 			let inlineYaml: string = '';
-			for (let line of yaml) {
+			for (const line of yaml) {
 				inlineYaml += line.replace(':', '::') + '\n';
 			}
 			this.writeInlineYamlToSel(inlineYaml, tfile);
@@ -149,8 +149,8 @@ export class WriteMethods {
 	 * @returns - an array where each element is surrounded with double quotes
 	 */
 	private surroundWithQuotes(headingsArray: string[]): string[] {
-		let newHeadingsArray: string[] = [];
-		for (let heading of headingsArray) {
+		const newHeadingsArray: string[] = [];
+		for (const heading of headingsArray) {
 			newHeadingsArray.push('"' + heading + '"');
 		}
 		return newHeadingsArray;
