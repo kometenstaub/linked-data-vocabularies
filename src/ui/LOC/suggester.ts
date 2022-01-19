@@ -1,6 +1,7 @@
 import {
 	App,
-	Instruction, Keymap,
+	Instruction,
+	Keymap,
 	normalizePath,
 	Notice,
 	Platform,
@@ -217,11 +218,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	): Promise<void> {
 		const { settings } = this.plugin;
 		let heading = item.pL;
-		if (
-			//(evt.metaKey && (Platform.isMacOS || Platform.isIosApp)) ||
-			//(evt.ctrlKey && (!Platform.isMacOS && !Platform.isIosApp))
-			Keymap.isModEvent(evt)
-		) {
+		if (Keymap.isModEvent(evt)) {
 			let itemUri = 'https://id.loc.gov/authorities/subjects/' + item.uri;
 			itemUri = encodeURI(itemUri);
 			window.open(itemUri);
