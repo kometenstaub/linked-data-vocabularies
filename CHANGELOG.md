@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.10...1.1.0) (2022-01-19)
+
+
+### Features
+
+* add instructions for browser feature ([f0e4358](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/f0e43585999831930b2a75f602f7307d124b6ea0))
+* Mod-Enter opens LOC site ([6b34d2e](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/6b34d2e6cdf2f19954d907648d7a18080213e2e8))
+
 ### [1.0.10](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.0.9...1.0.10) (2021-12-10)
 
 
