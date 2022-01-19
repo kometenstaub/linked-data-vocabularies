@@ -25,7 +25,7 @@ export class WriteMethods {
 	/**
 	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
 	 * YAML or inline YAML for use with {@link https://github.com/blacksmithgu/obsidian-dataview | Dataview}
-	 * @param moreKeys - The object containing all the broader, narrower and related headings from {@link parseSKOS}
+	 * @param moreKeys - The object with additional keys
 	 * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
 	 * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
 	 * @param keys - The key-value pairs that are added to the YAML
@@ -80,8 +80,7 @@ export class WriteMethods {
 		} // the shift key is activated
 		else if (evt.shiftKey) {
 			let newFrontMatter: string[] = [];
-			let yaml: string[] = [];
-			yaml = this.buildYaml(newFrontMatter, keys, moreKeys);
+			const yaml: string[] = this.buildYaml(newFrontMatter, keys, moreKeys);
 			let inlineYaml: string = '';
 			for (let line of yaml) {
 				inlineYaml += line.replace(':', '::') + '\n';
