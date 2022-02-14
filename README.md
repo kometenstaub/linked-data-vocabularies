@@ -36,7 +36,9 @@ If there is no YAML block present, a new one will be created. If there is alread
 
 Or you use <kbd>Shift</kbd> + <kbd>Enter</kbd> to insert it as inline YAML at the current selection.
 
-As of 0.4.2 you can also add a subdivision after an authorized heading if you press <kbd>Alt</kbd> + <kbd>Enter</kbd>.
+By clicking <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd>, you can open the heading on the Library of Congress website.
+
+You can also add a subdivision after an authorized heading if you press <kbd>Alt</kbd> + <kbd>Enter</kbd>.
 [Here](#subdivisions--complex-subjects) is an explanation of Subdivisions from [@brimwats](https://github.com/brimwats).
 
 You can of course also use the mouse instead.
@@ -51,7 +53,6 @@ Next to the heading it shows, if existing, the LC Classification.
 
 Use this plugin with [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs). You can set the hierachies in its settings and will have a breadcrumbs view for navigating the heading hierarchy you create in your notes.
 
-</br>
 
 # Explanation of linked data
 
@@ -171,7 +172,6 @@ If you're interested in reading more, here is documentation from the Library of 
 And here is [another explainer](https://www.librarianshipstudies.com/2018/01/library-of-congress-subject-headings-lcsh.html#:~:text=are%20free-floating.-,SUBDIVISIONS,are%20listed%20in%20LCSH.,-In%20order%20to) of subdivisions.
 
 
-</br>
 
 ## Credits
 
