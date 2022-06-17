@@ -102,7 +102,7 @@ export class WriteMethods {
 		headingObj?: extraKeys
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
-			newFrontMatter.push(key + ': ' + value);
+			newFrontMatter.push(key + ': ' + `"${value}"`);
 		}
 		if (headingObj !== undefined) {
 			return this.addHeadings(headingObj, newFrontMatter);
