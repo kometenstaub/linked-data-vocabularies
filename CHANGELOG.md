@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.1.0...1.1.2) (2022-07-06)
+
+
+### Bug Fixes
+
+* enquote strings ([dd1b624](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/dd1b624efb6d7127618113610628acc97e1f27f3))
+* Suggester for Obsidian 0.15.4 ([c151ea7](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/c151ea7d6cef881f9998cf2baea4de4cc34eeef6))
+
 ### [1.1.1](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.1.0...1.1.1) (2022-06-17)
 
 
