@@ -9,3 +9,7 @@
 .suggestion-item .linked-vocabs.lcsh-note {
 	display: inline;
 }
+
+.suggestion-item.linked-vocabs {
+	display: block;
+}

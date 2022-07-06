@@ -85,6 +85,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
 		const { aL, pL, note } = item;
+		el.addClass('linked-vocabs')
 		const el0 = el.createDiv();
 		const el1 = el0.createEl('b');
 		el1.appendText(pL);

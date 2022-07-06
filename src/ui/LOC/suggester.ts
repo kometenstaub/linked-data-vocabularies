@@ -110,6 +110,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	}
 	renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
 		const { aL, pL, note, lcc } = item;
+		el.addClass('linked-vocabs')
 		const el0 = el.createDiv();
 		const el1 = el0.createEl('b', {
 			cls: ['linked-vocabs', 'lcsh-prefLabel'],

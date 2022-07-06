@@ -2,7 +2,7 @@
 	"id": "linked-data-vocabularies",
 	"name": "Linked Data Vocabularies",
 	"version": "1.1.1",
-	"minAppVersion": "0.12.15",
+	"minAppVersion": "0.15.4",
 	"description": "Add linked data to the YAML of your notes.",
 	"author": "kometenstaub",
 	"authorUrl": "https://github.com/kometenstaub",
