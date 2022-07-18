@@ -1,4 +1,4 @@
-# Obsidian Linked Data Vocabularies Plugin
+# ~~Obsidian Linked Data Vocabularies Plugin~~ Discontinued: [more information](https://github.com/kometenstaub/linked-data-helper/issues/10) 
 
 Currently, Library of Congress Subject Headings are supported.
 
