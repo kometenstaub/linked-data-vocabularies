@@ -83,16 +83,21 @@ export function firstDiv (el: HTMLElement, el0: HTMLDivElement, pL: string, aL: 
 	});
 	el0.createEl("div", {
 		text: "LCC: ",
-		cls: ["linked-vocabs", "lcsh-lcc"],
+		cls: [LV, "lcsh-lcc"],
 	});
 	el0.createEl("div", {
 		text: lcc,
-		cls: ["linked-vocabs", "lcsh-lcc-classification"],
+		cls: [LV, "lcsh-lcc-classification"],
 	});
 	const subDiv = el.createDiv();
 	subDiv.createEl("div", {
 		text: aL,
-		cls: ["linked-vocabs", "lcsh-altLabel"],
+		cls: [LV, "lcsh-altLabel"],
 	});
 	return subDiv;
 }
+
+export const LV = "linked-vocabs";
+export const NOTE = "lcsh-note";
+export const AL = "lcsh-altLabel";
+export const NOTE_PRE = "lcsh-note-pre";

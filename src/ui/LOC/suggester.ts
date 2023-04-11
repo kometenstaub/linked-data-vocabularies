@@ -15,7 +15,9 @@ import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus } from "./utils";
-import {BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE, firstDiv} from "../../constants";
+import {AL, BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE, firstDiv, LV, NOTE, NOTE_PRE} from "../../constants";
+
+
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -110,10 +112,10 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	}
 	renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
 		const { aL, pL, note, lcc } = item;
-		el.addClass("linked-vocabs");
+		el.addClass(LV);
 		const el0 = el.createDiv();
 		const el1 = el0.createEl("b", {
-			cls: ["linked-vocabs", "lcsh-prefLabel"],
+			cls: [LV, "lcsh-prefLabel"],
 		});
 		el1.appendText(pL);
 		//el.createEl('br')
@@ -122,24 +124,24 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				const subDiv = firstDiv(el, el0, pL, aL, lcc)
 				subDiv.createEl("div", {
 					text: " — ",
-					cls: ["linked-vocabs", "lcsh-note-pre"],
+					cls: [LV, NOTE_PRE],
 				});
 				subDiv.createEl("div", {
 					text: note,
-					cls: ["linked-vocabs", "lcsh-note"],
+					cls: [LV, NOTE],
 				});
 			} else {
 				el.createEl("div", {
 					text: aL,
-					cls: ["linked-vocabs", "lcsh-altLabel"],
+					cls: [LV, AL],
 				});
 				el.createEl("div", {
 					text: " — ",
-					cls: ["linked-vocabs", "lcsh-note-pre"],
+					cls: [LV, NOTE_PRE],
 				});
 				el.createEl("div", {
 					text: note,
-					cls: ["linked-vocabs", "lcsh-note"],
+					cls: [LV, NOTE],
 				});
 			}
 		} else if (aL && !note && aL !== pL) {
@@ -148,46 +150,46 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			} else {
 				el.createEl("div", {
 					text: aL,
-					cls: ["linked-vocabs", "lcsh-altLabel"],
+					cls: [LV, AL],
 				});
 			}
 		} else if (!aL && note) {
 			if (lcc) {
 				el0.createEl("div", {
 					text: " — ",
-					cls: ["linked-vocabs", "lcsh-lcc-pre"],
+					cls: [LV, "lcsh-lcc-pre"],
 				});
 				el0.createEl("div", {
 					text: "LCC: ",
-					cls: ["linked-vocabs", "lcsh-lcc"],
+					cls: [LV, "lcsh-lcc"],
 				});
 				el0.createEl("div", {
 					text: lcc,
-					cls: ["linked-vocabs", "lcsh-lcc-classification"],
+					cls: [LV, "lcsh-lcc-classification"],
 				});
 				const subDiv = el.createDiv();
 				subDiv.createEl("div", {
 					text: note,
-					cls: ["linked-vocabs", "lcsh-note"],
+					cls: [LV, NOTE],
 				});
 			} else {
 				el.createEl("div", {
 					text: note,
-					cls: ["linked-vocabs", "lcsh-note"],
+					cls: [LV, NOTE],
 				});
 			}
 		} else if (lcc) {
 			el0.createEl("div", {
 				text: " — ",
-				cls: ["linked-vocabs", "lcsh-lcc-pre"],
+				cls: [LV, "lcsh-lcc-pre"],
 			});
 			el0.createEl("div", {
 				text: "LCC: ",
-				cls: ["linked-vocabs", "lcsh-lcc"],
+				cls: [LV, "lcsh-lcc"],
 			});
 			el0.createEl("div", {
 				text: lcc,
-				cls: ["linked-vocabs", "lcsh-lcc-classification"],
+				cls: [LV, "lcsh-lcc-classification"],
 			});
 		}
 	}
