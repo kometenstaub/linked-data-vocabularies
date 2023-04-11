@@ -142,10 +142,10 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		if (aL) {
 			let labels = ""
 			for (let i = 0; i < aL.length; i++) {
-				if (i === aL.length - 1) {
-					labels += aL[i]
-				} else {
+				if (i < aL.length - 1) {
 					labels += aL[i] + ", "
+				} else {
+					labels += aL[i]
 				}
 			}
 			secondLine.createSpan({
