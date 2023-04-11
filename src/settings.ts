@@ -240,9 +240,9 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.addLCSH)
-					.onChange((state) => {
+					.onChange(async (state) => {
 						this.plugin.settings.addLCSH = state;
-						this.plugin.saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 
@@ -254,9 +254,9 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.loadLcsh)
-					.onChange((state) => {
+					.onChange(async (state) => {
 						this.plugin.settings.loadLcsh = state;
-						this.plugin.saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 	}
