@@ -1,6 +1,6 @@
-import { App, Notice, TFile, MarkdownView } from 'obsidian';
-import type { extraKeys, headings, keyValuePairs } from '../interfaces';
-import type SKOSPlugin from '../main';
+import { App, Notice, TFile, MarkdownView } from "obsidian";
+import type { extraKeys, headings, keyValuePairs } from "../interfaces";
+import type SKOSPlugin from "../main";
 
 export class WriteMethods {
 	app: App;
@@ -41,14 +41,12 @@ export class WriteMethods {
 		if (!evt.shiftKey) {
 			const fileContent: string = await this.app.vault.read(tfile);
 			const fileCache = this.app.metadataCache.getFileCache(tfile);
-			const splitContent = fileContent.split('\n');
+			const splitContent = fileContent.split("\n");
 			// if the current file has no frontmatter
 			if (!fileCache?.frontmatter) {
-				const newFrontMatter: string[] = ['---'];
-				newFrontMatter.concat(
-					this.buildYaml(newFrontMatter, keys, moreKeys)
-				);
-				newFrontMatter.push('---');
+				const newFrontMatter: string[] = ["---"];
+				newFrontMatter.concat(this.buildYaml(newFrontMatter, keys, moreKeys));
+				newFrontMatter.push("---");
 				const reversedFrontMatter = newFrontMatter.reverse();
 
 				for (const property of reversedFrontMatter) {
@@ -65,9 +63,7 @@ export class WriteMethods {
 				} = fileCache.frontmatter;
 
 				let addedFrontmatter: string[] = [];
-				addedFrontmatter.concat(
-					this.buildYaml(addedFrontmatter, keys, moreKeys)
-				);
+				addedFrontmatter.concat(this.buildYaml(addedFrontmatter, keys, moreKeys));
 
 				let lineCount = 0;
 				for (const line of addedFrontmatter) {
@@ -81,9 +77,9 @@ export class WriteMethods {
 		else if (evt.shiftKey) {
 			const newFrontMatter: string[] = [];
 			const yaml: string[] = this.buildYaml(newFrontMatter, keys, moreKeys);
-			let inlineYaml: string = '';
+			let inlineYaml: string = "";
 			for (const line of yaml) {
-				inlineYaml += line.replace(':', '::') + '\n';
+				inlineYaml += line.replace(":", "::") + "\n";
 			}
 			this.writeInlineYamlToSel(inlineYaml, tfile);
 		}
@@ -102,7 +98,7 @@ export class WriteMethods {
 		headingObj?: extraKeys
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
-			newFrontMatter.push(key + ': ' + `"${value}"`);
+			newFrontMatter.push(key + ": " + `"${value}"`);
 		}
 		if (headingObj !== undefined) {
 			return this.addHeadings(headingObj, newFrontMatter);
@@ -122,23 +118,17 @@ export class WriteMethods {
 		if (headingObj.broader.length > 0) {
 			let broaderHeadings: string[] = headingObj.broader;
 			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
-			newFrontMatter.push(
-				settings.broaderKey + ': [' + broaderHeadings.toString() + ']'
-			);
+			newFrontMatter.push(settings.broaderKey + ": [" + broaderHeadings.toString() + "]");
 		}
 		if (headingObj.narrower.length > 0) {
 			let narrowerHeadings: string[] = headingObj.narrower;
 			narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
-			newFrontMatter.push(
-				settings.narrowerKey + ': [' + narrowerHeadings.toString() + ']'
-			);
+			newFrontMatter.push(settings.narrowerKey + ": [" + narrowerHeadings.toString() + "]");
 		}
 		if (headingObj.related.length > 0) {
 			let relatedHeadings: string[] = headingObj.related;
 			relatedHeadings = this.surroundWithQuotes(relatedHeadings);
-			newFrontMatter.push(
-				settings.relatedKey + ': [' + relatedHeadings.toString() + ']'
-			);
+			newFrontMatter.push(settings.relatedKey + ": [" + relatedHeadings.toString() + "]");
 		}
 		return newFrontMatter;
 	}
@@ -160,17 +150,12 @@ export class WriteMethods {
 	 * @param splitContent - the currently active file, each line being one array element
 	 * @param tfile - the currently active file, @see TFile
 	 */
-	private async writeYamlToFile(
-		splitContent: string[],
-		tfile: TFile
-	): Promise<void> {
-		const newFileContent = splitContent.join('\n');
+	private async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
+		const newFileContent = splitContent.join("\n");
 		if (this.app.workspace.getActiveFile() === tfile) {
 			await this.app.vault.modify(tfile, newFileContent);
 		} else {
-			new Notice(
-				'You switched to another file before the content could be written.'
-			);
+			new Notice("You switched to another file before the content could be written.");
 		}
 	}
 
@@ -183,11 +168,11 @@ export class WriteMethods {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (this.app.workspace.getActiveFile() === tfile) {
 			const activeEditor = activeView?.editor;
-			const editorRange = activeEditor?.getCursor('from');
-			if (typeof editorRange !== 'undefined') {
+			const editorRange = activeEditor?.getCursor("from");
+			if (typeof editorRange !== "undefined") {
 				activeEditor?.replaceRange(inlineYaml, editorRange);
 			} else {
-				new Notice('Your cursor is not anymore in the same file.');
+				new Notice("Your cursor is not anymore in the same file.");
 			}
 		}
 	}

@@ -1,6 +1,6 @@
-import { App, normalizePath, Notice } from 'obsidian';
-import type SKOSPlugin from '../main';
-import type { headings, SuggesterItem, uriToPrefLabel } from '../interfaces';
+import { App, normalizePath, Notice } from "obsidian";
+import type SKOSPlugin from "../main";
+import type { headings, SuggesterItem, uriToPrefLabel } from "../interfaces";
 
 export class LCSHMethods {
 	app: App;
@@ -28,28 +28,22 @@ export class LCSHMethods {
 			const lcshUriToPrefLabel = await adapter.read(path);
 			this.lcshUriToPrefLabel = JSON.parse(lcshUriToPrefLabel);
 		} else {
-			const text = 'The JSON file could not be read.';
+			const text = "The JSON file could not be read.";
 			new Notice(text);
 			throw Error(text);
 		}
 
 		const { settings } = this.plugin;
 		let broaderMax = 0;
-		settings.broaderMax !== ''
-			? (broaderMax = parseInt(settings.broaderMax))
-			: null;
+		settings.broaderMax !== "" ? (broaderMax = parseInt(settings.broaderMax)) : null;
 		let narrowerMax = 0;
-		settings.narrowerMax !== ''
-			? (narrowerMax = parseInt(settings.narrowerMax))
-			: null;
+		settings.narrowerMax !== "" ? (narrowerMax = parseInt(settings.narrowerMax)) : null;
 		let relatedMax = 0;
-		settings.relatedMax !== ''
-			? (relatedMax = parseInt(settings.relatedMax))
-			: null;
+		settings.relatedMax !== "" ? (relatedMax = parseInt(settings.relatedMax)) : null;
 
 		if (broader !== undefined && broaderMax > 0) {
 			for (const uri of broader.slice(0, broaderMax)) {
-				if (uri.startsWith('sh')) {
+				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					broaderHeadings.push(heading);
 				} else {
@@ -60,7 +54,7 @@ export class LCSHMethods {
 		}
 		if (narrower !== undefined && narrowerMax > 0) {
 			for (const uri of narrower.slice(0, narrowerMax)) {
-				if (uri.startsWith('sh')) {
+				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					narrowerHeadings.push(heading);
 				} else {
@@ -70,7 +64,7 @@ export class LCSHMethods {
 		}
 		if (related !== undefined && relatedMax > 0) {
 			for (const uri of related.slice(0, relatedMax)) {
-				if (uri.startsWith('sh')) {
+				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
 					relatedHeadings.push(heading);
 				} else {

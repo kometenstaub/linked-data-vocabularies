@@ -1,32 +1,25 @@
-import {
-	Command,
-	Editor,
-	MarkdownView,
-	normalizePath,
-	Notice,
-	Plugin,
-} from 'obsidian';
-import SKOSSettingTab from './settings';
-import { LCSHMethods } from './methods/methods-loc';
-import type { SKOSSettings, SuggesterItem } from './interfaces';
-import { SKOSModal } from './ui/LOC/suggester';
+import { Command, Editor, MarkdownView, normalizePath, Notice, Plugin } from "obsidian";
+import SKOSSettingTab from "./settings";
+import { LCSHMethods } from "./methods/methods-loc";
+import type { SKOSSettings, SuggesterItem } from "./interfaces";
+import { SKOSModal } from "./ui/LOC/suggester";
 
 //@ts-ignore
-import Worker from './workers/readJson.worker';
+import Worker from "./workers/readJson.worker";
 
 const DEFAULT_SETTINGS: SKOSSettings = {
-	inputFolder: '',
-	elementLimit: '100',
-	broaderKey: 'broader',
-	narrowerKey: 'narrower',
-	relatedKey: 'related',
-	headingKey: 'heading',
-	uriKey: 'uri',
-	lccKey: 'lcc',
-	broaderMax: '3',
-	narrowerMax: '3',
-	relatedMax: '3',
-	lcSensitivity: '-10000',
+	inputFolder: "",
+	elementLimit: "100",
+	broaderKey: "broader",
+	narrowerKey: "narrower",
+	relatedKey: "related",
+	headingKey: "heading",
+	uriKey: "uri",
+	lccKey: "lcc",
+	broaderMax: "3",
+	narrowerMax: "3",
+	relatedMax: "3",
+	lcSensitivity: "-10000",
 	loadLcsh: false,
 	addLCSH: true,
 };
@@ -44,12 +37,12 @@ export default class SKOSPlugin extends Plugin {
 	addCommand = (command: Command): Command => {
 		const commandName = command.name;
 		const newCommand = super.addCommand(command);
-		newCommand.name = 'Linked Vocabs: ' + commandName;
+		newCommand.name = "Linked Vocabs: " + commandName;
 		return newCommand;
 	};
 
 	async onload() {
-		console.log('loading Linked Data Vocabularies plugin');
+		console.log("loading Linked Data Vocabularies plugin");
 
 		await this.loadSettings();
 		this.addSettingTab(new SKOSSettingTab(this.app, this));
@@ -64,47 +57,39 @@ export default class SKOSPlugin extends Plugin {
 				let worker = Worker();
 				worker.postMessage(lcshSuggester);
 				worker.onerror = (event: any) => {
-					new Notice(
-						'The LCSH Suggester JSON file could not be parsed.'
-					);
+					new Notice("The LCSH Suggester JSON file could not be parsed.");
 				};
 				worker.onmessage = (event: any) => {
 					this.loadedLcshSuggester = event.data;
 					worker.terminate();
 				};
 			} else {
-				const text = 'The JSON file could not be read.';
+				const text = "The JSON file could not be read.";
 				new Notice(text);
 				throw Error(text);
 			}
 		}
 
-
 		// /**
 		//  * individual commands for the collections
 		//  */
 		this.addCommand({
-			id: 'query-lcsh',
-			name: 'Query LCSH (Subject Headings)',
+			id: "query-lcsh",
+			name: "Query LCSH (Subject Headings)",
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				const tfile = view.file;
 				const chooser = new SKOSModal(this.app, this, tfile).open();
 				return chooser;
 			},
 		});
-
 	}
 
 	onunload() {
-		console.log('unloading Linked Data Vocabularies plugin');
+		console.log("unloading Linked Data Vocabularies plugin");
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings() {

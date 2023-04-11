@@ -1,4 +1,4 @@
-import { Platform } from 'obsidian';
+import { Platform } from "obsidian";
 
 export function focus() {
 	if (Platform.isDesktopApp) {
@@ -9,5 +9,5 @@ export function focus() {
 }
 function focusInput() {
 	//@ts-ignore
-	document.getElementsByClassName('prompt-input')[0].focus();
+	document.getElementsByClassName("prompt-input")[0].focus();
 }

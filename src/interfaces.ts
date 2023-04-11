@@ -1,4 +1,4 @@
-import type { TFile } from 'obsidian';
+import type { TFile } from "obsidian";
 
 export interface SKOSSettings {
 	inputFolder: string;
@@ -41,7 +41,7 @@ export interface keyValuePairs {
 	[key: string]: string;
 }
 
-declare module 'obsidian' {
+declare module "obsidian" {
 	interface App {
 		commands: {
 			addCommand: any;
@@ -49,7 +49,7 @@ declare module 'obsidian' {
 		};
 		plugins: {
 			plugins: {
-				'linked-data-helper': {
+				"linked-data-helper": {
 					settings: {
 						lcshOutputPath: string;
 					};

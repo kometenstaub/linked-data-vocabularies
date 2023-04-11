@@ -1,12 +1,12 @@
-import { App, Notice, SuggestModal, TFile } from 'obsidian';
-import type SKOSPlugin from '../../main';
-import type { keyValuePairs, SuggesterItem } from '../../interfaces';
+import { App, Notice, SuggestModal, TFile } from "obsidian";
+import type SKOSPlugin from "../../main";
+import type { keyValuePairs, SuggesterItem } from "../../interfaces";
 //import { SUBDIVISIONS } from '../../constants';
-import { WriteMethods } from 'src/methods/methods-write';
-import * as fuzzysort from 'fuzzysort';
-import { LCSHMethods } from 'src/methods/methods-loc';
-import { focus } from './utils';
-import { BASIC_INSTRUCTIONS } from '../../constants';
+import { WriteMethods } from "src/methods/methods-write";
+import * as fuzzysort from "fuzzysort";
+import { LCSHMethods } from "src/methods/methods-loc";
+import { focus } from "./utils";
+import { BASIC_INSTRUCTIONS } from "../../constants";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -14,18 +14,13 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	lcshSubdivSuggester!: SuggesterItem[];
 	data: SuggesterItem;
 
-	constructor(
-		app: App,
-		plugin: SKOSPlugin,
-		tfile: TFile,
-		data: SuggesterItem
-	) {
+	constructor(app: App, plugin: SKOSPlugin, tfile: TFile, data: SuggesterItem) {
 		super(app);
 		this.plugin = plugin;
 		this.tfile = tfile;
 		this.data = data;
-		this.setPlaceholder('Please start typing...');
-		this.scope.register(['Shift'], 'Enter', (evt: KeyboardEvent) => {
+		this.setPlaceholder("Please start typing...");
+		this.scope.register(["Shift"], "Enter", (evt: KeyboardEvent) => {
 			// @ts-ignore
 			this.chooser.useSelectedItem(evt);
 			return false;
@@ -36,14 +31,10 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		const dir = this.plugin.settings.inputFolder;
 		(async () => {
 			if (await adapter.exists(`${dir}/lcshSubdivSuggester.json`)) {
-				const lcshSubdivSuggester = await adapter.read(
-					`${dir}/lcshSubdivSuggester.json`
-				);
-				this.lcshSubdivSuggester = await JSON.parse(
-					lcshSubdivSuggester
-				);
+				const lcshSubdivSuggester = await adapter.read(`${dir}/lcshSubdivSuggester.json`);
+				this.lcshSubdivSuggester = await JSON.parse(lcshSubdivSuggester);
 			} else {
-				const text = 'The JSON file could not be read.';
+				const text = "The JSON file could not be read.";
 				new Notice(text);
 				throw Error(text);
 			}
@@ -64,7 +55,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		const { settings } = this.plugin;
 		if (this.lcshSubdivSuggester !== null) {
 			const fuzzyResult = fuzzysort.go(input, this.lcshSubdivSuggester, {
-				key: 'pL',
+				key: "pL",
 				limit: parseInt(settings.elementLimit),
 				threshold: parseInt(settings.lcSensitivity),
 			});
@@ -85,14 +76,14 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
 		const { aL, pL, note } = item;
-		el.addClass('linked-vocabs')
+		el.addClass("linked-vocabs");
 		const el0 = el.createDiv();
-		const el1 = el0.createEl('b');
+		const el1 = el0.createEl("b");
 		el1.appendText(pL);
 		//el.createEl('br')
 		const el2 = el.createDiv();
 		if (aL && note && aL !== pL) {
-			el2.appendText(aL + ' — ' + note);
+			el2.appendText(aL + " — " + note);
 		} else if (aL && !note && aL !== pL) {
 			el2.appendText(aL);
 		} else if (!aL && note) {
@@ -110,10 +101,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	 */
 
 	//@ts-ignore
-	async onChooseSuggestion(
-		item: SuggesterItem,
-		evt: MouseEvent | KeyboardEvent
-	) {
+	async onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent) {
 		const data = this.data;
 		const { settings } = this.plugin;
 		// subheading
@@ -123,13 +111,12 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		const headings = await methods_loc.resolveUris(data);
 
 		const keys: keyValuePairs = {
-			[settings.headingKey]: data.pL + '--' + heading,
+			[settings.headingKey]: data.pL + "--" + heading,
 		};
-		if (settings.uriKey !== '') {
-			keys[settings.uriKey] =
-				'https://id.loc.gov/authorities/subjects/' + data.uri;
+		if (settings.uriKey !== "") {
+			keys[settings.uriKey] = "https://id.loc.gov/authorities/subjects/" + data.uri;
 		}
-		if (data.lcc !== undefined && settings.lccKey !== '') {
+		if (data.lcc !== undefined && settings.lccKey !== "") {
 			keys[settings.lccKey] = data.lcc;
 		}
 
