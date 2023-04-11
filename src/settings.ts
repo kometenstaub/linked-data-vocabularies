@@ -7,7 +7,7 @@ import {
 } from 'obsidian';
 import type SKOSPlugin from './main';
 import {settingsKeys} from "./constants";
-import {simpleSetting} from "./utils";
+import {maxSettings, simpleSetting} from "./utils";
 
 export default class SKOSSettingTab extends PluginSettingTab {
 	plugin: SKOSPlugin;
@@ -94,97 +94,29 @@ export default class SKOSSettingTab extends PluginSettingTab {
 
 		// create the key name settings
 		for (const setting of settingsKeys) {
-			simpleSetting(containerEl, this.plugin, settings, setting)
+			simpleSetting(containerEl, this.plugin, settings, setting);
 		}
 
-		//whether to display and if so, how many
-		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${settings.broaderKey}'`)
-			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entres.'
-			)
-			.addText((text) => {
-				text.setPlaceholder('')
-					.setValue(settings.broaderMax)
-					.onChange(async (value) => {
-						const num = Number.parseInt(value);
-						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
-						) {
-							settings.broaderMax = value;
-							await this.plugin.saveSettings();
-						} else {
-							new Notice(
-								'Please enter an integer greater than or equal to 0.'
-							);
-						}
-					});
-			});
-		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${settings.narrowerKey}'`)
-			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entries.'
-			)
-			.addText((text) => {
-				text.setPlaceholder('')
-					.setValue(settings.narrowerMax)
-					.onChange(async (value) => {
-						const num = Number.parseInt(value);
-						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
-						) {
-							settings.narrowerMax = value;
-							await this.plugin.saveSettings();
-						} else {
-							new Notice(
-								'Please enter an integer greater than or equal to 0.'
-							);
-						}
-					});
-			});
-		new Setting(containerEl)
-			.setName(`Maximum number of entries for '${settings.relatedKey}'`)
-			.setDesc(
-				'If set to 0, it will not be added. Leave empty to add all entries.'
-			)
-			.addText((text) => {
-				text.setPlaceholder('')
-					.setValue(settings.relatedMax)
-					.onChange(async (value) => {
-						const num = Number.parseInt(value);
-						if (
-							(Number.isInteger(num) && num >= 0) ||
-							value === ''
-						) {
-							settings.relatedMax = value;
-							await this.plugin.saveSettings();
-						} else {
-							new Notice(
-								'Please enter an integer greater than or equal to 0.'
-							);
-						}
-					});
-			});
+		// max number of relations to be added
+		maxSettings(containerEl, this.plugin, settings);
 
 		containerEl.createEl('h4', {
 			text: 'Reload required for these changes to take effect.',
 		});
 
-		new Setting(containerEl)
-			.setName('Add LCSH command')
-			.setDesc(
-				'Add command to search LC Authorized Subject Headings. Keep this enabled, currently only LCSH is re-implemented.'
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.addLCSH)
-					.onChange(async (state) => {
-						this.plugin.settings.addLCSH = state;
-						await this.plugin.saveSettings();
-					});
-			});
+		// new Setting(containerEl)
+		// 	.setName('Add LCSH command')
+		// 	.setDesc(
+		// 		'Add command to search LC Authorized Subject Headings. Keep this enabled, currently only LCSH is re-implemented.'
+		// 	)
+		// 	.addToggle((toggle) => {
+		// 		toggle
+		// 			.setValue(this.plugin.settings.addLCSH)
+		// 			.onChange(async (state) => {
+		// 				this.plugin.settings.addLCSH = state;
+		// 				await this.plugin.saveSettings();
+		// 			});
+		// 	});
 
 		new Setting(containerEl)
 			.setName('Load LCSH onload.')

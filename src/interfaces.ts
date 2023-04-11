@@ -22,11 +22,14 @@ export interface SKOSSettings {
 	//addAllLoc: boolean;
 }
 
-export interface simpleHeading {
+export interface baseSetting {
 	name: string;
 	description: string;
-	placeholder: string;
 	value: keyof SKOSSettings;
+}
+
+export interface textSetting extends baseSetting {
+	placeholder: string;
 }
 
 export interface headings {

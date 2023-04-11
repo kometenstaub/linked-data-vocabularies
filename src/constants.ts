@@ -1,5 +1,5 @@
 import type { Instruction } from 'obsidian';
-import type {simpleHeading} from "./interfaces";
+import type {textSetting, SKOSSettings, baseSetting} from "./interfaces";
 
 export const BASIC_INSTRUCTIONS: Instruction[] = [
 	{
@@ -17,9 +17,8 @@ export const BROWSER_PURPOSE = 'to open in the browser';
 export const BASE_URI = 'https://id.loc.gov/authorities/subjects/';
 
 
-// setting values
-
-export const settingsKeys: simpleHeading[] = [
+// setting values for key names
+export const settingsKeys: textSetting[] = [
 	{
 		name: "YAML key for chosen heading",
 		description: "You cannot leave this empty as the heading always needs to be added.",
@@ -57,3 +56,24 @@ export const settingsKeys: simpleHeading[] = [
 		value: "relatedKey"
 	},
 ]
+
+// setting values for limits
+export function settingsMax(settings: SKOSSettings): baseSetting[] {
+	return [
+		{
+			name: `Maximum number of entries for ${settings.broaderKey}`,
+			description: "If set to 0, it will not be added. Leave empty to add all entries.",
+			value: "broaderMax"
+		},
+		{
+			name: `Maximum number of entries for ${settings.narrowerKey}`,
+			description: "If set to 0, it will not be added. Leave empty to add all entries.",
+			value: "narrowerMax"
+		},
+		{
+			name: `Maximum number of entries for ${settings.relatedKey}`,
+			description: "If set to 0, it will not be added. Leave empty to add all entries.",
+			value: "relatedMax"
+		},
+	]
+}
