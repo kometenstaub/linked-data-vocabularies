@@ -131,12 +131,11 @@ export class WriteMethods {
 	 * @param tfile - the currently active file, @see TFile
 	 */
 	private writeInlineYamlToSel(inlineYaml: string, tfile: TFile) {
-		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-		if (this.app.workspace.getActiveFile() === tfile) {
-			const activeEditor = activeView?.editor;
-			const editorRange = activeEditor?.getCursor("from");
+		const ed = this.app.workspace.activeEditor;
+		if (ed?.editor) {
+			const editorRange = ed.editor.getCursor("from");
 			if (typeof editorRange !== "undefined") {
-				activeEditor?.replaceRange(inlineYaml, editorRange);
+				ed.editor.replaceRange(inlineYaml, editorRange);
 			} else {
 				new Notice("Your cursor is not anymore in the same file.");
 			}
