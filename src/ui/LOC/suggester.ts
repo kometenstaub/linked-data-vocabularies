@@ -15,7 +15,17 @@ import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus } from "./utils";
-import {AL, BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE, firstDiv, LV, NOTE, NOTE_PRE} from "../../constants";
+import {
+	AL,
+	BASE_URI,
+	BASIC_INSTRUCTIONS,
+	BROWSER_PURPOSE,
+	CLASSIFICATION,
+	firstDiv, LCC, LCC_PRE,
+	LV,
+	NOTE,
+	NOTE_PRE
+} from "../../constants";
 
 
 
@@ -157,15 +167,15 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			if (lcc) {
 				el0.createDiv({
 					text: " — ",
-					cls: [LV, "lcsh-lcc-pre"],
+					cls: [LV, LCC_PRE],
 				});
 				el0.createDiv({
 					text: "LCC: ",
-					cls: [LV, "lcsh-lcc"],
+					cls: [LV, LCC],
 				});
 				el0.createDiv({
 					text: lcc,
-					cls: [LV, "lcsh-lcc-classification"],
+					cls: [LV, CLASSIFICATION],
 				});
 				const subDiv = el.createDiv();
 				subDiv.createDiv({
@@ -181,15 +191,15 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		} else if (lcc) {
 			el0.createDiv({
 				text: " — ",
-				cls: [LV, "lcsh-lcc-pre"],
+				cls: [LV, LCC_PRE],
 			});
 			el0.createDiv({
 				text: "LCC: ",
-				cls: [LV, "lcsh-lcc"],
+				cls: [LV, LCC],
 			});
 			el0.createDiv({
 				text: lcc,
-				cls: [LV, "lcsh-lcc-classification"],
+				cls: [LV, CLASSIFICATION],
 			});
 		}
 	}

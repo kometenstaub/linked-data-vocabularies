@@ -76,18 +76,21 @@ export function settingsMax(settings: SKOSSettings): baseSetting[] {
 		},
 	];
 }
+
+
+
 export function firstDiv (el: HTMLElement, el0: HTMLDivElement, pL: string, aL: string, lcc: string): HTMLDivElement {
 	el0.createDiv({
 		text: " — ",
-		cls: ["linked-vocabs", "lcsh-lcc-pre"],
+		cls: [LV, LCC_PRE],
 	});
 	el0.createDiv({
 		text: "LCC: ",
-		cls: [LV, "lcsh-lcc"],
+		cls: [LV, LCC],
 	});
 	el0.createDiv({
 		text: lcc,
-		cls: [LV, "lcsh-lcc-classification"],
+		cls: [LV, CLASSIFICATION],
 	});
 	const subDiv = el.createDiv();
 	subDiv.createDiv({
@@ -101,3 +104,6 @@ export const LV = "linked-vocabs";
 export const NOTE = "lcsh-note";
 export const AL = "lcsh-altLabel";
 export const NOTE_PRE = "lcsh-note-pre";
+export const CLASSIFICATION = "lcsh-lcc-classification";
+export const LCC = "lcsh-lcc";
+export const LCC_PRE = "lcsh-lcc-pre";
