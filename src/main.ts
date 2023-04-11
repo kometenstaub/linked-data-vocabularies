@@ -1,4 +1,4 @@
-import { Command, Editor, MarkdownView, normalizePath, Notice, Plugin } from "obsidian";
+import { Command, normalizePath, Notice, Plugin } from "obsidian";
 import SKOSSettingTab from "./settings";
 import { LCSHMethods } from "./methods/methods-loc";
 import type { SKOSSettings, SuggesterItem } from "./interfaces";

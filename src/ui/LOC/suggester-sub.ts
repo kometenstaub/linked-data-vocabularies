@@ -1,12 +1,11 @@
 import { App, Notice, SuggestModal, TFile } from "obsidian";
 import type SKOSPlugin from "../../main";
 import type { keyValuePairs, SuggesterItem } from "../../interfaces";
-//import { SUBDIVISIONS } from '../../constants';
 import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus } from "./utils";
-import {BASIC_INSTRUCTIONS, LV} from "../../constants";
+import {BASIC_INSTRUCTIONS} from "../../constants";
 import {renderSug} from "../../utils";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
