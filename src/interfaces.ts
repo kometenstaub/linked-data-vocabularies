@@ -14,12 +14,7 @@ export interface SKOSSettings {
 	relatedMax: string;
 	lcSensitivity: string;
 	loadLcsh: boolean;
-	//lcshFilterChar: string;
 	addLCSH: boolean;
-	//addLCC: boolean;
-	//addLCNAF: boolean;
-	//addCulHO: boolean;
-	//addAllLoc: boolean;
 }
 
 export interface baseSetting {
