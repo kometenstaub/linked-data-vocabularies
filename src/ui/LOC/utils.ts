@@ -1,5 +1,5 @@
 import { Platform } from "obsidian";
-import { SuggesterItem } from "../../interfaces";
+import type { SuggesterItem } from "../../interfaces";
 import { LV } from "../../constants";
 
 export function focus() {
