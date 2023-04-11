@@ -122,24 +122,24 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		if (aL && note && aL !== pL) {
 			if (lcc) {
 				const subDiv = firstDiv(el, el0, pL, aL, lcc)
-				subDiv.createEl("div", {
+				subDiv.createDiv({
 					text: " — ",
 					cls: [LV, NOTE_PRE],
 				});
-				subDiv.createEl("div", {
+				subDiv.createDiv({
 					text: note,
 					cls: [LV, NOTE],
 				});
 			} else {
-				el.createEl("div", {
+				el.createDiv({
 					text: aL,
 					cls: [LV, AL],
 				});
-				el.createEl("div", {
+				el.createDiv({
 					text: " — ",
 					cls: [LV, NOTE_PRE],
 				});
-				el.createEl("div", {
+				el.createDiv({
 					text: note,
 					cls: [LV, NOTE],
 				});
@@ -148,46 +148,46 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			if (lcc) {
 				firstDiv(el, el0, pL, aL, lcc)
 			} else {
-				el.createEl("div", {
+				el.createDiv({
 					text: aL,
 					cls: [LV, AL],
 				});
 			}
 		} else if (!aL && note) {
 			if (lcc) {
-				el0.createEl("div", {
+				el0.createDiv({
 					text: " — ",
 					cls: [LV, "lcsh-lcc-pre"],
 				});
-				el0.createEl("div", {
+				el0.createDiv({
 					text: "LCC: ",
 					cls: [LV, "lcsh-lcc"],
 				});
-				el0.createEl("div", {
+				el0.createDiv({
 					text: lcc,
 					cls: [LV, "lcsh-lcc-classification"],
 				});
 				const subDiv = el.createDiv();
-				subDiv.createEl("div", {
+				subDiv.createDiv({
 					text: note,
 					cls: [LV, NOTE],
 				});
 			} else {
-				el.createEl("div", {
+				el.createDiv({
 					text: note,
 					cls: [LV, NOTE],
 				});
 			}
 		} else if (lcc) {
-			el0.createEl("div", {
+			el0.createDiv({
 				text: " — ",
 				cls: [LV, "lcsh-lcc-pre"],
 			});
-			el0.createEl("div", {
+			el0.createDiv({
 				text: "LCC: ",
 				cls: [LV, "lcsh-lcc"],
 			});
-			el0.createEl("div", {
+			el0.createDiv({
 				text: lcc,
 				cls: [LV, "lcsh-lcc-classification"],
 			});
