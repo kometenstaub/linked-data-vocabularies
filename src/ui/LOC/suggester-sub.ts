@@ -4,8 +4,8 @@ import type { keyValuePairs, SuggesterItem } from "../../interfaces";
 import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
-import {focus, renderSug} from "./utils";
-import {BASIC_INSTRUCTIONS} from "../../constants";
+import { focus, renderSug } from "./utils";
+import { BASIC_INSTRUCTIONS } from "../../constants";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;

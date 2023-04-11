@@ -1,4 +1,4 @@
-import {App, Notice, TFile, MarkdownView} from "obsidian";
+import { App, Notice, TFile, MarkdownView } from "obsidian";
 import type { headings, keyValuePairs } from "../interfaces";
 import type SKOSPlugin from "../main";
 
@@ -43,15 +43,15 @@ export class WriteMethods {
 					frontMatter[key] = value;
 				}
 				if (moreKeys.broader.length > 0) {
-					frontMatter[this.plugin.settings.broaderKey] = moreKeys.broader
+					frontMatter[this.plugin.settings.broaderKey] = moreKeys.broader;
 				}
 				if (moreKeys.narrower.length > 0) {
-					frontMatter[this.plugin.settings.narrowerKey] = moreKeys.narrower
+					frontMatter[this.plugin.settings.narrowerKey] = moreKeys.narrower;
 				}
 				if (moreKeys.related.length > 0) {
-					frontMatter[this.plugin.settings.relatedKey] = moreKeys.related
+					frontMatter[this.plugin.settings.relatedKey] = moreKeys.related;
 				}
-			})
+			});
 		} // the shift key is activated
 		else if (evt.shiftKey) {
 			const newFrontMatter: string[] = [];

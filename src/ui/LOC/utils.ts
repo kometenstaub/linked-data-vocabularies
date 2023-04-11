@@ -1,6 +1,6 @@
-import {Platform} from "obsidian";
-import {SuggesterItem} from "../../interfaces";
-import {LV} from "../../constants";
+import { Platform } from "obsidian";
+import { SuggesterItem } from "../../interfaces";
+import { LV } from "../../constants";
 
 export function focus() {
 	if (Platform.isDesktopApp) {
@@ -16,45 +16,45 @@ function focusInput() {
 
 export function renderSug(item: SuggesterItem, el: HTMLElement) {
 	// the suggester-sub didn't use the aL, so maybe it needs a condition
-	const {aL, pL, note, lcc} = item;
+	const { aL, pL, note, lcc } = item;
 	el.addClass(LV);
 	const suggestionContent = el.createDiv({
-		cls: "suggestion-content"
+		cls: "suggestion-content",
 	});
 	const suggestionTitle = suggestionContent.createDiv();
 	// TODO: is there a better way?
 	suggestionTitle.createEl("b", {
 		text: pL,
-	})
+	});
 	if (lcc) {
 		suggestionTitle.createSpan({
-			text: ` — LCC: ${lcc}`
-		})
+			text: ` — LCC: ${lcc}`,
+		});
 	}
 	const secondLine = createDiv({
-		cls: "u-muted"
-	})
+		cls: "u-muted",
+	});
 	if (aL) {
-		let labels = ""
+		let labels = "";
 		for (let i = 0; i < aL.length; i++) {
 			if (i < aL.length - 1) {
-				labels += aL[i] + ", "
+				labels += aL[i] + ", ";
 			} else {
-				labels += aL[i]
+				labels += aL[i];
 			}
 		}
 		secondLine.createSpan({
-			text: labels
-		})
+			text: labels,
+		});
 	}
 	if (note) {
-		let text = ""
+		let text = "";
 		if (aL) {
-			text += " — "
+			text += " — ";
 		}
 		secondLine.createSpan({
 			text: text + note,
-		})
+		});
 	}
-	suggestionContent.appendChild(secondLine)
+	suggestionContent.appendChild(secondLine);
 }

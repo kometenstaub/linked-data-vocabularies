@@ -83,7 +83,4 @@ export function settingsMax(settings: SKOSSettings): baseSetting[] {
 	];
 }
 
-
-
-
 export const LV = "linked-vocabs";

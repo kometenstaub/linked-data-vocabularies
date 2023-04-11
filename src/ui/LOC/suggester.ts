@@ -1,13 +1,21 @@
-import {App, Instruction, Keymap, normalizePath, Notice, Platform, SuggestModal, TFile,} from "obsidian";
+import {
+	App,
+	Instruction,
+	Keymap,
+	normalizePath,
+	Notice,
+	Platform,
+	SuggestModal,
+	TFile,
+} from "obsidian";
 import type SKOSPlugin from "../../main";
-import type {headings, keyValuePairs, SuggesterItem} from "../../interfaces";
-import {SubSKOSModal} from "./suggester-sub";
-import {WriteMethods} from "src/methods/methods-write";
+import type { headings, keyValuePairs, SuggesterItem } from "../../interfaces";
+import { SubSKOSModal } from "./suggester-sub";
+import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
-import {LCSHMethods} from "src/methods/methods-loc";
-import {focus, renderSug} from "./utils";
-import {BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE,} from "../../constants";
-
+import { LCSHMethods } from "src/methods/methods-loc";
+import { focus, renderSug } from "./utils";
+import { BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE } from "../../constants";
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -119,7 +127,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			// before condition, otherwise if Alt key is pressed, the second modal would be delayed
 			const headings: headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
-			const aL = item.aL
+			const aL = item.aL;
 			// the heading is always added
 			const keys: keyValuePairs = {
 				[settings.headingKey]: heading,
@@ -131,7 +139,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				keys[settings.lccKey] = lcc;
 			}
 			if (aL && settings.altLabel !== "") {
-				keys[settings.altLabel] = aL
+				keys[settings.altLabel] = aL;
 			}
 			const writeMethods = new WriteMethods(this.app, this.plugin);
 			await writeMethods.writeLocYaml(this.tfile, evt, keys, headings);

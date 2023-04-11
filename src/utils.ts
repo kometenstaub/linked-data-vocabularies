@@ -1,7 +1,7 @@
-import {Notice, Setting} from "obsidian";
-import type {SKOSSettings, textSetting} from "./interfaces";
+import { Notice, Setting } from "obsidian";
+import type { SKOSSettings, textSetting } from "./interfaces";
 import type SKOSPlugin from "./main";
-import {settingsMax} from "./constants";
+import { settingsMax } from "./constants";
 
 /**
  *
@@ -55,4 +55,3 @@ export function maxSettings(
 			});
 	}
 }
-
