@@ -123,85 +123,41 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 	renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
 		const { aL, pL, note, lcc } = item;
 		el.addClass(LV);
-		const el0 = el.createDiv();
-		const el1 = el0.createEl("b", {
-			cls: [LV, "lcsh-prefLabel"],
+		const suggestionContent = el.createDiv({
+			cls: "suggestion-content"
 		});
-		el1.appendText(pL);
-		//el.createEl('br')
-		if (aL && note && aL !== pL) {
-			if (lcc) {
-				const subDiv = firstDiv(el, el0, pL, aL, lcc)
-				subDiv.createDiv({
-					text: " — ",
-					cls: [LV, NOTE_PRE],
-				});
-				subDiv.createDiv({
-					text: note,
-					cls: [LV, NOTE],
-				});
-			} else {
-				el.createDiv({
-					text: aL,
-					cls: [LV, AL],
-				});
-				el.createDiv({
-					text: " — ",
-					cls: [LV, NOTE_PRE],
-				});
-				el.createDiv({
-					text: note,
-					cls: [LV, NOTE],
-				});
-			}
-		} else if (aL && !note && aL !== pL) {
-			if (lcc) {
-				firstDiv(el, el0, pL, aL, lcc)
-			} else {
-				el.createDiv({
-					text: aL,
-					cls: [LV, AL],
-				});
-			}
-		} else if (!aL && note) {
-			if (lcc) {
-				el0.createDiv({
-					text: " — ",
-					cls: [LV, LCC_PRE],
-				});
-				el0.createDiv({
-					text: "LCC: ",
-					cls: [LV, LCC],
-				});
-				el0.createDiv({
-					text: lcc,
-					cls: [LV, CLASSIFICATION],
-				});
-				const subDiv = el.createDiv();
-				subDiv.createDiv({
-					text: note,
-					cls: [LV, NOTE],
-				});
-			} else {
-				el.createDiv({
-					text: note,
-					cls: [LV, NOTE],
-				});
-			}
-		} else if (lcc) {
-			el0.createDiv({
-				text: " — ",
-				cls: [LV, LCC_PRE],
-			});
-			el0.createDiv({
-				text: "LCC: ",
-				cls: [LV, LCC],
-			});
-			el0.createDiv({
-				text: lcc,
-				cls: [LV, CLASSIFICATION],
-			});
+		const suggestionTitle = suggestionContent.createDiv();
+		// TODO: is there a better way?
+		suggestionTitle.createEl("b", {
+			text: pL,
+		})
+		if (lcc) {
+			suggestionTitle.createSpan({
+				text: ` — LCC: ${lcc}`
+			})
 		}
+		const secondLine = createDiv({
+			cls: "u-muted"
+			})
+		if (aL) {
+			let labels = ""
+			for (let i = 0; i < aL.length; i++) {
+				if (i === aL.length - 1) {
+					labels += aL[i]
+				} else {
+					labels += aL[i] + ", "
+				}
+			}
+			secondLine.createSpan({
+				text: labels
+			})
+		}
+		if (note) {
+			secondLine.createSpan({
+				text: note,
+			})
+		}
+		suggestionContent.appendChild(secondLine)
 	}
 
 	async onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent): Promise<void> {

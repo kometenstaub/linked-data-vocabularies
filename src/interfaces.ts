@@ -76,7 +76,7 @@ export interface passInformation {
 export interface SuggesterItem {
 	pL: string;
 	uri: string;
-	aL?: string; //altLabel
+	aL?: string[]; //altLabel
 	bt?: string[]; //broader
 	nt?: string[]; // narrower
 	rt?: string[]; //related
