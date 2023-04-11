@@ -5,9 +5,8 @@ import {SubSKOSModal} from "./suggester-sub";
 import {WriteMethods} from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import {LCSHMethods} from "src/methods/methods-loc";
-import {focus} from "./utils";
+import {focus, renderSug} from "./utils";
 import {BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE,} from "../../constants";
-import {renderSug} from "../../utils";
 
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
