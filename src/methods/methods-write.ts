@@ -1,4 +1,4 @@
-import { App, Notice, TFile, MarkdownView } from "obsidian";
+import {App, Notice, TFile, MarkdownView} from "obsidian";
 import type { extraKeys, headings, keyValuePairs } from "../interfaces";
 import type SKOSPlugin from "../main";
 
@@ -25,10 +25,10 @@ export class WriteMethods {
 	/**
 	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
 	 * YAML or inline YAML for use with {@link https://github.com/blacksmithgu/obsidian-dataview | Dataview}
-	 * @param moreKeys - The object with additional keys
 	 * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
 	 * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
 	 * @param keys - The key-value pairs that are added to the YAML
+	 * @param moreKeys - The object with additional keys
 	 */
 	private async writeYaml(
 		tfile: TFile,
@@ -39,40 +39,22 @@ export class WriteMethods {
 	): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
-			const fileContent: string = await this.app.vault.read(tfile);
-			const fileCache = this.app.metadataCache.getFileCache(tfile);
-			const splitContent = fileContent.split("\n");
-			// if the current file has no frontmatter
-			if (!fileCache?.frontmatter) {
-				const newFrontMatter: string[] = ["---"];
-				newFrontMatter.concat(this.buildYaml(newFrontMatter, keys, moreKeys));
-				newFrontMatter.push("---");
-				const reversedFrontMatter = newFrontMatter.reverse();
 
-				for (const property of reversedFrontMatter) {
-					splitContent.unshift(property);
+			await this.app.fileManager.processFrontMatter(tfile, (frontMatter) => {
+				for (const [key, value] of Object.entries(keys)) {
+					frontMatter[key] = value;
 				}
-				await this.writeYamlToFile(splitContent, tfile);
-			} // the current file has frontmatter
-			else {
-				// destructures the file cache frontmatter position
-				// start is the beginning and should return 0, the end returns
-				// the line number of the last ---
-				const {
-					position: { start, end },
-				} = fileCache.frontmatter;
-
-				let addedFrontmatter: string[] = [];
-				addedFrontmatter.concat(this.buildYaml(addedFrontmatter, keys, moreKeys));
-
-				let lineCount = 0;
-				for (const line of addedFrontmatter) {
-					splitContent.splice(end.line + lineCount, 0, line);
-					lineCount++;
+				if ((moreKeys as unknown as headings).broader.length > 0) {
+					frontMatter[this.plugin.settings.broaderKey] = (moreKeys as unknown as headings).broader
 				}
+				if ((moreKeys as unknown as headings).narrower.length > 0) {
+					frontMatter[this.plugin.settings.narrowerKey] = (moreKeys as unknown as headings).narrower
+				}
+				if ((moreKeys as unknown as headings).related.length > 0) {
+					frontMatter[this.plugin.settings.relatedKey] = (moreKeys as unknown as headings).related
+				}
+			})
 
-				await this.writeYamlToFile(splitContent, tfile);
-			}
 		} // the shift key is activated
 		else if (evt.shiftKey) {
 			const newFrontMatter: string[] = [];
@@ -144,19 +126,6 @@ export class WriteMethods {
 			newHeadingsArray.push('"' + heading + '"');
 		}
 		return newHeadingsArray;
-	}
-	/**
-	 * Writes the YAML to the currently active file, if it is active.
-	 * @param splitContent - the currently active file, each line being one array element
-	 * @param tfile - the currently active file, @see TFile
-	 */
-	private async writeYamlToFile(splitContent: string[], tfile: TFile): Promise<void> {
-		const newFileContent = splitContent.join("\n");
-		if (this.app.workspace.getActiveFile() === tfile) {
-			await this.app.vault.modify(tfile, newFileContent);
-		} else {
-			new Notice("You switched to another file before the content could be written.");
-		}
 	}
 
 	/**
