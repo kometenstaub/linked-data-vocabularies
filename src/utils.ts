@@ -1,7 +1,8 @@
-import { Notice, Setting } from "obsidian";
-import type { textSetting, SKOSSettings } from "./interfaces";
+import {Notice, Setting} from "obsidian";
+import type {SKOSSettings, textSetting} from "./interfaces";
+import type {SuggesterItem} from "./interfaces";
 import type SKOSPlugin from "./main";
-import { settingsMax } from "./constants";
+import {LV, settingsMax} from "./constants";
 
 /**
  *
@@ -54,4 +55,45 @@ export function maxSettings(
 					});
 			});
 	}
+}
+
+export function renderSug(item: SuggesterItem, el: HTMLElement) {
+	// the suggester-sub didn't use the aL, so maybe it needs a condition
+	const {aL, pL, note, lcc} = item;
+	el.addClass(LV);
+	const suggestionContent = el.createDiv({
+		cls: "suggestion-content"
+	});
+	const suggestionTitle = suggestionContent.createDiv();
+	// TODO: is there a better way?
+	suggestionTitle.createEl("b", {
+		text: pL,
+	})
+	if (lcc) {
+		suggestionTitle.createSpan({
+			text: ` — LCC: ${lcc}`
+		})
+	}
+	const secondLine = createDiv({
+		cls: "u-muted"
+	})
+	if (aL) {
+		let labels = ""
+		for (let i = 0; i < aL.length; i++) {
+			if (i < aL.length - 1) {
+				labels += aL[i] + ", "
+			} else {
+				labels += aL[i]
+			}
+		}
+		secondLine.createSpan({
+			text: labels
+		})
+	}
+	if (note) {
+		secondLine.createSpan({
+			text: note,
+		})
+	}
+	suggestionContent.appendChild(secondLine)
 }

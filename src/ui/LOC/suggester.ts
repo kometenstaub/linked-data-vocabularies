@@ -1,32 +1,13 @@
-import {
-	App,
-	Instruction,
-	Keymap,
-	normalizePath,
-	Notice,
-	Platform,
-	SuggestModal,
-	TFile,
-} from "obsidian";
+import {App, Instruction, Keymap, normalizePath, Notice, Platform, SuggestModal, TFile,} from "obsidian";
 import type SKOSPlugin from "../../main";
-import type { headings, keyValuePairs, SuggesterItem } from "../../interfaces";
-import { SubSKOSModal } from "./suggester-sub";
-import { WriteMethods } from "src/methods/methods-write";
+import type {headings, keyValuePairs, SuggesterItem} from "../../interfaces";
+import {SubSKOSModal} from "./suggester-sub";
+import {WriteMethods} from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
-import { LCSHMethods } from "src/methods/methods-loc";
-import { focus } from "./utils";
-import {
-	AL,
-	BASE_URI,
-	BASIC_INSTRUCTIONS,
-	BROWSER_PURPOSE,
-	CLASSIFICATION,
-	firstDiv, LCC, LCC_PRE,
-	LV,
-	NOTE,
-	NOTE_PRE
-} from "../../constants";
-
+import {LCSHMethods} from "src/methods/methods-loc";
+import {focus} from "./utils";
+import {BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE,} from "../../constants";
+import {renderSug} from "../../utils";
 
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
@@ -121,43 +102,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		return results;
 	}
 	renderSuggestion(item: SuggesterItem, el: HTMLElement): void {
-		const { aL, pL, note, lcc } = item;
-		el.addClass(LV);
-		const suggestionContent = el.createDiv({
-			cls: "suggestion-content"
-		});
-		const suggestionTitle = suggestionContent.createDiv();
-		// TODO: is there a better way?
-		suggestionTitle.createEl("b", {
-			text: pL,
-		})
-		if (lcc) {
-			suggestionTitle.createSpan({
-				text: ` — LCC: ${lcc}`
-			})
-		}
-		const secondLine = createDiv({
-			cls: "u-muted"
-			})
-		if (aL) {
-			let labels = ""
-			for (let i = 0; i < aL.length; i++) {
-				if (i < aL.length - 1) {
-					labels += aL[i] + ", "
-				} else {
-					labels += aL[i]
-				}
-			}
-			secondLine.createSpan({
-				text: labels
-			})
-		}
-		if (note) {
-			secondLine.createSpan({
-				text: note,
-			})
-		}
-		suggestionContent.appendChild(secondLine)
+		renderSug(item, el);
 	}
 
 	async onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent): Promise<void> {

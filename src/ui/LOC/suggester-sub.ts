@@ -7,6 +7,7 @@ import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus } from "./utils";
 import {BASIC_INSTRUCTIONS, LV} from "../../constants";
+import {renderSug} from "../../utils";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -75,20 +76,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 
 	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
-		const { aL, pL, note } = item;
-		el.addClass(LV);
-		const el0 = el.createDiv();
-		const el1 = el0.createEl("b");
-		el1.appendText(pL);
-		//el.createEl('br')
-		const el2 = el.createDiv();
-		if (aL && note && aL !== pL) {
-			el2.appendText(aL + " — " + note);
-		} else if (aL && !note && aL !== pL) {
-			el2.appendText(aL);
-		} else if (!aL && note) {
-			el2.appendText(note);
-		}
+		renderSug(item, el);
 	}
 
 	/**

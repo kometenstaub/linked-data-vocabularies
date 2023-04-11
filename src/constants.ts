@@ -79,31 +79,5 @@ export function settingsMax(settings: SKOSSettings): baseSetting[] {
 
 
 
-export function firstDiv (el: HTMLElement, el0: HTMLDivElement, pL: string, aL: string, lcc: string): HTMLDivElement {
-	el0.createDiv({
-		text: " — ",
-		cls: [LV, LCC_PRE],
-	});
-	el0.createDiv({
-		text: "LCC: ",
-		cls: [LV, LCC],
-	});
-	el0.createDiv({
-		text: lcc,
-		cls: [LV, CLASSIFICATION],
-	});
-	const subDiv = el.createDiv();
-	subDiv.createDiv({
-		text: aL,
-		cls: [LV, "lcsh-altLabel"],
-	});
-	return subDiv;
-}
 
 export const LV = "linked-vocabs";
-export const NOTE = "lcsh-note";
-export const AL = "lcsh-altLabel";
-export const NOTE_PRE = "lcsh-note-pre";
-export const CLASSIFICATION = "lcsh-lcc-classification";
-export const LCC = "lcsh-lcc";
-export const LCC_PRE = "lcsh-lcc-pre";
