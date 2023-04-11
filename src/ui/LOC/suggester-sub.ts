@@ -6,7 +6,7 @@ import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus } from "./utils";
-import { BASIC_INSTRUCTIONS } from "../../constants";
+import {BASIC_INSTRUCTIONS, LV} from "../../constants";
 
 export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -76,7 +76,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
 		const { aL, pL, note } = item;
-		el.addClass("linked-vocabs");
+		el.addClass(LV);
 		const el0 = el.createDiv();
 		const el1 = el0.createEl("b");
 		el1.appendText(pL);
