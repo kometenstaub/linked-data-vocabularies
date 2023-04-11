@@ -78,8 +78,7 @@ export default class SKOSPlugin extends Plugin {
 			name: "Query LCSH (Subject Headings)",
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				const tfile = view.file;
-				const chooser = new SKOSModal(this.app, this, tfile).open();
-				return chooser;
+				new SKOSModal(this.app, this, tfile).open();
 			},
 		});
 	}
