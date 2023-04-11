@@ -120,6 +120,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			// before condition, otherwise if Alt key is pressed, the second modal would be delayed
 			const headings: headings = await methods_loc.resolveUris(item);
 			const lcc = item.lcc;
+			const aL = item.aL
 			// the heading is always added
 			const keys: keyValuePairs = {
 				[settings.headingKey]: heading,
@@ -127,8 +128,11 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 			if (settings.uriKey !== "") {
 				keys[settings.uriKey] = BASE_URI + item.uri;
 			}
-			if (lcc !== undefined && settings.lccKey !== "") {
+			if (lcc && settings.lccKey !== "") {
 				keys[settings.lccKey] = lcc;
+			}
+			if (aL && settings.altLabel !== "") {
+				keys[settings.altLabel] = aL
 			}
 			const writeMethods = new WriteMethods(this.app, this.plugin);
 			await writeMethods.writeLocYaml(this.tfile, evt, keys, headings);

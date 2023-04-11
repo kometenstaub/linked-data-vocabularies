@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	narrowerKey: "narrower",
 	relatedKey: "related",
 	headingKey: "heading",
+	altLabel: "altLabel",
 	uriKey: "uri",
 	lccKey: "lcc",
 	broaderMax: "3",
@@ -76,9 +77,11 @@ export default class SKOSPlugin extends Plugin {
 		this.addCommand({
 			id: "query-lcsh",
 			name: "Query LCSH (Subject Headings)",
-			editorCallback: (editor: Editor, view: MarkdownView) => {
+			editorCallback: (editor, view) => {
 				const tfile = view.file;
-				new SKOSModal(this.app, this, tfile).open();
+				if (tfile) {
+					new SKOSModal(this.app, this, tfile).open();
+				}
 			},
 		});
 	}

@@ -7,6 +7,7 @@ export interface SKOSSettings {
 	narrowerKey: string;
 	relatedKey: string;
 	headingKey: string;
+	altLabel: string;
 	uriKey: string;
 	lccKey: string;
 	broaderMax: string;
@@ -33,12 +34,8 @@ export interface headings {
 	related: string[];
 }
 
-export interface extraKeys {
-	[key: string]: string[];
-}
-
 export interface keyValuePairs {
-	[key: string]: string;
+	[key: string]: string | string[];
 }
 
 declare module "obsidian" {

@@ -25,6 +25,12 @@ export const settingsKeys: textSetting[] = [
 		value: "headingKey",
 	},
 	{
+		name: "YAML key for alternative label",
+		description: "Leave empty if no alternative label key should be added.",
+		placeholder: "altLabel",
+		value: "altLabel",
+	},
+	{
 		name: "YAML Key for URI of chosen heading",
 		description: "Leave empty if no URI YAML key should be added.",
 		placeholder: "uri",

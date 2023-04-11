@@ -1,5 +1,5 @@
 import {App, Notice, TFile, MarkdownView} from "obsidian";
-import type { extraKeys, headings, keyValuePairs } from "../interfaces";
+import type { headings, keyValuePairs } from "../interfaces";
 import type SKOSPlugin from "../main";
 
 export class WriteMethods {
@@ -17,7 +17,6 @@ export class WriteMethods {
 		keys: keyValuePairs,
 		headingObj: headings
 	): Promise<void> {
-		//@ts-expect-error This type is finer and passed into a broader type
 		await this.writeYaml(tfile, evt, keys, headingObj);
 	}
 
@@ -28,33 +27,31 @@ export class WriteMethods {
 	 * @param tfile - The {@link TFile } of the current active {@link MarkdownView}
 	 * @param evt - The keys which are pressed down or not of type {@link MouseEvent} or {@link KeyboardEvent}
 	 * @param keys - The key-value pairs that are added to the YAML
-	 * @param moreKeys - The object with additional keys
+	 * @param moreKeys - The object with the headings
 	 */
 	private async writeYaml(
 		tfile: TFile,
 		evt: KeyboardEvent | MouseEvent,
 		keys: keyValuePairs,
 		// will be made optional in the future for other vocabs that don't have BT/NT/RT relations
-		moreKeys: extraKeys
+		moreKeys: headings
 	): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
-
 			await this.app.fileManager.processFrontMatter(tfile, (frontMatter) => {
 				for (const [key, value] of Object.entries(keys)) {
 					frontMatter[key] = value;
 				}
-				if ((moreKeys as unknown as headings).broader.length > 0) {
-					frontMatter[this.plugin.settings.broaderKey] = (moreKeys as unknown as headings).broader
+				if (moreKeys.broader.length > 0) {
+					frontMatter[this.plugin.settings.broaderKey] = moreKeys.broader
 				}
-				if ((moreKeys as unknown as headings).narrower.length > 0) {
-					frontMatter[this.plugin.settings.narrowerKey] = (moreKeys as unknown as headings).narrower
+				if (moreKeys.narrower.length > 0) {
+					frontMatter[this.plugin.settings.narrowerKey] = moreKeys.narrower
 				}
-				if ((moreKeys as unknown as headings).related.length > 0) {
-					frontMatter[this.plugin.settings.relatedKey] = (moreKeys as unknown as headings).related
+				if (moreKeys.related.length > 0) {
+					frontMatter[this.plugin.settings.relatedKey] = moreKeys.related
 				}
 			})
-
 		} // the shift key is activated
 		else if (evt.shiftKey) {
 			const newFrontMatter: string[] = [];
@@ -77,7 +74,7 @@ export class WriteMethods {
 	private buildYaml(
 		newFrontMatter: string[],
 		keys: keyValuePairs,
-		headingObj?: extraKeys
+		headingObj?: headings
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
 			newFrontMatter.push(key + ": " + `"${value}"`);
@@ -89,7 +86,7 @@ export class WriteMethods {
 		}
 	}
 
-	private addHeadings(headingObject: extraKeys, newFrontMatter: string[]) {
+	private addHeadings(headingObject: headings, newFrontMatter: string[]) {
 		const { settings } = this.plugin;
 		/**
 		 * It will be zero if there are no headings or when the user chose 0 in the settings,
