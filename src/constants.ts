@@ -1,4 +1,5 @@
 import type { Instruction } from 'obsidian';
+import type {simpleHeading} from "./interfaces";
 
 export const BASIC_INSTRUCTIONS: Instruction[] = [
 	{
@@ -14,3 +15,45 @@ export const BASIC_INSTRUCTIONS: Instruction[] = [
 export const BROWSER_PURPOSE = 'to open in the browser';
 
 export const BASE_URI = 'https://id.loc.gov/authorities/subjects/';
+
+
+// setting values
+
+export const settingsKeys: simpleHeading[] = [
+	{
+		name: "YAML key for chosen heading",
+		description: "You cannot leave this empty as the heading always needs to be added.",
+		placeholder: "heading",
+		value: "headingKey"
+	},
+	{
+		name: "YAML Key for URI of chosen heading",
+		description: "Leave empty if no URI YAML key should be added.",
+		placeholder: "uri",
+		value: "uriKey"
+	},
+	{
+		name: "YAML Key for LC classification of chosen heading",
+		description: "Leave empty if no LCC YAML key should be added.",
+		placeholder: "lcc",
+		value: "lccKey"
+	},
+	{
+		name: "YAML Key for 'broader'",
+		description: "This will be the YAML key for the broader headings.",
+		placeholder: "broader",
+		value: "broaderKey"
+	},
+	{
+		name: "YAML Key for 'narrower'",
+		description: "This will be the YAML key for the narrower headings.",
+		placeholder: "narrower",
+		value: "narrowerKey"
+	},
+	{
+		name: "YAML Key for 'narrower'",
+		description: "This will be the YAML key of the related headings.",
+		placeholder: "related",
+		value: "relatedKey"
+	},
+]

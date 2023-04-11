@@ -6,6 +6,8 @@ import {
 	Setting,
 } from 'obsidian';
 import type SKOSPlugin from './main';
+import {settingsKeys} from "./constants";
+import {simpleSetting} from "./utils";
 
 export default class SKOSSettingTab extends PluginSettingTab {
 	plugin: SKOSPlugin;
@@ -90,73 +92,11 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			});
 
 
-		// keys for YAML
-		new Setting(containerEl)
-			.setName('YAML Key for chosen heading')
-			//.setDesc('')
-			.addText((text) => {
-				text.setPlaceholder('heading')
-					.setValue(settings.headingKey)
-					.onChange(async (value) => {
-						settings.headingKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName('YAML Key for URI of chosen heading')
-			.setDesc('Leave empty if no URI YAML key should be added.')
-			.addText((text) => {
-				text.setPlaceholder('uri')
-					.setValue(settings.uriKey)
-					.onChange(async (value) => {
-						settings.uriKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName('YAML Key for LC classification of chosen heading')
-			.setDesc('Leave empty if no LCC YAML key should be added.')
-			.addText((text) => {
-				text.setPlaceholder('lcc')
-					.setValue(settings.lccKey)
-					.onChange(async (value) => {
-						settings.lccKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName("YAML Key for 'broader'")
-			.setDesc('This will be the YAML key for the broader headings.')
-			.addText((text) => {
-				text.setPlaceholder('broader')
-					.setValue(settings.broaderKey)
-					.onChange(async (value) => {
-						settings.broaderKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName("YAML Key for 'narrower'")
-			.setDesc('This will be the YAML key for the narrower headings.')
-			.addText((text) => {
-				text.setPlaceholder('narrower')
-					.setValue(settings.narrowerKey)
-					.onChange(async (value) => {
-						settings.narrowerKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName("YAML Key for 'related'")
-			.setDesc('This will be the YAML key for the related headings.')
-			.addText((text) => {
-				text.setPlaceholder('related')
-					.setValue(settings.relatedKey)
-					.onChange(async (value) => {
-						settings.relatedKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
+		// create the key name settings
+		for (const setting of settingsKeys) {
+			simpleSetting(containerEl, this.plugin, settings, setting)
+		}
+
 		//whether to display and if so, how many
 		new Setting(containerEl)
 			.setName(`Maximum number of entries for '${settings.broaderKey}'`)
