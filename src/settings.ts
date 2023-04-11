@@ -89,26 +89,6 @@ export default class SKOSSettingTab extends PluginSettingTab {
 					});
 			});
 
-		//new Setting(containerEl)
-		//	.setName('Configure sorting order for Modal')
-		//	.setDesc(
-		//		'Choose the search type. \
-		//Left anchored searches are ordered alphabetically, are case and diacritic insensitive.\
-		//Keyword searches are in descending relevance order.'
-		//	)
-		//	.addDropdown((dropdown) => {
-		//		dropdown.addOption('keyword', 'Keyword search');
-		//		dropdown.addOption('leftanchored', 'Left anchored search');
-
-		//		// select the currently saved option
-		//		dropdown.setValue(settings.lcshSearchType);
-
-		//		dropdown.onChange(async (newValue) => {
-		//			// update and save the plugin settings
-		//			settings.lcshSearchType = newValue;
-		//			await this.plugin.saveSettings();
-		//		});
-		//	});
 
 		// keys for YAML
 		new Setting(containerEl)
@@ -279,101 +259,5 @@ export default class SKOSSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
-
-		// new Setting(containerEl)
-		// 	.setName('Load LCSH when Obsidian starts')
-		// 	.setDesc(
-		// 		'If enabled, the JSON file will be loaded into memory once at the start of Obsidian to \
-		// 		improve performance when the modal is opened.'
-		// 	)
-		// 	.addToggle((toggle) => {
-		// 		toggle
-		// 			.setValue(this.plugin.settings.loadLcsh)
-		// 			.onChange((state) => {
-		// 				this.plugin.settings.loadLcsh = state;
-		// 				this.plugin.saveSettings();
-		// 			});
-		// 	});
-
-		// containerEl.createEl('hr');
-
-		// containerEl.createEl('p', {
-		// 	text: "LCC, LCNAF and LCCHO are very different from LCSH.\
-		// 	They are only recommended for people who are familiar with them.",
-		// });
-
-		//These will eventually be added back
-
-		// 	new Setting(containerEl)
-		// 		.setName('Add LOC command')
-		// 		.setDesc('Add command to search all implemented Library of Congress collections.')
-		// 		.addToggle((toggle) => {
-		// 			toggle
-		// 				.setValue(this.plugin.settings.addAllLoc)
-		// 				.onChange((state) => {
-		// 					this.plugin.settings.addAllLoc = state;
-		// 					this.plugin.saveSettings();
-		// 				});
-		// 		});
-
-		// 	// setting for global loc parameter
-		// 	new Setting(containerEl)
-		// 		.setName('Configure LOC filter parameter')
-		// 		.setDesc(
-		// 			'Pick one of the options that will filter the collections in the LOC search.'
-		// 		)
-		// 		.addDropdown((dropdown) => {
-		// 			dropdown.addOption(':', 'colon');
-		// 			dropdown.addOption(';', 'semi-colon');
-		// 			dropdown.addOption(',', 'comma');
-		// 			dropdown.addOption('.', 'dot');
-
-		// 			// select the currently saved option
-		// 			dropdown.setValue(settings.lcshFilterChar);
-
-		// 			dropdown.onChange(async (newValue) => {
-		// 				// update and save the plugin settings
-		// 				settings.lcshFilterChar = newValue;
-		// 				await this.plugin.saveSettings();
-		// 			});
-		// 		});
-
-		// 	new Setting(containerEl)
-		// 		.setName('Add LCC command')
-		// 		.setDesc('Add command to search LC Classification.')
-		// 		.addToggle((toggle) => {
-		// 			toggle
-		// 				.setValue(this.plugin.settings.addLCC)
-		// 				.onChange((state) => {
-		// 					this.plugin.settings.addLCC = state;
-		// 					this.plugin.saveSettings();
-		// 				});
-		// 		});
-
-		// 	new Setting(containerEl)
-		// 		.setName('Add LCNAF command')
-		// 		.setDesc('Add command to search LC Name Authority File.')
-		// 		.addToggle((toggle) => {
-		// 			toggle
-		// 				.setValue(this.plugin.settings.addLCNAF)
-		// 				.onChange((state) => {
-		// 					this.plugin.settings.addLCNAF = state;
-		// 					this.plugin.saveSettings();
-		// 				});
-		// 		});
-
-		// 	new Setting(containerEl)
-		// 		.setName('Add LCCHO command')
-		// 		.setDesc(
-		// 			'Add command to search LC Cultural Heritage Organizations.'
-		// 		)
-		// 		.addToggle((toggle) => {
-		// 			toggle
-		// 				.setValue(this.plugin.settings.addCulHO)
-		// 				.onChange((state) => {
-		// 					this.plugin.settings.addCulHO = state;
-		// 					this.plugin.saveSettings();
-		// 				});
-		// 		});
 	}
 }
