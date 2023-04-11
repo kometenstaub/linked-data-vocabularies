@@ -102,7 +102,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		// 	});
 
 		new Setting(containerEl)
-			.setName("Load LCSH onload.")
+			.setName("Load LCSH onload")
 			.setDesc(
 				"This will increase performance when opening the modal, but will load the data into memory on startup."
 			)
