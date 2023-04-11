@@ -91,8 +91,12 @@ export function renderSug(item: SuggesterItem, el: HTMLElement) {
 		})
 	}
 	if (note) {
+		let text = ""
+		if (aL) {
+			text += " — "
+		}
 		secondLine.createSpan({
-			text: note,
+			text: text + note,
 		})
 	}
 	suggestionContent.appendChild(secondLine)
