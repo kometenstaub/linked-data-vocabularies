@@ -40,14 +40,14 @@ export class WriteMethods {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
 			await this.app.fileManager.processFrontMatter(tfile, (frontmatter) => {
-				const { settings } = this.plugin
-				frontmatter[settings.headingKey] = undefined;
-				frontmatter[settings.altLabel] = undefined;
-				frontmatter[settings.uriKey] = undefined;
-				frontmatter[settings.lccKey] = undefined;
-				frontmatter[settings.broaderKey] = undefined;
-				frontmatter[settings.narrowerKey] = undefined;
-				frontmatter[settings.relatedKey] = undefined;
+				const s = this.plugin.settings
+				const els = [s.headingKey, s.altLabel, s.uriKey, s.lccKey, s.broaderKey, s.narrowerKey, s.relatedKey]
+				for (const el of els) {
+					// only remove keys that are activated by the user
+					if (el.length > 0) {
+						frontmatter[el] = undefined;
+					}
+				}
 			})
 			await this.app.fileManager.processFrontMatter(tfile, (frontMatter) => {
 				for (const [key, value] of Object.entries(keys)) {
