@@ -1,4 +1,9 @@
-# ~~Obsidian Linked Data Vocabularies Plugin~~ Discontinued: [more information](https://github.com/kometenstaub/linked-data-helper/issues/10) 
+# Obsidian Linked Data Vocabularies Plugin 
+
+> [!question] Why should you use this plugin?
+> 
+> It allows you to add linked data to your notes.
+> See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better. (This link only works in GitHub, in the plugin gallery you need to scroll down.)
 
 Currently, Library of Congress Subject Headings are supported.
 
@@ -6,7 +11,6 @@ This plugin adds YAML keys for the selected heading, url (optional), and broader
 
 **To generate the necessary data, you have to install the [Linked Data Helper](https://github.com/kometenstaub/linked-data-helper) plugin.** To sync the data using Obsidian Sync, you will have to enable `Sync all other types` in the Sync settings.
 
-See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better.
 
 ## Configuration
 
@@ -14,17 +18,16 @@ See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-li
 
 You can set the limit of queries to be displayed. 100 is the default setting. You can also set the fuzzy search sensitivity.
 
-You can set the key names for `heading`, `uri`, `lcc`,  `broader`, `narrower` and `related` in the settings.
+You can set the key names for `heading`, `altLabel`, `uri`, `lcc`,  `broader`, `narrower` and `related` in the settings.
 
 `lcc` is the LC Classification.
 
 All but `heading` can be disabled in the settings.
 
-### For a better user experience
-
-There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
-
-Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
+> [!note]
+> There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
+> 
+> Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
 
 ## Usage
 
@@ -42,6 +45,14 @@ You can also add a subdivision after an authorized heading if you press <kbd>Alt
 [Here](#subdivisions--complex-subjects) is an explanation of Subdivisions from [@brimwats](https://github.com/brimwats).
 
 You can of course also use the mouse instead.
+
+> [!warning]
+>
+> Inserting the YAML will overwrite existing key values or remove old key names which aren't used by the new heading. This is useful if you want to associate another heading with a note.
+> 
+> Therefore, make sure to decide on the key names you want to use from the beginning, otherwise the plugin will not be able to overwrite existing keys.
+> 
+> Also make sure not to use the same YAML keys for other data, as this plugin will overwrite them.
 
 ## Modal
 
