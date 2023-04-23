@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.1.3...2.0.0) (2023-04-23)
+
+
+### Features
+
+* remove old keys on write ([51ea486](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/51ea486dde6ce1c2b5b4f2340b2df049da6ffa39))
+
+
+### Bug Fixes
+
+* don't remove keys with length 0 ([91d0482](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/91d048214e14f0c5b2262565030f13d9bb2984bc))
+* double colon; altLabel brackets ([973d612](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/973d6129c94d4043f2b7adb48914f8658687ce9d))
+* formatting ([3ff8128](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/3ff812840215cece7fe05dc721f250cb9f2234f8))
+* remove old altLabel key ([d097be5](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/commit/d097be55f0b3e0ffa95f9fd834b0c61eb6e98171))
+
 ### [1.1.3](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.1.2...1.1.3) (2022-07-13)
 
 ### [1.1.2](https://github.com/kometenstaub/obsidian-linked-data-vocabularies/compare/1.1.0...1.1.2) (2022-07-06)
