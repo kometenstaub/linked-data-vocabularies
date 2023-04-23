@@ -39,6 +39,15 @@ export class WriteMethods {
 	): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
+			await this.app.fileManager.processFrontMatter(tfile, (frontmatter) => {
+				const { settings } = this.plugin
+				frontmatter[settings.headingKey] = undefined;
+				frontmatter[settings.uriKey] = undefined;
+				frontmatter[settings.lccKey] = undefined;
+				frontmatter[settings.broaderKey] = undefined;
+				frontmatter[settings.narrowerKey] = undefined;
+				frontmatter[settings.relatedKey] = undefined;
+			})
 			await this.app.fileManager.processFrontMatter(tfile, (frontMatter) => {
 				for (const [key, value] of Object.entries(keys)) {
 					frontMatter[key] = value;
