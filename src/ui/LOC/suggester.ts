@@ -15,7 +15,7 @@ import { WriteMethods } from "src/methods/methods-write";
 import * as fuzzysort from "fuzzysort";
 import { LCSHMethods } from "src/methods/methods-loc";
 import { focus, renderSug } from "./utils";
-import { BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE } from "../../constants";
+import { BASE_URI, BASIC_INSTRUCTIONS, BROWSER_PURPOSE, SUBDIV_PURPOSE } from "../../constants";
 
 export class SKOSModal extends SuggestModal<SuggesterItem> {
 	plugin: SKOSPlugin;
@@ -63,19 +63,24 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				}
 			})();
 		}
-		const extraInstructions: Instruction[] = [
-			{
-				command: "alt ↵",
-				purpose: "to add a subdivision",
-			},
-		];
+		const extraInstructions: Instruction[] = [];
 		if (Platform.isMacOS) {
 			extraInstructions.push({
+				command: "opt ↵",
+					purpose: SUBDIV_PURPOSE,
+			},
+			{
 				command: "cmd ↵",
 				purpose: BROWSER_PURPOSE,
-			});
+			},
+			)
 		} else {
-			extraInstructions.push({
+			extraInstructions.push(
+				{
+					command: "alt ↵",
+					purpose: SUBDIV_PURPOSE,
+				},
+				{
 				command: "ctrl ↵",
 				purpose: BROWSER_PURPOSE,
 			});

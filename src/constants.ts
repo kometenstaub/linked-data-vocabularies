@@ -13,6 +13,7 @@ export const BASIC_INSTRUCTIONS: Instruction[] = [
 ];
 
 export const BROWSER_PURPOSE = "to open in the browser";
+export const SUBDIV_PURPOSE = "to add a subdivision";
 
 export const BASE_URI = "https://id.loc.gov/authorities/subjects/";
 
