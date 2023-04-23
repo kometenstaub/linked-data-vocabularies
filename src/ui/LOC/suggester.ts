@@ -65,15 +65,16 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 		}
 		const extraInstructions: Instruction[] = [];
 		if (Platform.isMacOS) {
-			extraInstructions.push({
-				command: "opt ↵",
+			extraInstructions.push(
+				{
+					command: "opt ↵",
 					purpose: SUBDIV_PURPOSE,
-			},
-			{
-				command: "cmd ↵",
-				purpose: BROWSER_PURPOSE,
-			},
-			)
+				},
+				{
+					command: "cmd ↵",
+					purpose: BROWSER_PURPOSE,
+				}
+			);
 		} else {
 			extraInstructions.push(
 				{
@@ -81,9 +82,10 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 					purpose: SUBDIV_PURPOSE,
 				},
 				{
-				command: "ctrl ↵",
-				purpose: BROWSER_PURPOSE,
-			});
+					command: "ctrl ↵",
+					purpose: BROWSER_PURPOSE,
+				}
+			);
 		}
 		this.setInstructions(BASIC_INSTRUCTIONS.concat(extraInstructions));
 	}

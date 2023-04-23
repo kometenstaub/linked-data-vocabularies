@@ -1,7 +1,7 @@
 import { App, Notice, TFile, MarkdownView } from "obsidian";
 import type { headings, keyValuePairs } from "../interfaces";
 import type SKOSPlugin from "../main";
-import {settingsKeys} from "../constants";
+import { settingsKeys } from "../constants";
 
 export class WriteMethods {
 	app: App;
@@ -40,15 +40,23 @@ export class WriteMethods {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
 			await this.app.fileManager.processFrontMatter(tfile, (frontmatter) => {
-				const s = this.plugin.settings
-				const els = [s.headingKey, s.altLabel, s.uriKey, s.lccKey, s.broaderKey, s.narrowerKey, s.relatedKey]
+				const s = this.plugin.settings;
+				const els = [
+					s.headingKey,
+					s.altLabel,
+					s.uriKey,
+					s.lccKey,
+					s.broaderKey,
+					s.narrowerKey,
+					s.relatedKey,
+				];
 				for (const el of els) {
 					// only remove keys that are activated by the user
 					if (el.length > 0) {
 						frontmatter[el] = undefined;
 					}
 				}
-			})
+			});
 			await this.app.fileManager.processFrontMatter(tfile, (frontMatter) => {
 				for (const [key, value] of Object.entries(keys)) {
 					frontMatter[key] = value;
@@ -85,7 +93,7 @@ export class WriteMethods {
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
 			if (key === this.plugin.settings.altLabel) {
-				const newValue = this.surroundWithQuotes(value as string[])
+				const newValue = this.surroundWithQuotes(value as string[]);
 				newFrontMatter.push(key + ":: " + `[${newValue}]`);
 			} else {
 				newFrontMatter.push(key + ":: " + `"${value}"`);
