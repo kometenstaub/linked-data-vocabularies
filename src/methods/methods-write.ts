@@ -1,6 +1,7 @@
 import { App, Notice, TFile, MarkdownView } from "obsidian";
 import type { headings, keyValuePairs } from "../interfaces";
 import type SKOSPlugin from "../main";
+import {settingsKeys} from "../constants";
 
 export class WriteMethods {
 	app: App;
@@ -20,7 +21,7 @@ export class WriteMethods {
 		await this.writeYaml(tfile, evt, keys, headingObj);
 	}
 
-	// Thank you for the inspiration: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
+	// An earlier version of this code was based on: https://github.com/chhoumann/MetaEdit/blob/95e9fc662d170da52a8c83119e174e33dc58276b/src/metaController.ts#L38
 	/**
 	 * Depending on whether the Shift key is activated, it either starts to build up the YAML for the frontmatter
 	 * YAML or inline YAML for use with {@link https://github.com/blacksmithgu/obsidian-dataview | Dataview}
@@ -56,11 +57,7 @@ export class WriteMethods {
 		else if (evt.shiftKey) {
 			const newFrontMatter: string[] = [];
 			const yaml: string[] = this.buildYaml(newFrontMatter, keys, moreKeys);
-			let inlineYaml: string = "";
-			for (const line of yaml) {
-				inlineYaml += line.replace(":", "::") + "\n";
-			}
-			this.writeInlineYamlToSel(inlineYaml, tfile);
+			this.writeInlineYamlToSel(yaml.join("\n"), tfile);
 		}
 	}
 
@@ -77,9 +74,14 @@ export class WriteMethods {
 		headingObj?: headings
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
-			newFrontMatter.push(key + ": " + `"${value}"`);
+			if (key === this.plugin.settings.altLabel) {
+				const newValue = this.surroundWithQuotes(value as string[])
+				newFrontMatter.push(key + ":: " + `"${newValue}"`);
+			} else {
+				newFrontMatter.push(key + ":: " + `"${value}"`);
+			}
 		}
-		if (headingObj !== undefined) {
+		if (headingObj) {
 			return this.addHeadings(headingObj, newFrontMatter);
 		} else {
 			return newFrontMatter;
@@ -93,19 +95,18 @@ export class WriteMethods {
 		 * because {@link LCSHMethods.resolveUris} breaks if the number is 0 or at the user defined limit,
 		 * so the array with headings will only contain as many headings as the user chose
 		 */
-		const headingObj = headingObject as unknown as headings;
-		if (headingObj.broader.length > 0) {
-			let broaderHeadings: string[] = headingObj.broader;
+		if (headingObject.broader.length > 0) {
+			let broaderHeadings = headingObject.broader;
 			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
 			newFrontMatter.push(settings.broaderKey + ": [" + broaderHeadings.toString() + "]");
 		}
-		if (headingObj.narrower.length > 0) {
-			let narrowerHeadings: string[] = headingObj.narrower;
+		if (headingObject.narrower.length > 0) {
+			let narrowerHeadings = headingObject.narrower;
 			narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
 			newFrontMatter.push(settings.narrowerKey + ": [" + narrowerHeadings.toString() + "]");
 		}
-		if (headingObj.related.length > 0) {
-			let relatedHeadings: string[] = headingObj.related;
+		if (headingObject.related.length > 0) {
+			let relatedHeadings = headingObject.related;
 			relatedHeadings = this.surroundWithQuotes(relatedHeadings);
 			newFrontMatter.push(settings.relatedKey + ": [" + relatedHeadings.toString() + "]");
 		}
