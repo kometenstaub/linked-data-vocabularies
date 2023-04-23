@@ -28,7 +28,7 @@ export function renderSug(item: SuggesterItem, el: HTMLElement) {
 	});
 	if (lcc) {
 		suggestionTitle.createSpan({
-			text: ` — LCC: ${lcc}`,
+			text: ` — ${lcc}`,
 		});
 	}
 	const secondLine = createDiv({
