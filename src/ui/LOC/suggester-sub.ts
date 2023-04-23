@@ -102,7 +102,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		if (settings.uriKey !== "") {
 			keys[settings.uriKey] = "https://id.loc.gov/authorities/subjects/" + data.uri;
 		}
-		if (data.lcc !== undefined && settings.lccKey !== "") {
+		if (data.lcc && settings.lccKey !== "") {
 			keys[settings.lccKey] = data.lcc;
 		}
 

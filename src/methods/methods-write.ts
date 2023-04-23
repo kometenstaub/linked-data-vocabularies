@@ -144,7 +144,7 @@ export class WriteMethods {
 		const ed = this.app.workspace.activeEditor;
 		if (ed?.editor) {
 			const editorRange = ed.editor.getCursor("from");
-			if (typeof editorRange !== "undefined") {
+			if (editorRange) {
 				ed.editor.replaceRange(inlineYaml, editorRange);
 			} else {
 				new Notice("Your cursor is not anymore in the same file.");
