@@ -25,9 +25,10 @@ You can set the key names for `heading`, `altLabel`, `uri`, `lcc`,  `broader`, `
 All but `heading` can be disabled in the settings.
 
 > [!note]
-> There is also an option to load the LCSH Suggester data on startup of Obsidian. This will make it faster when you open the modal. It is disabled by default. The parsing is done in a web worker, so that it doesn't block the main thread. (That means that the data won't be *immediately* available after launch of Obsidian, but also has the effect that it doesn't block completely on startup.) There will be a bit of blocking, but it is minimal.
 > 
-> Enabling this setting is recommended on Desktop and iOS; on Android it can be a bit slower, depending on your device. If you choose to enable this option on Android, it makes sense to lock Obsidian (keep it from getting shut down).
+> There is also an option to load the LCSH Suggester data on startup of Obsidian. This can improve performance on slower devices. It is disabled by default. 
+> 
+> This is not recommended for mobile devices, because it will slow down every startup, which may happen more frequently.
 
 ## Usage
 
