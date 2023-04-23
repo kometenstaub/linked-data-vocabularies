@@ -41,7 +41,7 @@ export class LCSHMethods {
 		let relatedMax = 0;
 		settings.relatedMax !== "" ? (relatedMax = parseInt(settings.relatedMax)) : null;
 
-		if (broader !== undefined && broaderMax > 0) {
+		if (broader && broaderMax > 0) {
 			for (const uri of broader.slice(0, broaderMax)) {
 				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
@@ -52,7 +52,7 @@ export class LCSHMethods {
 				}
 			}
 		}
-		if (narrower !== undefined && narrowerMax > 0) {
+		if (narrower && narrowerMax > 0) {
 			for (const uri of narrower.slice(0, narrowerMax)) {
 				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
@@ -62,7 +62,7 @@ export class LCSHMethods {
 				}
 			}
 		}
-		if (related !== undefined && relatedMax > 0) {
+		if (related && relatedMax > 0) {
 			for (const uri of related.slice(0, relatedMax)) {
 				if (uri.startsWith("sh")) {
 					const heading = this.lcshUriToPrefLabel[uri];
@@ -73,12 +73,12 @@ export class LCSHMethods {
 			}
 		}
 
-		const returnItem: headings = {
+		const items: headings = {
 			broader: broaderHeadings,
 			narrower: narrowerHeadings,
 			related: relatedHeadings,
 		};
 
-		return returnItem;
+		return items;
 	}
 }
