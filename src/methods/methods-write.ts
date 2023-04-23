@@ -76,7 +76,7 @@ export class WriteMethods {
 		for (const [key, value] of Object.entries(keys)) {
 			if (key === this.plugin.settings.altLabel) {
 				const newValue = this.surroundWithQuotes(value as string[])
-				newFrontMatter.push(key + ":: " + `"${newValue}"`);
+				newFrontMatter.push(key + ":: " + `[${newValue}]`);
 			} else {
 				newFrontMatter.push(key + ":: " + `"${value}"`);
 			}
@@ -98,17 +98,17 @@ export class WriteMethods {
 		if (headingObject.broader.length > 0) {
 			let broaderHeadings = headingObject.broader;
 			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
-			newFrontMatter.push(settings.broaderKey + ": [" + broaderHeadings.toString() + "]");
+			newFrontMatter.push(settings.broaderKey + ":: [" + broaderHeadings.toString() + "]");
 		}
 		if (headingObject.narrower.length > 0) {
 			let narrowerHeadings = headingObject.narrower;
 			narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
-			newFrontMatter.push(settings.narrowerKey + ": [" + narrowerHeadings.toString() + "]");
+			newFrontMatter.push(settings.narrowerKey + ":: [" + narrowerHeadings.toString() + "]");
 		}
 		if (headingObject.related.length > 0) {
 			let relatedHeadings = headingObject.related;
 			relatedHeadings = this.surroundWithQuotes(relatedHeadings);
-			newFrontMatter.push(settings.relatedKey + ": [" + relatedHeadings.toString() + "]");
+			newFrontMatter.push(settings.relatedKey + ":: [" + relatedHeadings.toString() + "]");
 		}
 		return newFrontMatter;
 	}
