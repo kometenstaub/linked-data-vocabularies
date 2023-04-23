@@ -26,7 +26,7 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 		});
 		this.setInstructions(BASIC_INSTRUCTIONS);
 
-		const adapter = this.app.vault.adapter;
+		const { adapter } = this.app.vault;
 		const dir = this.plugin.settings.inputFolder;
 		(async () => {
 			if (await adapter.exists(`${dir}/lcshSubdivSuggester.json`)) {
@@ -62,7 +62,6 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 				results.push(el.obj);
 			}
 		}
-		//@ts-ignore
 		return results;
 	}
 
@@ -72,7 +71,6 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	 * @param el - append HTML to be displayed to it
 	 */
 
-	//@ts-ignore
 	renderSuggestion(item: SuggesterItem, el: HTMLElement) {
 		renderSug(item, el);
 	}
@@ -86,7 +84,6 @@ export class SubSKOSModal extends SuggestModal<SuggesterItem> {
 	 * @param evt - @see the type definition
 	 */
 
-	//@ts-ignore
 	async onChooseSuggestion(item: SuggesterItem, evt: MouseEvent | KeyboardEvent) {
 		const data = this.data;
 		const { settings } = this.plugin;
