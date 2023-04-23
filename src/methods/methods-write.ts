@@ -42,6 +42,7 @@ export class WriteMethods {
 			await this.app.fileManager.processFrontMatter(tfile, (frontmatter) => {
 				const { settings } = this.plugin
 				frontmatter[settings.headingKey] = undefined;
+				frontmatter[settings.altLabel] = undefined;
 				frontmatter[settings.uriKey] = undefined;
 				frontmatter[settings.lccKey] = undefined;
 				frontmatter[settings.broaderKey] = undefined;
