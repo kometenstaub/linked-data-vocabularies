@@ -87,20 +87,6 @@ export default class SKOSSettingTab extends PluginSettingTab {
 			text: "Reload required for these changes to take effect.",
 		});
 
-		// new Setting(containerEl)
-		// 	.setName('Add LCSH command')
-		// 	.setDesc(
-		// 		'Add command to search LC Authorized Subject Headings. Keep this enabled, currently only LCSH is re-implemented.'
-		// 	)
-		// 	.addToggle((toggle) => {
-		// 		toggle
-		// 			.setValue(this.plugin.settings.addLCSH)
-		// 			.onChange(async (state) => {
-		// 				this.plugin.settings.addLCSH = state;
-		// 				await this.plugin.saveSettings();
-		// 			});
-		// 	});
-
 		new Setting(containerEl)
 			.setName("Load LCSH onload")
 			.setDesc(

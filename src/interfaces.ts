@@ -15,7 +15,6 @@ export interface SKOSSettings {
 	relatedMax: string;
 	lcSensitivity: string;
 	loadLcsh: boolean;
-	addLCSH: boolean;
 }
 
 export interface baseSetting {

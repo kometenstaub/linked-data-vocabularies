@@ -22,7 +22,6 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	relatedMax: "3",
 	lcSensitivity: "-10000",
 	loadLcsh: false,
-	addLCSH: true,
 };
 
 export default class SKOSPlugin extends Plugin {
@@ -71,9 +70,6 @@ export default class SKOSPlugin extends Plugin {
 			}
 		}
 
-		// /**
-		//  * individual commands for the collections
-		//  */
 		this.addCommand({
 			id: "query-lcsh",
 			name: "Query LCSH (Subject Headings)",
