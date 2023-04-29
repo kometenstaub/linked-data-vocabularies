@@ -53,7 +53,7 @@ export class WriteMethods {
 				for (const el of els) {
 					// only remove keys that are activated by the user
 					if (el.length > 0) {
-						frontmatter[el] = undefined;
+						delete frontmatter[el]
 					}
 				}
 			});
