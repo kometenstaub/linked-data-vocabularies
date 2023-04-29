@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.2...2.0.3) (2023-04-29)
+
+
+### Bug Fixes
+
+* use delete for removing frontmatter keys ([51c5523](https://github.com/kometenstaub/linked-data-vocabularies/commit/51c552348a283c91c0e0699e4a3b55042e930efc))
+
 ### [2.0.2](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.1...2.0.2) (2023-04-23)
 
 
