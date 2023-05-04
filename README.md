@@ -7,7 +7,7 @@
 > [!question] Why should you use this plugin?
 > 
 > It allows you to add linked data to your notes.
-> See [@brimwats](https://github.com/brimwats)’ [explanation](#Explanation%20of%20linked%20data) to understand linked data better. ([Link that works on GitHub](#explanation-of-linked-data))
+> See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better. 
 
 ![modal](./assets/modal.png)
 
