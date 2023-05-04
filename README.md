@@ -9,6 +9,11 @@
 > It allows you to add linked data to your notes.
 > See [@brimwats](https://github.com/brimwats)’ [explanation](#Explanation%20of%20linked%20data) to understand linked data better. ([Link that works on GitHub](#explanation-of-linked-data))
 
+![modal](./assets/modal.png)
+
+![result](assets/result.png)
+
+
 Currently, Library of Congress Subject Headings are supported.
 
 This plugin adds YAML keys for the selected heading, url (optional), and broader, narrower and related headings. It also supports inserting it as inline YAML at the current selection for use with [Dataview](https://github.com/blacksmithgu/obsidian-dataview).
