@@ -11,7 +11,7 @@ export function focus() {
 }
 function focusInput() {
 	//@ts-ignore
-	document.getElementsByClassName("prompt-input")[0].focus();
+	activeDocument.getElementsByClassName("prompt-input")[0].focus();
 }
 
 export function renderSug(item: SuggesterItem, el: HTMLElement) {
