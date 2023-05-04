@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.4](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.3...2.0.4) (2023-05-04)
+
+
+### Bug Fixes
+
+* use activeDocument ([b69cd67](https://github.com/kometenstaub/linked-data-vocabularies/commit/b69cd671946a9e99a1262390a027e4e3fd7dbca0))
+
 ### [2.0.3](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.2...2.0.3) (2023-04-29)
 
 
