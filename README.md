@@ -4,7 +4,7 @@
 > 
 > If you are an existing user, you will need to update your data. For that you need to update the Linked Data Helper plugin to version 1.0.0 and follow the steps outlined in its settings again.
 
-> [!info]
+> [!note]
 >
 > Why should you use this plugin?
 > 
