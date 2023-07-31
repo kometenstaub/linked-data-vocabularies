@@ -4,7 +4,8 @@
 > 
 > If you are an existing user, you will need to update your data. For that you need to update the Linked Data Helper plugin to version 1.0.0 and follow the steps outlined in its settings again.
 
-> [!question] Why should you use this plugin?
+> [!question]
+> Why should you use this plugin?
 > 
 > It allows you to add linked data to your notes.
 > See [@brimwats](https://github.com/brimwats)’ [explanation](#explanation-of-linked-data) to understand linked data better. 
