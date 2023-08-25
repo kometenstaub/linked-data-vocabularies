@@ -88,7 +88,7 @@ const context = await esbuild.context(
 			'process.env.NODE_ENV': JSON.stringify(process.env.BUILD),
 		},
 		outfile: 'build/main.js',
-		plugins: [copyManifest],
+		plugins: [copyManifest, inlineWorkerPlugin()],
 	});
 
 if (isProd) {
