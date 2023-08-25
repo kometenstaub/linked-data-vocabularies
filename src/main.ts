@@ -47,6 +47,17 @@ export default class SKOSPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new SKOSSettingTab(this.app, this));
 
+		this.addCommand({
+			id: "query-lcsh",
+			name: "Query LCSH (Subject Headings)",
+			editorCallback: (editor, view) => {
+				const tfile = view.file;
+				if (tfile) {
+					new SKOSModal(this.app, this, tfile).open();
+				}
+			},
+		});
+
 		if (this.settings.loadLcsh) {
 			const { adapter } = this.app.vault;
 			const dir = this.settings.inputFolder;
@@ -69,17 +80,6 @@ export default class SKOSPlugin extends Plugin {
 				throw Error(text);
 			}
 		}
-
-		this.addCommand({
-			id: "query-lcsh",
-			name: "Query LCSH (Subject Headings)",
-			editorCallback: (editor, view) => {
-				const tfile = view.file;
-				if (tfile) {
-					new SKOSModal(this.app, this, tfile).open();
-				}
-			},
-		});
 	}
 
 	onunload() {
