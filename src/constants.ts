@@ -56,7 +56,7 @@ export const settingsKeys: textSetting[] = [
 		value: "narrowerKey",
 	},
 	{
-		name: "YAML Key for 'narrower'",
+		name: "YAML Key for 'related'",
 		description: "This will be the YAML key of the related headings.",
 		placeholder: "related",
 		value: "relatedKey",
