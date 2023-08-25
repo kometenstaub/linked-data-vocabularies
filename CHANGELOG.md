@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.7](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.6...2.0.7) (2023-08-25)
+
+
+### Bug Fixes
+
+* command not added ([d5a5c93](https://github.com/kometenstaub/linked-data-vocabularies/commit/d5a5c933dd58234c54194f580d734dcf9a7defbe))
+
 ### [2.0.6](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.4...2.0.6) (2023-08-25)
 
 ### [2.0.5](https://github.com/kometenstaub/linked-data-vocabularies/compare/2.0.4...2.0.5) (2023-08-25)
