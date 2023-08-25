@@ -1,7 +1,7 @@
 {
 	"id": "linked-data-vocabularies",
 	"name": "Linked Data Vocabularies",
-	"version": "2.0.4",
+	"version": "2.0.5",
 	"minAppVersion": "1.1.16",
 	"description": "Add linked data (LCSH) as metadata to your notes.",
 	"author": "kometenstaub",
