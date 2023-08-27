@@ -2,7 +2,7 @@
 
 > [!important]
 > 
-> If you are an existing user, you will need to update your data. For that you need to update the Linked Data Helper plugin to version 1.0.0 and follow the steps outlined in its settings again.
+> If you are an existing user (version number < 1.0.0), you will need to update your data. For that you need to update the Linked Data Helper plugin to version 1.0.0 and follow the steps outlined in its settings again.
 
 > [!note]
 >
