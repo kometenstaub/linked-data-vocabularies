@@ -15,6 +15,7 @@ export interface SKOSSettings {
 	relatedMax: string;
 	lcSensitivity: string;
 	loadLcsh: boolean;
+	enableWikilinks: boolean;
 }
 
 export interface baseSetting {
@@ -57,7 +58,7 @@ declare module "obsidian" {
 		getAvailablePathForAttachments: (
 			fileName: string,
 			extension?: string,
-			currentFile?: TFile
+			currentFile?: TFile,
 		) => Promise<string>;
 		config: {
 			attachmentFolderPath: string;
