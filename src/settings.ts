@@ -24,7 +24,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Folder path")
 			.setDesc(
-				"Please input the path to where the JSON files are stored, relative from the vault root."
+				"Please input the path to where the JSON files are stored, relative from the vault root.",
 			)
 			.addText((text) => {
 				text.setPlaceholder("Attachments/linked-data-vocabularies/")
@@ -59,7 +59,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Sensitivity")
 			.setDesc(
-				"How good should the matches be? 0 is a perfect match, the smaller it is, worse matches will be included."
+				"How good should the matches be? 0 is a perfect match, the smaller it is, worse matches will be included.",
 			)
 			.addText((text) => {
 				text.setPlaceholder("Enter a number greater than 0. Default: -10000")
@@ -83,6 +83,18 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		// max number of relations to be added
 		maxSettings(containerEl, this.plugin, settings);
 
+		new Setting(containerEl)
+			.setName("Link relations")
+			.setDesc(
+				"Activate to add broader, narrower and related items as Wikilinks instead of as plain text.",
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableWikilinks).onChange(async (state) => {
+					this.plugin.settings.enableWikilinks = state;
+					await this.plugin.saveSettings();
+				});
+			});
+
 		containerEl.createEl("h4", {
 			text: "Reload required for these changes to take effect.",
 		});
@@ -90,7 +102,7 @@ export default class SKOSSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Load LCSH onload")
 			.setDesc(
-				"This will increase performance when opening the modal, but will load the data into memory on startup."
+				"This will increase performance when opening the modal, but will load the data into memory on startup.",
 			)
 			.addToggle((toggle) => {
 				toggle.setValue(this.plugin.settings.loadLcsh).onChange(async (state) => {

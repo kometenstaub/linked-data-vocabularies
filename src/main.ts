@@ -22,6 +22,7 @@ const DEFAULT_SETTINGS: SKOSSettings = {
 	relatedMax: "3",
 	lcSensitivity: "-10000",
 	loadLcsh: false,
+	enableWikilinks: false,
 };
 
 export default class SKOSPlugin extends Plugin {

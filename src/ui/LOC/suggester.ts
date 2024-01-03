@@ -73,7 +73,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				{
 					command: "cmd ↵",
 					purpose: BROWSER_PURPOSE,
-				}
+				},
 			);
 		} else {
 			extraInstructions.push(
@@ -84,7 +84,7 @@ export class SKOSModal extends SuggestModal<SuggesterItem> {
 				{
 					command: "ctrl ↵",
 					purpose: BROWSER_PURPOSE,
-				}
+				},
 			);
 		}
 		this.setInstructions(BASIC_INSTRUCTIONS.concat(extraInstructions));

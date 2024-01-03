@@ -16,7 +16,7 @@ export class WriteMethods {
 		tfile: TFile,
 		evt: KeyboardEvent | MouseEvent,
 		keys: keyValuePairs,
-		headingObj: headings
+		headingObj: headings,
 	): Promise<void> {
 		await this.writeYaml(tfile, evt, keys, headingObj);
 	}
@@ -35,7 +35,7 @@ export class WriteMethods {
 		evt: KeyboardEvent | MouseEvent,
 		keys: keyValuePairs,
 		// will be made optional in the future for other vocabs that don't have BT/NT/RT relations
-		moreKeys: headings
+		moreKeys: headings,
 	): Promise<void> {
 		// the shift key is not activated
 		if (!evt.shiftKey) {
@@ -62,13 +62,22 @@ export class WriteMethods {
 					frontMatter[key] = value;
 				}
 				if (moreKeys.broader.length > 0) {
-					frontMatter[this.plugin.settings.broaderKey] = moreKeys.broader;
+					frontMatter[this.plugin.settings.broaderKey] = this.plugin.settings
+						.enableWikilinks
+						? this.formatAsWikilink(moreKeys.broader)
+						: moreKeys.broader;
 				}
 				if (moreKeys.narrower.length > 0) {
-					frontMatter[this.plugin.settings.narrowerKey] = moreKeys.narrower;
+					frontMatter[this.plugin.settings.narrowerKey] = this.plugin.settings
+						.enableWikilinks
+						? this.formatAsWikilink(moreKeys.narrower)
+						: moreKeys.narrower;
 				}
 				if (moreKeys.related.length > 0) {
-					frontMatter[this.plugin.settings.relatedKey] = moreKeys.related;
+					frontMatter[this.plugin.settings.relatedKey] = this.plugin.settings
+						.enableWikilinks
+						? this.formatAsWikilink(moreKeys.related)
+						: moreKeys.related;
 				}
 			});
 		} // the shift key is activated
@@ -89,11 +98,11 @@ export class WriteMethods {
 	private buildYaml(
 		newFrontMatter: string[],
 		keys: keyValuePairs,
-		headingObj?: headings
+		headingObj?: headings,
 	): string[] {
 		for (const [key, value] of Object.entries(keys)) {
 			if (key === this.plugin.settings.altLabel) {
-				const newValue = this.surroundWithQuotes(value as string[]);
+				const newValue = this.wrapWithQuotes(value as string[]);
 				newFrontMatter.push(key + ":: " + `[${newValue}]`);
 			} else {
 				newFrontMatter.push(key + ":: " + `"${value}"`);
@@ -115,17 +124,26 @@ export class WriteMethods {
 		 */
 		if (headingObject.broader.length > 0) {
 			let broaderHeadings = headingObject.broader;
-			broaderHeadings = this.surroundWithQuotes(broaderHeadings);
+			if (this.plugin.settings.enableWikilinks) {
+				broaderHeadings = this.formatAsWikilink(broaderHeadings);
+			}
+			broaderHeadings = this.wrapWithQuotes(broaderHeadings);
 			newFrontMatter.push(settings.broaderKey + ":: [" + broaderHeadings.toString() + "]");
 		}
 		if (headingObject.narrower.length > 0) {
 			let narrowerHeadings = headingObject.narrower;
-			narrowerHeadings = this.surroundWithQuotes(narrowerHeadings);
+			if (this.plugin.settings.enableWikilinks) {
+				narrowerHeadings = this.formatAsWikilink(narrowerHeadings);
+			}
+			narrowerHeadings = this.wrapWithQuotes(narrowerHeadings);
 			newFrontMatter.push(settings.narrowerKey + ":: [" + narrowerHeadings.toString() + "]");
 		}
 		if (headingObject.related.length > 0) {
 			let relatedHeadings = headingObject.related;
-			relatedHeadings = this.surroundWithQuotes(relatedHeadings);
+			if (this.plugin.settings.enableWikilinks) {
+				relatedHeadings = this.formatAsWikilink(relatedHeadings);
+			}
+			relatedHeadings = this.wrapWithQuotes(relatedHeadings);
 			newFrontMatter.push(settings.relatedKey + ":: [" + relatedHeadings.toString() + "]");
 		}
 		return newFrontMatter;
@@ -136,10 +154,23 @@ export class WriteMethods {
 	 * @param headingsArray | the array of headings returned from {@link buildYaml}
 	 * @returns - an array where each element is surrounded with double quotes
 	 */
-	private surroundWithQuotes(headingsArray: string[]): string[] {
+	private wrapWithQuotes(headingsArray: string[]): string[] {
 		const newHeadingsArray: string[] = [];
 		for (const heading of headingsArray) {
 			newHeadingsArray.push('"' + heading + '"');
+		}
+		return newHeadingsArray;
+	}
+
+	/**
+	 *
+	 * @param headingsArray | the array of relation headings
+	 * @returns - the array where each element is made into a Wikilink
+	 */
+	private formatAsWikilink(headingsArray: string[]): string[] {
+		const newHeadingsArray: string[] = [];
+		for (const heading of headingsArray) {
+			newHeadingsArray.push("[[" + heading + "]]");
 		}
 		return newHeadingsArray;
 	}

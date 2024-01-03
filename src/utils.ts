@@ -14,7 +14,7 @@ export function simpleSetting(
 	containerEl: HTMLElement,
 	plugin: SKOSPlugin,
 	settings: SKOSSettings,
-	input: textSetting
+	input: textSetting,
 ): void {
 	new Setting(containerEl)
 		.setName(input.name)
@@ -32,7 +32,7 @@ export function simpleSetting(
 export function maxSettings(
 	containerEl: HTMLElement,
 	plugin: SKOSPlugin,
-	settings: SKOSSettings
+	settings: SKOSSettings,
 ): void {
 	const entries = settingsMax(settings);
 	for (const entry of entries) {
